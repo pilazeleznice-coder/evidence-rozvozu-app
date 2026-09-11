@@ -1,0 +1,3353 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Evidence rozvozů</title>
+<style>
+:root{--g950:#103d24;--g900:#15512f;--g850:#1b5d35;--g300:#acd59a;--g200:#dcefd5;--g100:#f3f8f1;--white:#fff;--bg:#f5f7f4;--text:#263229;--muted:#718076;--line:#dfe7dc;--red:#d64545;--redSoft:#ffe3e3;--shadow:0 10px 26px rgba(16,61,36,.10)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}button,input,select{font:inherit}
+.app{width:min(100%,560px);min-height:100vh;margin:auto;background:#fff;padding:14px 12px 90px}
+.hero{min-height:104px;background:linear-gradient(180deg,var(--g900),var(--g950));border-radius:24px;display:flex;align-items:center;gap:18px;padding:16px 18px;box-shadow:var(--shadow)}
+.hero-logo{width:66px;height:66px;flex:0 0 66px;border:1.5px solid rgba(255,255,255,.75);border-radius:50%;display:grid;place-items:center;color:#fff;font-size:10px;font-weight:800;text-align:center;background:rgba(255,255,255,.06)}
+.hero-title{color:#fff;font-size:23px;font-weight:900;letter-spacing:.2px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:10px 0}.stat{min-height:64px;background:var(--g300);border:2px solid var(--g900);border-radius:13px;text-align:center;padding:7px 5px;display:flex;flex-direction:column;justify-content:center}.stat-label{font-size:11px;font-weight:800;color:var(--g950)}.stat-value{margin-top:4px;font-size:19px;font-weight:900;color:var(--g950)}
+.daybar{height:58px;display:grid;grid-template-columns:56px 1fr 56px;align-items:center;border-radius:14px;background:#168500;overflow:hidden;margin-bottom:8px}.daybtn{height:100%;border:0;background:transparent;display:grid;place-items:center;cursor:pointer}.tri{width:0;height:0;border-top:12px solid transparent;border-bottom:12px solid transparent}.tri.left{border-right:20px solid var(--g950)}.tri.right{border-left:20px solid var(--g950)}.day-center{color:#fff;text-align:center;line-height:1.05}.relative{font-size:19px;font-weight:900}.weekday{font-size:11px;font-weight:800;margin-top:2px}.date{font-size:10px;margin-top:3px;opacity:.95}
+.work-area{display:grid;grid-template-columns:minmax(0,1fr) 88px;gap:10px;align-items:stretch}.left-flow{min-width:0}.section-chip{display:inline-flex;align-items:center;justify-content:center;min-width:118px;height:34px;padding:0 16px;margin:0 0 8px;border:2px solid var(--g900);border-radius:999px;background:var(--g300);color:var(--g950);font-size:11px}.section-chip.completed-chip{margin-top:2px;background:#bfe1b3}.section-chip.cancelled-chip{background:#ffd6d6;border-color:#e66a6a;color:#8f2424}
+.card{position:relative;border-radius:18px;margin:0 0 10px;overflow:hidden}.card.planned{background:linear-gradient(180deg,#216b3f,#195632);color:#fff;box-shadow:0 5px 14px rgba(16,61,36,.16)}.card.completed{background:rgba(181,214,171,.48);color:#617064;border:1px solid rgba(21,81,47,.14)}.card.cancelled{background:#c94b4b;color:#fff;border:1px solid #b83d3d}.card-inner{position:relative;min-height:118px;padding:10px 10px 47px 40px}.card-number{position:absolute;left:10px;top:10px;font-size:20px;font-weight:900}.card-content{padding-right:84px;min-height:62px}.time-row{font-size:17px;font-weight:900;margin-bottom:6px;letter-spacing:.1px;line-height:1.05}.time-row .time-value{font-size:22px;font-weight:900}.data-row{font-size:10px;line-height:1.45}.data-row strong{font-weight:800}.name-row{font-size:12px;font-weight:900;margin-bottom:3px;color:inherit}
+.edit-btn{position:absolute;right:8px;top:8px;width:32px;height:32px;border-radius:10px;border:1px solid rgba(21,81,47,.16);background:#fff;color:var(--g900);display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08)}.edit-btn svg{width:16px;height:16px}
+.vehicle-block{position:absolute;right:8px;top:47px;display:flex;align-items:center;gap:5px}.vehicle-code{min-width:38px;height:25px;padding:0 7px;border-radius:8px;display:grid;place-items:center;background:#168500;color:#fff;font-size:10px;font-weight:900}.vehicle-image{width:34px;height:25px;border-radius:8px;background:rgba(255,255,255,.09);display:grid;place-items:center;overflow:hidden}.vehicle-image img{width:100%;height:100%;object-fit:contain}.vehicle-placeholder{width:22px;height:12px;border:2px solid currentColor;border-radius:3px;opacity:.75;position:relative}.vehicle-placeholder:before,.vehicle-placeholder:after{content:"";position:absolute;bottom:-5px;width:5px;height:5px;border-radius:50%;background:currentColor}.vehicle-placeholder:before{left:2px}.vehicle-placeholder:after{right:2px}
+.card-actions{position:absolute;left:8px;right:8px;bottom:8px;display:grid;grid-template-columns:58px 1fr 58px;gap:8px}.card-actions button{height:30px;border:0;border-radius:8px;font-size:10px;font-weight:900;cursor:pointer}.planned .card-actions button{background:#168500;color:#fff}.completed .card-actions button{background:rgba(21,133,0,.40);color:#fff}.cancelled .card-actions button{background:rgba(214,69,69,.18);color:#fff}.completed:after{content:"";position:absolute;left:0;right:0;top:50%;height:3px;background:rgba(49,130,61,.45);transform:translateY(-50%);pointer-events:none}
+.tool-panel{background:#168500;border-radius:13px;padding:8px 7px 10px;min-height:100%;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 12px rgba(16,61,36,.12)}.tool-title{color:#fff;font-size:10px;line-height:1.2;font-weight:900;text-align:center;margin:1px 0 10px}.tool-btn{width:43px;height:43px;border:0;border-radius:11px;background:var(--g900);color:#fff;display:grid;place-items:center;margin-bottom:10px;cursor:pointer}.tool-btn svg{width:22px;height:22px}.tool-spacer{flex:1}.add-btn{width:48px;height:48px;border-radius:50%;border:0;background:var(--g900);color:#fff;font-size:34px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.cancelled-section{margin-top:8px}.cancelled-row{display:grid;grid-template-columns:minmax(0,1fr) 74px;gap:8px;align-items:center}.cancel-x{width:68px;height:68px;border:4px solid #ff1111;border-radius:50%;position:relative;margin:auto}.cancel-x:before,.cancel-x:after{content:"";position:absolute;left:13px;right:13px;top:29px;height:7px;border-radius:999px;background:#ff1111}.cancel-x:before{transform:rotate(42deg)}.cancel-x:after{transform:rotate(-42deg)}
+.empty{margin-bottom:10px;padding:14px;border:1px dashed #d8e3d5;border-radius:14px;text-align:center;color:#8b958d;font-size:11px;background:#fafbf9}
+.modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;padding:12px;background:rgba(15,34,21,.45)}.modal.show{display:flex}.sheet{width:min(100%,540px);max-height:90vh;overflow:auto;background:#fff;border-radius:24px;padding:20px;box-shadow:0 20px 55px rgba(0,0,0,.20)}.sheet h2{margin:0 0 16px;color:var(--g900);font-size:23px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin-bottom:4px}.field.full{grid-column:1/-1}label{display:block;margin:0 0 5px;color:var(--g900);font-size:11px;font-weight:800}input,select{width:100%;height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--text);padding:0 11px;outline:none}input:focus,select:focus{border-color:#92b888;box-shadow:0 0 0 3px #edf5ea}.sheet-actions{display:flex;gap:8px;margin-top:16px}.sheet-actions button{flex:1;min-height:44px;border:0;border-radius:12px;font-weight:900;cursor:pointer}.primary{background:var(--g900);color:#fff}.secondary{background:#eef4eb;color:var(--g900)}.danger{background:var(--red);color:#fff}.detail-line{padding:9px 0;border-bottom:1px solid #edf0ec;font-size:13px}.detail-line b{color:var(--g900)}
+textarea{width:100%;min-height:92px;resize:vertical;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--text);padding:11px;outline:none}textarea:focus{border-color:#92b888;box-shadow:0 0 0 3px #edf5ea}
+.calendar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.calendar-head h2{margin:0}.calendar-switch{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px;background:var(--green-100);border:1px solid var(--line);border-radius:12px}.calendar-switch button{border:0;border-radius:9px;padding:8px 12px;background:transparent;color:var(--green-900);font-size:12px;font-weight:800;cursor:pointer}.calendar-switch button.active{background:var(--green-900);color:#fff}.calendar-nav{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;gap:8px;margin:10px 0 12px}.calendar-nav button{height:38px;border:0;border-radius:10px;background:var(--green-150);color:var(--green-900);font-size:20px;font-weight:900;cursor:pointer}.calendar-period{text-align:center;color:var(--green-900);font-weight:900}.cal-weekdays,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.cal-weekdays div{text-align:center;font-size:10px;font-weight:800;color:var(--muted);padding:4px 0}.cal-day{min-height:58px;font:inherit;text-align:left;border:1px solid var(--line);border-radius:11px;background:#fff;padding:6px;cursor:pointer;position:relative}.cal-day.other{opacity:.35}.cal-day.today{border:2px solid var(--green-900)}.cal-day.selected{background:var(--green-150)}.cal-num{font-size:11px;font-weight:900;color:var(--green-900)}.cal-dots{display:flex;gap:3px;flex-wrap:wrap;margin-top:7px}.cal-dot{width:7px;height:7px;border-radius:50%;background:var(--green-700)}.cal-dot.done{background:#9fc792}.cal-dot.cancel{background:var(--red)}.week-list{display:grid;gap:8px}.week-day{width:100%;font:inherit;text-align:left;border:1px solid var(--line);border-radius:14px;padding:10px;background:#fff;cursor:pointer}.week-day.selected{background:var(--green-150)}.week-day-head{display:flex;justify-content:space-between;color:var(--green-900);font-weight:900;font-size:12px}.week-count{font-size:10px;color:var(--muted);font-weight:700}.week-rides{margin-top:7px;display:flex;gap:5px;flex-wrap:wrap}.week-pill{padding:4px 7px;border-radius:999px;background:var(--green-900);color:#fff;font-size:9px;font-weight:800}.week-pill.done{background:#8eaf87}.week-pill.cancel{background:var(--red)}
+
+.cancelled .vehicle-code{
+  background:#d71920;
+  color:#fff;
+  border:1px solid #b90f16;
+}
+
+.cal-day{
+  min-height:82px;
+  padding:6px 5px;
+}
+.cal-events{
+  display:grid;
+  gap:3px;
+  margin-top:5px;
+}
+.cal-event{
+  display:block;
+  width:100%;
+  padding:3px 4px;
+  border-radius:5px;
+  background:var(--green-900);
+  color:#fff;
+  font-size:8px;
+  line-height:1.15;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.cal-event.done{
+  background:#9ebd96;
+  color:#38503d;
+  text-decoration:line-through;
+}
+.cal-event.cancel{
+  background:#d64545;
+  color:#fff;
+}
+@media(max-width:430px){
+  .cal-day{min-height:70px}
+  .cal-event{font-size:7px}
+}
+@media(max-width:430px){.app{padding:10px 8px 80px}.hero{min-height:92px;padding:12px 14px;gap:12px}.hero-logo{width:58px;height:58px;flex-basis:58px}.hero-title{font-size:20px}.stats{gap:6px}.stat{min-height:58px;padding:5px 3px}.stat-label{font-size:10px}.stat-value{font-size:17px}.work-area{grid-template-columns:minmax(0,1fr) 76px;gap:7px}.tool-btn{width:39px;height:39px}.card-content{padding-right:75px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+
+.time-row{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+  font-size:12px !important;
+  font-weight:900 !important;
+  margin-bottom:7px !important;
+}
+.time-value{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:74px;
+  padding:5px 9px;
+  border-radius:9px;
+  background:#fff;
+  color:#15512f;
+  font-size:23px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  letter-spacing:.3px;
+  box-shadow:0 2px 7px rgba(0,0,0,.12);
+}
+.completed .time-value{
+  background:rgba(255,255,255,.72);
+  color:#56705c;
+}
+.cancelled .time-value{
+  background:#fff;
+  color:#a62828;
+}
+
+
+#calendarOverlay{
+  position:fixed; inset:0; z-index:9999;
+  display:none; align-items:center; justify-content:center;
+  padding:12px; background:rgba(15,34,21,.55);
+}
+#calendarOverlay.open{display:flex}
+.calbox{
+  width:min(96vw,620px); max-height:92vh; overflow:auto;
+  background:#fff; border-radius:22px; padding:16px;
+  box-shadow:0 22px 60px rgba(0,0,0,.25);
+}
+.calTop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.calTopTitle{font-size:21px;font-weight:900;color:#15512f}
+.calToggle{display:flex;gap:4px;background:#f3f8f1;padding:4px;border-radius:11px}
+.calToggle button,.calNav button,.calBottom button{
+  border:0;cursor:pointer;font-weight:900;border-radius:9px
+}
+.calToggle button{padding:8px 11px;background:transparent;color:#15512f}
+.calToggle button.on{background:#15512f;color:#fff}
+.calNav{display:grid;grid-template-columns:42px 1fr 42px;gap:8px;align-items:center;margin-bottom:10px}
+.calNav button{height:38px;background:#eaf5e6;color:#15512f;font-size:21px}
+#calTitle{text-align:center;font-weight:900;color:#15512f}
+.calNames,.calMonth{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.calNames div{text-align:center;font-size:10px;font-weight:900;color:#718076;padding:4px}
+.cday{
+  min-height:76px;border:1px solid #dfe7dc;border-radius:10px;background:#fff;
+  padding:5px;text-align:left;cursor:pointer;overflow:hidden
+}
+.cday.dim{opacity:.35}.cday.now{border:2px solid #15512f}.cday.sel{background:#eaf5e6}
+.cnum{font-size:11px;font-weight:900;color:#15512f}
+.cevent{
+  display:block;margin-top:3px;padding:3px 4px;border-radius:5px;
+  background:#15512f;color:#fff;font-size:8px;font-weight:800;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.cevent.done{background:#a9c7a1;color:#35523c;text-decoration:line-through}
+.cevent.cancel{background:#c94b4b;color:#fff}
+.calWeek{display:grid;gap:7px}
+.cweekday{border:1px solid #dfe7dc;border-radius:12px;padding:9px;background:#fff;cursor:pointer;text-align:left}
+.cweekhead{display:flex;justify-content:space-between;font-size:12px;font-weight:900;color:#15512f}
+.cweekevents{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.calBottom{display:flex;gap:8px;margin-top:12px}
+.calBottom button{flex:1;height:42px}
+#calGoToday{background:#eaf5e6;color:#15512f}
+#calClose{background:#15512f;color:#fff}
+
+
+.today-return-wrap{
+  display:flex;
+  justify-content:center;
+  max-height:0;
+  opacity:0;
+  overflow:hidden;
+  transform:translateY(-5px);
+  transition:max-height .2s ease,opacity .2s ease,transform .2s ease,margin .2s ease;
+  margin:0;
+}
+.today-return-wrap.show{
+  max-height:46px;
+  opacity:1;
+  transform:translateY(0);
+  margin:0 0 8px;
+}
+.today-return-btn{
+  border:1px solid #cfe0ca;
+  background:#eef7eb;
+  color:var(--green-900);
+  border-radius:999px;
+  padding:7px 15px;
+  font-size:11px;
+  font-weight:900;
+  cursor:pointer;
+}
+.completed .return-btn{
+  background:rgba(255,255,255,.78) !important;
+  color:var(--green-900) !important;
+  border:1px solid rgba(21,81,47,.18) !important;
+}
+
+
+.completed .return-btn{background:#fff!important;color:#15512f!important;border:2px solid #15512f!important;font-weight:900!important}
+.today-return-wrap{display:none;justify-content:center;margin:7px 0 9px}
+.today-return-wrap.show{display:flex}
+.today-return-btn{border:1px solid #bcd5b6;background:#eef7eb;color:#15512f;border-radius:999px;padding:8px 17px;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 2px 8px rgba(21,81,47,.12)}
+</style>
+
+<style id="v11-redesign">
+:root{
+  --pz:#104c29;
+  --pz-dark:#0c3b20;
+  --pz-mid:#1f6a3d;
+  --pz-soft:#eef6ec;
+  --pz-soft-2:#f6faf4;
+  --pz-line:#d9e5d6;
+  --pz-text:#243129;
+  --pz-muted:#6f7c73;
+  --pz-red:#bd3b3b;
+  --pz-red-soft:#fff1f1;
+  --pz-shadow:0 8px 24px rgba(16,76,41,.08);
+}
+
+/* page */
+html,body{background:#f2f5f1!important;color:var(--pz-text)}
+body{font-family:Arial,Helvetica,sans-serif!important}
+.app{
+  width:min(100%,620px)!important;
+  padding:14px 12px 100px!important;
+  background:#fff!important;
+  box-shadow:0 0 0 1px rgba(16,76,41,.04);
+}
+
+/* header: clean configurator / form look */
+.hero{
+  min-height:0!important;
+  padding:16px!important;
+  gap:14px!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  border:1px solid var(--pz-line)!important;
+  border-left:5px solid var(--pz)!important;
+  box-shadow:var(--pz-shadow)!important;
+}
+.hero-logo{
+  width:58px!important;height:58px!important;flex:0 0 58px!important;
+  border:none!important;border-radius:14px!important;
+  background:var(--pz)!important;padding:7px!important;
+  display:grid!important;place-items:center!important;
+}
+.hero-logo img{width:100%;height:100%;object-fit:contain;display:block}
+.hero-copy{min-width:0}
+.hero-eyebrow{
+  font-size:9px;font-weight:900;letter-spacing:1.5px;color:var(--pz-mid);
+  margin-bottom:3px;
+}
+.hero-title{
+  color:var(--pz)!important;
+  font-size:24px!important;
+  line-height:1.05!important;
+  font-weight:900!important;
+  letter-spacing:-.3px!important;
+  text-transform:none!important;
+}
+.hero-subtitle{
+  margin-top:5px;font-size:10px;line-height:1.35;color:var(--pz-muted);font-weight:600
+}
+
+/* summary cards inspired by configurator */
+.stats{
+  gap:8px!important;
+  margin:10px 0 12px!important;
+}
+.stat{
+  min-height:68px!important;
+  padding:9px 7px!important;
+  border-radius:14px!important;
+  border:1px solid var(--pz-line)!important;
+  background:var(--pz-soft-2)!important;
+  box-shadow:none!important;
+}
+.stat-label{
+  color:var(--pz-muted)!important;font-size:9px!important;
+  font-weight:800!important;text-transform:uppercase;letter-spacing:.45px
+}
+.stat-value{
+  color:var(--pz)!important;font-size:21px!important;
+  margin-top:5px!important;font-weight:900!important
+}
+
+/* day selector = form-like card */
+.daybar{
+  min-height:64px!important;height:auto!important;
+  grid-template-columns:54px 1fr 54px!important;
+  margin-bottom:7px!important;
+  background:var(--pz-soft)!important;
+  border:1px solid #cfe0cb!important;
+  border-radius:16px!important;
+  overflow:hidden!important;
+  box-shadow:none!important;
+}
+.daybtn{background:#fff!important;margin:6px!important;border-radius:11px!important;height:50px!important}
+.tri{border-top-width:9px!important;border-bottom-width:9px!important}
+.tri.left{border-right:14px solid var(--pz)!important}
+.tri.right{border-left:14px solid var(--pz)!important}
+.day-center{color:var(--pz)!important;padding:7px 0!important}
+.relative{font-size:19px!important;font-weight:900!important}
+.weekday{font-size:10px!important;color:#496052!important}
+.date{font-size:10px!important;color:var(--pz-muted)!important;opacity:1!important}
+
+/* return today */
+.today-return-wrap{margin:0 0 10px!important}
+.today-return-btn{
+  background:#fff!important;color:var(--pz)!important;
+  border:1px solid #cfe0cb!important;
+  padding:8px 15px!important;border-radius:10px!important;
+  box-shadow:none!important;font-size:10px!important
+}
+
+/* main columns */
+.work-area{grid-template-columns:minmax(0,1fr) 82px!important;gap:10px!important}
+.left-flow{min-width:0}
+
+/* section titles: no canva pill look */
+.section-heading{
+  display:flex;align-items:center;gap:7px;margin:5px 0 8px
+}
+.section-chip{
+  min-width:0!important;height:auto!important;
+  padding:0!important;margin:0!important;
+  border:0!important;border-radius:0!important;
+  background:transparent!important;
+  color:var(--pz)!important;
+  font-size:15px!important;font-weight:900!important;
+}
+.section-chip.completed-chip{color:#416d4e!important}
+.section-chip.cancelled-chip{color:var(--pz-red)!important}
+.section-count{
+  min-width:24px;height:24px;padding:0 7px;border-radius:999px;
+  display:inline-grid;place-items:center;
+  background:var(--pz-soft);color:var(--pz);font-size:10px;font-weight:900
+}
+.section-count.done{background:#edf5ea;color:#4b7557}
+.section-count.cancelled{background:#fff0f0;color:var(--pz-red)}
+
+/* delivery cards = clean white configurator panels */
+.card{
+  margin:0 0 10px!important;
+  border-radius:16px!important;
+  overflow:hidden!important;
+  box-shadow:0 5px 17px rgba(16,76,41,.07)!important;
+}
+.card.planned{
+  background:#fff!important;color:var(--pz-text)!important;
+  border:1px solid #cfded0!important;
+  border-left:4px solid var(--pz)!important;
+}
+.card.completed{
+  background:#f4f9f2!important;color:#647269!important;
+  border:1px solid #d7e6d3!important;
+  border-left:4px solid #7fa888!important;
+}
+.card.cancelled{
+  background:var(--pz-red-soft)!important;color:#633434!important;
+  border:1px solid #efcaca!important;
+  border-left:4px solid var(--pz-red)!important;
+}
+.card-inner{
+  min-height:0!important;
+  padding:12px 10px 49px 39px!important
+}
+.card-number{
+  top:13px!important;left:11px!important;
+  color:#8a978e!important;font-size:14px!important
+}
+.card-content{padding-right:86px!important;min-height:80px!important}
+
+/* delivery time = dominant */
+.time-row{
+  display:block!important;
+  margin:0 0 9px!important;
+  font-size:8px!important;
+  color:var(--pz-muted)!important;
+  text-transform:uppercase!important;
+  letter-spacing:.75px!important;
+  font-weight:900!important;
+}
+.time-value{
+  display:block!important;
+  width:max-content!important;
+  min-width:0!important;
+  margin-top:3px!important;
+  padding:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:var(--pz)!important;
+  font-size:30px!important;
+  line-height:.98!important;
+  letter-spacing:-.6px!important;
+  box-shadow:none!important;
+  font-weight:900!important;
+}
+.completed .time-value{background:transparent!important;color:#5f8066!important}
+.cancelled .time-value{background:transparent!important;color:var(--pz-red)!important}
+
+.name-row{
+  font-size:12px!important;
+  color:var(--pz-text)!important;
+  font-weight:900!important;
+  margin-bottom:4px!important
+}
+.completed .name-row{color:#5d6c62!important}
+.cancelled .name-row{color:#633434!important}
+.data-row{
+  font-size:9px!important;
+  line-height:1.55!important;
+  color:#5f6c63!important
+}
+.data-row strong{color:#334239!important;font-weight:800!important}
+.cancelled .data-row,.cancelled .data-row strong{color:#744444!important}
+
+/* edit + vehicle */
+.edit-btn{
+  right:9px!important;top:9px!important;
+  width:32px!important;height:32px!important;
+  border-radius:9px!important;
+  border:1px solid #d6e2d4!important;
+  background:#fff!important;color:var(--pz)!important;
+  box-shadow:none!important
+}
+.vehicle-block{right:9px!important;top:49px!important;gap:4px!important}
+.vehicle-code{
+  min-width:38px!important;height:24px!important;
+  padding:0 7px!important;border-radius:7px!important;
+  background:var(--pz-soft)!important;color:var(--pz)!important;
+  border:1px solid #cfe0cb!important;font-size:9px!important
+}
+.cancelled .vehicle-code{
+  background:#f8dede!important;color:var(--pz-red)!important;
+  border-color:#e7b7b7!important
+}
+.vehicle-image{
+  width:32px!important;height:24px!important;
+  background:#f7faf6!important;color:#819286!important;
+  border:1px solid #e0e8de!important
+}
+
+/* buttons like configurator */
+.card-actions{
+  left:9px!important;right:9px!important;bottom:9px!important;
+  grid-template-columns:58px 1fr 66px!important;gap:6px!important
+}
+.card-actions button{
+  height:32px!important;
+  border-radius:9px!important;
+  border:1px solid #d6e2d4!important;
+  background:#fff!important;
+  color:var(--pz)!important;
+  font-size:9px!important;font-weight:900!important;
+  box-shadow:none!important
+}
+.card-actions button:nth-child(2){
+  background:var(--pz)!important;color:#fff!important;border-color:var(--pz)!important
+}
+.card.planned .card-actions button:last-child{
+  background:#eaf4e7!important;color:var(--pz)!important;border-color:#c9ddc4!important
+}
+.completed .card-actions button{background:#fff!important;color:#52705a!important}
+.completed .card-actions button:nth-child(2){background:#7c9f82!important;color:#fff!important;border-color:#7c9f82!important}
+.completed .return-btn{
+  background:#fff!important;color:var(--pz)!important;border:1px solid #a9c4ad!important
+}
+.cancelled .card-actions button{
+  background:#fff!important;color:#8f4646!important;border-color:#e7c5c5!important
+}
+.cancelled .card-actions button:nth-child(2){
+  background:#ad6262!important;color:#fff!important;border-color:#ad6262!important
+}
+.completed:after{
+  height:1.5px!important;background:rgba(76,119,83,.25)!important
+}
+
+/* tool panel transformed into light utility card */
+.tool-panel{
+  min-height:100%!important;
+  padding:9px 7px!important;
+  background:var(--pz-soft-2)!important;
+  border:1px solid var(--pz-line)!important;
+  border-radius:16px!important;
+  box-shadow:none!important
+}
+.tool-title{
+  color:var(--pz)!important;font-size:8px!important;
+  text-transform:uppercase;letter-spacing:.65px!important;
+  margin:3px 0 10px!important
+}
+.tool-btn{
+  width:44px!important;height:44px!important;
+  margin-bottom:8px!important;
+  border-radius:11px!important;
+  border:1px solid #cfe0cb!important;
+  background:#fff!important;color:var(--pz)!important
+}
+.tool-btn:first-of-type{background:var(--pz)!important;color:#fff!important;border-color:var(--pz)!important}
+.add-btn{
+  width:47px!important;height:47px!important;
+  background:var(--pz)!important;color:#fff!important;
+  border:0!important;font-size:30px!important;
+  box-shadow:0 5px 12px rgba(16,76,41,.16)!important
+}
+
+/* cancelled area */
+.cancelled-section{
+  margin-top:12px!important;
+  padding-top:11px!important;
+  border-top:1px solid #e7ece5!important
+}
+.cancelled-row{grid-template-columns:minmax(0,1fr) 47px!important;gap:6px!important}
+.cancel-x{
+  width:40px!important;height:40px!important;
+  border:2px solid #d95d5d!important
+}
+.cancel-x:before,.cancel-x:after{
+  left:8px!important;right:8px!important;top:17px!important;height:4px!important;
+  background:#d95d5d!important
+}
+
+/* empty states */
+.empty{
+  padding:13px!important;
+  border:1px dashed #d8e3d5!important;
+  border-radius:12px!important;
+  background:#fbfcfa!important;
+  color:#8a958d!important;
+  font-size:10px!important
+}
+
+/* forms / modals made to match inquiry form */
+.modal{background:rgba(14,44,25,.42)!important}
+.sheet{
+  width:min(100%,570px)!important;
+  border-radius:20px!important;
+  padding:18px!important;
+  border:1px solid #d9e4d6!important;
+  box-shadow:0 20px 55px rgba(12,59,32,.18)!important
+}
+.sheet h2{
+  color:var(--pz)!important;
+  font-size:20px!important;font-weight:900!important;
+  margin-bottom:15px!important
+}
+label{
+  color:#405047!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  text-transform:uppercase!important;
+  letter-spacing:.35px!important
+}
+input,select,textarea{
+  border:1px solid #d8e2d6!important;
+  border-radius:9px!important;
+  background:#fff!important;
+  color:var(--pz-text)!important;
+}
+input,select{height:43px!important}
+input:focus,select:focus,textarea:focus{
+  border-color:#89ac8f!important;
+  box-shadow:0 0 0 3px #edf5ea!important
+}
+.sheet-actions button{
+  border-radius:9px!important;
+  min-height:43px!important;
+  font-size:10px!important
+}
+.primary{background:var(--pz)!important;color:#fff!important}
+.secondary{background:#eef5eb!important;color:var(--pz)!important;border:1px solid #d7e4d3!important}
+.danger{background:#bc4646!important;color:#fff!important}
+
+/* calendar v8 overlay in same family */
+#calendarOverlay{background:rgba(14,44,25,.45)!important}
+.calbox{
+  border-radius:20px!important;
+  border:1px solid #d8e3d5!important;
+  box-shadow:0 20px 55px rgba(12,59,32,.18)!important
+}
+.calTopTitle,#calTitle,.cnum,.cweekhead{color:var(--pz)!important}
+.calToggle{background:var(--pz-soft)!important}
+.calToggle button.on{background:var(--pz)!important}
+.calNav button{background:var(--pz-soft)!important;color:var(--pz)!important}
+.cday{border-color:#dfe7dc!important;border-radius:9px!important}
+.cday.now{border-color:var(--pz)!important}
+.cday.sel{background:#edf5ea!important}
+.cevent{background:var(--pz)!important}
+#calGoToday{background:var(--pz-soft)!important;color:var(--pz)!important}
+#calClose{background:var(--pz)!important}
+
+/* mobile */
+@media(max-width:430px){
+  .app{padding:9px 7px 90px!important}
+  .hero{padding:13px!important;border-radius:15px!important}
+  .hero-logo{width:51px!important;height:51px!important;flex-basis:51px!important}
+  .hero-title{font-size:21px!important}
+  .hero-subtitle{font-size:9px!important}
+  .stats{gap:5px!important}
+  .stat{min-height:61px!important;padding:7px 3px!important}
+  .stat-value{font-size:19px!important}
+  .work-area{grid-template-columns:minmax(0,1fr) 70px!important;gap:7px!important}
+  .tool-panel{padding:7px 5px!important}
+  .tool-btn{width:40px!important;height:40px!important}
+  .add-btn{width:43px!important;height:43px!important}
+  .card-inner{padding-left:35px!important}
+  .card-number{left:9px!important}
+  .time-value{font-size:28px!important}
+  .card-content{padding-right:76px!important}
+  .cancelled-row{grid-template-columns:minmax(0,1fr) 42px!important}
+  .cancel-x{width:36px!important;height:36px!important}
+  .cancel-x:before,.cancel-x:after{top:15px!important}
+}
+</style>
+
+
+<style id="v12-adjustments">
+.hero{
+  background:#104c29!important;
+  border:1px solid #104c29!important;
+  border-left:1px solid #104c29!important;
+  box-shadow:0 8px 24px rgba(16,76,41,.16)!important;
+}
+.hero-logo{
+  background:transparent!important;
+  padding:2px!important;
+  border-radius:0!important;
+}
+.hero-logo img{
+  filter:none!important;
+}
+.hero-eyebrow,
+.hero-title{
+  color:#fff!important;
+}
+.hero-eyebrow{opacity:.82!important}
+
+/* checkbox replaces Konec */
+.finish-check{
+  width:34px!important;
+  min-width:34px!important;
+  height:34px!important;
+  padding:0!important;
+  border-radius:8px!important;
+  border:2px solid #9fbea5!important;
+  background:#fff!important;
+  display:grid!important;
+  place-items:center!important;
+  cursor:pointer!important;
+  color:#104c29!important;
+}
+.finish-check:hover{background:#eef6ec!important}
+.finish-check .checkmark{
+  opacity:0;
+  font-size:22px;
+  line-height:1;
+  font-weight:900;
+}
+.finish-check.checked{
+  background:#104c29!important;
+  border-color:#104c29!important;
+  color:#fff!important;
+}
+.finish-check.checked .checkmark{opacity:1}
+
+/* Completed: return + checked box together on the right */
+.completed .card-actions{
+  grid-template-columns:58px 1fr auto!important;
+}
+.completed .completed-actions{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:6px;
+}
+.completed .completed-actions .return-btn{
+  width:auto!important;
+  min-width:72px!important;
+  padding:0 10px!important;
+}
+.completed .completed-actions .finish-check{
+  flex:0 0 34px!important;
+}
+</style>
+
+
+<style id="v13-adjustments">
+/* 1 + 2: unmistakable checkbox; completed check stays fully saturated */
+.finish-check{
+  width:36px!important;min-width:36px!important;height:36px!important;
+  border:3px solid #202a23!important;
+  border-radius:7px!important;
+  background:#fff!important;
+  box-shadow:0 1px 2px rgba(0,0,0,.08)!important;
+}
+.finish-check.checked{
+  background:#104c29!important;
+  border-color:#104c29!important;
+  color:#fff!important;
+  opacity:1!important;
+  filter:none!important;
+}
+.finish-check.checked .checkmark{
+  opacity:1!important;color:#fff!important;font-size:24px!important;font-weight:900!important;
+}
+.completed .finish-check.checked{
+  background:#104c29!important;border-color:#104c29!important;color:#fff!important;
+  opacity:1!important;filter:none!important;
+}
+
+/* 5: floating new-ride button */
+.tool-panel .add-btn{
+  position:fixed!important;
+  right:max(16px,calc((100vw - 620px)/2 + 16px))!important;
+  bottom:18px!important;
+  z-index:8500!important;
+  width:58px!important;height:58px!important;
+  border-radius:50%!important;
+  background:#104c29!important;color:#fff!important;
+  border:3px solid #fff!important;
+  box-shadow:0 8px 24px rgba(16,76,41,.30)!important;
+  font-size:36px!important;
+}
+.tool-spacer{min-height:55px}
+
+/* 6 + 7: larger, darker, more legible card copy */
+.name-row{
+  font-size:14px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  color:#16251b!important;
+  margin:2px 0 7px!important;
+}
+.data-row{
+  font-size:10.5px!important;
+  line-height:1.6!important;
+  color:#3f4f45!important;
+}
+.data-row strong{color:#22342a!important}
+.completed .name-row{color:#294b34!important}
+.completed .data-row,.completed .data-row strong{color:#52685a!important}
+.cancelled .name-row{color:#6f2929!important}
+.cancelled .data-row,.cancelled .data-row strong{color:#704141!important}
+
+/* cancelled card reason */
+.cancel-reason{
+  margin-top:8px;
+  padding:7px 9px;
+  border-radius:9px;
+  background:#fff7f7;
+  border:1px solid #efcccc;
+  color:#8c3b3b;
+  font-size:10.5px;
+  line-height:1.4;
+  font-weight:700;
+}
+.cancel-reason b{font-weight:900}
+.cancelled .card-inner{padding-bottom:56px!important}
+.cancelled .card-actions{grid-template-columns:58px 1fr!important}
+.cancelled .card-actions .return-btn{
+  background:#fff!important;color:#104c29!important;
+  border:1px solid #9fbea5!important;
+  font-weight:900!important;
+}
+#cancelReasonInput,#fCancelReason{min-height:100px;resize:vertical}
+
+/* completed controls */
+.completed .completed-actions{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:7px!important}
+.completed .completed-actions .return-btn{min-width:78px!important}
+</style>
+
+<style id="v14-name-adjustment">
+/* Zákazník je po čase druhý nejdůležitější údaj */
+.name-row{
+  font-size:16px!important;
+  line-height:1.08!important;
+  font-weight:900!important;
+  letter-spacing:-.15px!important;
+  margin:1px 0 3px!important;
+  color:#12291b!important;
+}
+.completed .name-row{
+  color:#104c29!important;
+  opacity:1!important;
+}
+.cancelled .name-row{
+  color:#7e2424!important;
+  opacity:1!important;
+}
+/* první informační řádek hned navazuje na jméno */
+.name-row + .data-row{
+  margin-top:0!important;
+}
+.data-row{
+  margin-top:0!important;
+}
+</style>
+
+
+<style id="v15-checkbox-visibility">
+/* PLÁNOVANÉ: checkbox musí být na první pohled rozpoznatelný */
+.card.planned .finish-check{
+  width:38px!important;
+  min-width:38px!important;
+  height:38px!important;
+  padding:0!important;
+  border:4px solid #17231b!important;
+  border-radius:7px!important;
+  background:#fff!important;
+  box-shadow:0 1px 3px rgba(0,0,0,.14)!important;
+  opacity:1!important;
+  filter:none!important;
+}
+
+/* SPLNĚNÉ: jediný plně sytý prvek na zesvětlené kartě */
+.card.completed .finish-check.checked{
+  width:38px!important;
+  min-width:38px!important;
+  height:38px!important;
+  background:#104c29!important;
+  border:4px solid #104c29!important;
+  color:#fff!important;
+  opacity:1!important;
+  filter:none!important;
+  box-shadow:0 2px 6px rgba(16,76,41,.24)!important;
+}
+.card.completed .finish-check.checked .checkmark{
+  display:block!important;
+  opacity:1!important;
+  color:#fff!important;
+  font-size:25px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  text-decoration:none!important;
+}
+
+/* Přeškrtnutí splněné karty nesmí opticky šednout přes zelenou fajfku */
+.card.completed:after{
+  z-index:1!important;
+  pointer-events:none!important;
+}
+.card.completed .card-actions{
+  z-index:3!important;
+}
+.card.completed .completed-actions,
+.card.completed .finish-check.checked{
+  position:relative!important;
+  z-index:4!important;
+}
+</style>
+
+
+<style id="v16-controls-vehicle">
+/* SPLNĚNÉ: Vrátit zpět zůstává plně aktivní a kontrastní */
+.card.completed .completed-actions .return-btn{
+  background:#ffffff!important;
+  color:#104c29!important;
+  border:2px solid #104c29!important;
+  opacity:1!important;
+  filter:none!important;
+  box-shadow:0 2px 6px rgba(16,76,41,.13)!important;
+  font-weight:900!important;
+  text-decoration:none!important;
+}
+.card.completed .completed-actions .return-btn:disabled{
+  opacity:1!important;
+}
+
+/* Větší označení typu soupravy */
+.vehicle-block{
+  gap:6px!important;
+  align-items:center!important;
+}
+.vehicle-code{
+  min-width:52px!important;
+  height:34px!important;
+  padding:0 9px!important;
+  border-radius:9px!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  letter-spacing:.2px!important;
+}
+
+/* Větší prostor pro budoucí obrázek vozidla */
+.vehicle-image{
+  width:52px!important;
+  height:38px!important;
+  border-radius:9px!important;
+  font-size:10px!important;
+  flex:0 0 52px!important;
+}
+.vehicle-image img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  display:block!important;
+}
+
+/* Kvůli většímu štítku/obrázku ponechat dost místa vpravo */
+.card-content{
+  padding-right:118px!important;
+}
+</style>
+
+<style id="v17">
+.field-help{margin-top:6px;font-size:9px;color:#728078}.document-list,.info-documents{display:grid;gap:6px;margin-top:7px}.document-item,.info-document{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 9px;border:1px solid #d8e3d5;border-radius:9px;background:#f8fbf7;font-size:10px}.document-item span,.info-document span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:800}.document-item button{border:1px solid #d2dfcf;background:#fff;color:#104c29;border-radius:7px;padding:5px 8px;font-size:9px;font-weight:900}.info-document button{border:0;background:#104c29;color:#fff;border-radius:8px;padding:7px 10px;font-size:9px;font-weight:900}
+</style>
+<style id="v18-ui">
+#fDocuments{
+  padding:0!important;border:0!important;background:transparent!important;
+  min-height:38px;color:transparent;font-size:0;
+}
+#fDocuments::file-selector-button{
+  border:0;background:#104c29;color:#fff;border-radius:10px;
+  padding:10px 14px;margin:0;font:800 10px/1 inherit;cursor:pointer;
+}
+#fDocuments::-webkit-file-upload-button{
+  border:0;background:#104c29;color:#fff;border-radius:10px;
+  padding:10px 14px;margin:0;font-weight:800;cursor:pointer;
+}
+.document-list{margin-top:8px!important}
+.document-item{
+  background:#fff!important;border:1px solid #dfe8dc!important;
+  border-radius:10px!important;padding:9px 10px!important;
+}
+.document-item:before{content:"";width:7px;height:7px;border-radius:50%;background:#104c29;flex:0 0 auto}
+.document-item span{flex:1}
+</style>
+
+<style id="v19-polish">
+.duration-picker-trigger{
+ width:100%;min-height:42px;display:flex;align-items:center;gap:9px;text-align:left;
+ padding:8px 11px;border:1px solid #d7e2d4;border-radius:10px;background:#fff;
+ color:#24372b;font:800 11px/1.2 inherit;cursor:pointer;box-shadow:0 1px 0 rgba(16,76,41,.03)
+}
+.duration-picker-trigger:hover{border-color:#a9c2a7;background:#fbfdfb}
+.duration-clock{display:grid;place-items:center;width:25px;height:25px;border-radius:8px;background:#edf5eb;color:#104c29;font-size:17px}
+#durationPickerText{flex:1}.duration-chevron{color:#78917d;font-size:22px;line-height:1}
+
+.upload-card{
+ position:relative;display:flex;align-items:center;gap:10px;min-height:54px;padding:9px 11px;
+ border:1px dashed #a9bea7;border-radius:12px;background:#f8fbf7;cursor:pointer;
+ transition:.15s ease;overflow:hidden
+}
+.upload-card:hover{background:#f2f8f0;border-color:#6e956d}
+.upload-card input[type=file]{position:absolute!important;inset:0;width:100%!important;height:100%!important;opacity:0!important;cursor:pointer;padding:0!important}
+.upload-icon{width:34px;height:34px;display:grid;place-items:center;flex:0 0 auto;border-radius:10px;background:#e8f2e5}
+.upload-icon svg{width:19px;height:19px;fill:none;stroke:#104c29;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.upload-copy{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.upload-copy strong{font-size:10px;color:#183b25}.upload-copy span{font-size:8.5px;color:#718077}
+.upload-plus{width:25px;height:25px;display:grid;place-items:center;border-radius:8px;background:#104c29;color:#fff;font-size:18px;font-weight:500}
+.document-list{display:grid!important;gap:6px!important;margin-top:7px!important}
+.document-item{
+ display:flex!important;align-items:center!important;gap:8px!important;background:#fff!important;
+ border:1px solid #dde7da!important;border-radius:10px!important;padding:7px 8px!important;
+ box-shadow:none!important
+}
+.document-item:before{display:none!important}
+.document-item .doc-file-icon{width:26px;height:26px;display:grid;place-items:center;flex:0 0 auto;border-radius:8px;background:#edf5eb;color:#104c29}
+.document-item .doc-file-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.document-item span.doc-name{flex:1!important;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9.5px;font-weight:800;color:#334239}
+.document-item button{position:relative;z-index:2;border:0!important;background:#f2f5f1!important;color:#536159!important;border-radius:7px!important;padding:5px 8px!important;font-size:8.5px!important;font-weight:800!important}
+
+.duration-overlay{position:fixed;inset:0;z-index:9999;background:rgba(10,27,17,.48);display:none;align-items:center;justify-content:center;padding:18px}
+.duration-overlay.open{display:flex}
+.duration-dialog{width:min(370px,100%);background:#fff;border-radius:18px;box-shadow:0 22px 70px rgba(9,35,20,.25);overflow:hidden}
+.duration-head{padding:16px 18px 12px;border-bottom:1px solid #edf1eb}
+.duration-head strong{font-size:13px;color:#153820}.duration-head span{display:block;margin-top:3px;font-size:9px;color:#78847c}
+.duration-main{padding:17px 18px}
+.duration-numbers{display:flex;justify-content:center;align-items:center;gap:13px;margin-bottom:13px}
+.duration-unit{text-align:center}
+.duration-value{font-size:30px;line-height:1;font-weight:900;color:#173c24;min-width:58px}
+.duration-unit small{display:block;margin-top:5px;font-size:8px;font-weight:800;color:#7b897f;text-transform:uppercase;letter-spacing:.08em}
+.duration-colon{font-size:25px;font-weight:900;color:#8aa08d;margin-top:-12px}
+.duration-controls{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.duration-controls button{height:32px;border:1px solid #d8e4d5;border-radius:9px;background:#f7faf6;color:#104c29;font-size:17px;font-weight:900;cursor:pointer}
+.quick-title{margin:16px 0 7px;font-size:8px;font-weight:900;color:#6f7d73;text-transform:uppercase;letter-spacing:.09em}
+.quick-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.quick-grid button{border:1px solid #d8e4d5;border-radius:9px;background:#fff;color:#294431;padding:8px 3px;font-size:8.5px;font-weight:900;cursor:pointer}
+.quick-grid button.active{background:#eaf3e7;border-color:#91ad8f;color:#104c29}
+.duration-actions{display:flex;gap:7px;padding:0 18px 17px}
+.duration-actions button{flex:1;height:37px;border-radius:10px;font-size:9px;font-weight:900;cursor:pointer}
+#durationCancel{background:#fff;color:#536159;border:1px solid #dbe3d9}
+#durationConfirm{background:#104c29;color:#fff;border:1px solid #104c29}
+</style>
+
+<style id="v20-timeline-style">
+.timeline-page{position:fixed;inset:0;z-index:8000;background:#f3f6f1;display:none;overflow:auto;color:#26372c}
+.timeline-page.open{display:block}
+.timeline-shell{width:min(980px,100%);margin:0 auto;min-height:100vh;background:#f8faf7}
+.timeline-top{position:sticky;top:0;z-index:30;background:#104c29;color:#fff;padding:13px 15px 11px;box-shadow:0 3px 15px rgba(10,45,25,.16)}
+.timeline-topline{display:flex;align-items:center;gap:10px}
+.timeline-back{width:34px;height:34px;border:0;border-radius:10px;background:rgba(255,255,255,.13);color:#fff;font-size:21px;cursor:pointer}
+.timeline-titlebox{flex:1}.timeline-titlebox strong{display:block;font-size:15px}.timeline-titlebox span{font-size:9px;opacity:.78}
+.timeline-daynav{display:grid;grid-template-columns:38px 1fr 38px;gap:7px;align-items:center;margin-top:11px}
+.timeline-daynav button{height:34px;border:0;border-radius:9px;background:rgba(255,255,255,.12);color:#fff;font-size:18px;cursor:pointer}
+.timeline-daylabel{text-align:center}.timeline-daylabel b{display:block;font-size:11px}.timeline-daylabel small{font-size:8px;opacity:.75}
+.timeline-toolbar{display:flex;gap:7px;padding:11px 12px;background:#fff;border-bottom:1px solid #e2e9df;position:sticky;top:91px;z-index:25}
+.timeline-toolbar button{border:1px solid #d9e4d6;background:#fff;color:#104c29;border-radius:9px;padding:8px 10px;font-size:8.5px;font-weight:900;cursor:pointer}
+.timeline-toolbar .primary{background:#edf5ea}
+.timeline-legend{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:8px;color:#738078}
+.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:#104c29}.legend-dot.break{background:#d6a641}
+.timeline-scroll{padding:13px 10px 30px;overflow-x:auto}
+.timeline-board{position:relative;min-width:620px;border:1px solid #dfe7dc;border-radius:14px;background:#fff;overflow:hidden;box-shadow:0 5px 18px rgba(25,58,35,.05)}
+.timeline-grid{position:relative;margin-left:64px;height:1920px}
+.timeline-hour{position:absolute;left:0;right:0;height:80px;border-top:1px solid #e7ece5}
+.timeline-hour.half:after{content:"";position:absolute;left:0;right:0;top:40px;border-top:1px dashed #f0f3ee}
+.timeline-hour-label{position:absolute;right:calc(100% + 12px);top:-7px;width:43px;text-align:right;font-size:9px;font-weight:800;color:#748078}
+.timeline-event{position:absolute;left:14px;right:14px;border-radius:11px;border:1px solid #bcd0b8;background:#edf5ea;box-shadow:0 2px 7px rgba(20,65,35,.06);padding:7px 10px;overflow:hidden;cursor:pointer;z-index:5}
+.timeline-event .ev-top{display:flex;align-items:center;gap:7px}.timeline-event .ev-time{font-size:10px;font-weight:950;color:#104c29}.timeline-event .ev-code{margin-left:auto;background:#104c29;color:#fff;border-radius:7px;padding:3px 6px;font-size:7.5px;font-weight:950}
+.timeline-event .ev-name{font-size:10.5px;font-weight:950;margin-top:3px;color:#21382a}.timeline-event .ev-address{font-size:8px;color:#68776d;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timeline-event.compact .ev-address{display:none}.timeline-event.tiny{padding:4px 8px}.timeline-event.tiny .ev-name{font-size:8.5px;margin:0}.timeline-event.tiny .ev-code{display:none}
+.timeline-event.conflict{border-color:#dca09a;background:#fff0ee}.timeline-event.conflict:before{content:"⚠";position:absolute;right:8px;bottom:5px;font-size:10px}
+.timeline-break{position:absolute;left:14px;right:14px;border:1px solid #e3c26d;background:#fff8df;border-radius:11px;padding:7px 10px;z-index:6;cursor:pointer;box-shadow:0 2px 7px rgba(90,67,15,.05)}
+.timeline-break .break-top{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:950;color:#725913}.timeline-break .break-time{margin-left:auto;font-size:8px;font-weight:800;color:#8d762e}
+.timeline-free{position:absolute;right:22px;z-index:4;transform:translateY(-50%);background:#fff;border:1px solid #dce6d9;border-radius:999px;padding:4px 7px;font-size:7.5px;font-weight:900;color:#708076;box-shadow:0 1px 4px rgba(20,50,30,.04);pointer-events:none}
+.timeline-now{position:absolute;left:0;right:0;height:2px;background:#b53d35;z-index:20;pointer-events:none}.timeline-now:before{content:"";position:absolute;left:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:#b53d35}.timeline-now span{position:absolute;right:8px;top:-11px;background:#b53d35;color:#fff;border-radius:6px;padding:3px 5px;font-size:7px;font-weight:900}
+.timeline-conflicts{margin:0 12px 10px;padding:9px 10px;border-radius:10px;background:#fff0ee;border:1px solid #efc3bd;color:#8a3933;font-size:8.5px;font-weight:800;display:none}
+.timeline-empty{position:absolute;left:50%;top:20px;transform:translateX(-50%);font-size:9px;color:#879188;z-index:2}
+.break-overlay{position:fixed;inset:0;z-index:10020;background:rgba(10,27,17,.48);display:none;align-items:center;justify-content:center;padding:18px}.break-overlay.open{display:flex}
+.break-dialog{width:min(350px,100%);background:#fff;border-radius:17px;overflow:hidden;box-shadow:0 20px 65px rgba(8,35,19,.25)}
+.break-dialog-head{padding:15px 17px 11px;border-bottom:1px solid #edf1eb}.break-dialog-head strong{font-size:13px;color:#153820}.break-dialog-head span{display:block;font-size:8.5px;color:#78847c;margin-top:3px}
+.break-dialog-body{padding:15px 17px}.break-time-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.break-time-fields label{font-size:8px;font-weight:900;color:#6c796f}.break-time-fields input{width:100%;margin-top:5px;border:1px solid #d8e3d5;border-radius:9px;padding:9px;font:800 11px inherit;color:#26372c}
+.break-actions{display:flex;gap:7px;padding:0 17px 16px}.break-actions button{flex:1;height:36px;border-radius:9px;font-size:8.5px;font-weight:900;cursor:pointer}.break-remove{border:1px solid #edcbc6;background:#fff;color:#a3433b}.break-save{border:0;background:#104c29;color:#fff}
+@media(max-width:650px){.timeline-board{min-width:520px}.timeline-grid{height:1680px}.timeline-hour{height:70px}.timeline-hour.half:after{top:35px}.timeline-toolbar{top:91px}.timeline-legend{display:none}}
+</style>
+
+
+<style id="v21-timeline-refine">
+/* Timeline as a compact app screen rather than a wide desktop planner */
+.timeline-shell{width:min(720px,100%);background:#f5f8f3}
+.timeline-top{padding:11px 14px 10px;box-shadow:none}
+.timeline-topline{gap:8px}
+.timeline-back{width:31px;height:31px;border-radius:9px;font-size:19px}
+.timeline-titlebox strong{font-size:13px}.timeline-titlebox span{font-size:8px}
+.timeline-daynav{grid-template-columns:34px 1fr 34px;margin-top:8px;gap:6px}
+.timeline-daynav button{height:31px;border-radius:8px}
+.timeline-daylabel b{font-size:10px}.timeline-daylabel small{font-size:7.5px}
+
+.timeline-toolbar{top:81px;padding:8px 10px;gap:6px}
+.timeline-toolbar button{padding:7px 9px;border-radius:8px;font-size:8px}
+.timeline-scroll{padding:10px 9px 24px}
+.timeline-board{
+ min-width:0;width:100%;border-radius:13px;border:1px solid #e0e8dd;
+ box-shadow:0 3px 12px rgba(20,55,31,.035);background:#fff
+}
+/* Reduce vertical scale: 24h remains complete, but less stretched */
+.timeline-grid{margin-left:51px;height:1320px}
+.timeline-hour{height:55px;border-top-color:#e9eee7}
+.timeline-hour.half:after{top:27.5px;border-top-color:#f2f5f0}
+.timeline-hour-label{right:calc(100% + 9px);width:35px;top:-6px;font-size:8px;color:#839087}
+
+/* Main ride cards: light green, narrower, less bulky */
+.timeline-event{
+ left:10px;right:38px;border-radius:9px;
+ border:1px solid #cfe0cb;background:#eef6eb;
+ box-shadow:none;padding:5px 8px
+}
+.timeline-event:hover{background:#e9f3e6;border-color:#bdd3b8}
+.timeline-event .ev-top{gap:5px}
+.timeline-event .ev-time{font-size:8.5px;color:#104c29}
+.timeline-event .ev-code{
+ padding:2px 5px;border-radius:6px;font-size:6.5px;background:#104c29
+}
+.timeline-event .ev-name{font-size:9px;margin-top:2px}
+.timeline-event .ev-address{font-size:7px;margin-top:1px}
+.timeline-event.tiny{padding:3px 7px}.timeline-event.tiny .ev-name{font-size:7.5px}
+.timeline-event.conflict{background:#fff1ef;border-color:#e3aaa4}
+
+/* Break is compact and visually secondary */
+.timeline-break{
+ left:10px;right:38px;border-radius:9px;padding:5px 8px;
+ border:1px solid #ead596;background:#fff9e8;box-shadow:none
+}
+.timeline-break .break-top{font-size:8.5px}.timeline-break .break-time{font-size:7px}
+
+/* Free gap label sits in the free gutter instead of over the card */
+.timeline-free{
+ right:5px;padding:3px 5px;font-size:6.5px;
+ border-color:#e2e9df;background:#f9fbf8;color:#718077;box-shadow:none
+}
+.timeline-now span{font-size:6.5px;padding:2px 4px}
+.timeline-conflicts{margin:8px 10px;padding:8px 9px;font-size:8px;border-radius:9px}
+
+@media(max-width:650px){
+ .timeline-board{min-width:0}
+ .timeline-grid{height:1200px;margin-left:47px}
+ .timeline-hour{height:50px}.timeline-hour.half:after{top:25px}
+ .timeline-event,.timeline-break{left:8px;right:34px}
+ .timeline-scroll{padding-left:7px;padding-right:7px}
+}
+</style>
+
+
+<style id="v22-timeline-final-polish">
+/* Full day starts cleanly below the header; no clipped top edge */
+.timeline-page{background:#f4f7f2}
+.timeline-shell{width:min(760px,100%);background:#f4f7f2}
+.timeline-top{
+ position:relative;top:auto;background:#fff;color:#24372b;padding:14px 14px 12px;
+ border-bottom:1px solid #e2e9df;box-shadow:none
+}
+.timeline-topline{align-items:center}
+.timeline-back{
+ background:#edf4eb;color:#104c29;border:1px solid #dbe6d8;
+ width:34px;height:34px;border-radius:10px;font-weight:900
+}
+.timeline-titlebox strong{font-size:16px;color:#104c29;line-height:1.15}
+.timeline-titlebox span{font-size:9.5px;color:#748178;opacity:1;margin-top:3px;display:block}
+.timeline-daynav{margin-top:12px;grid-template-columns:36px 1fr 36px}
+.timeline-daynav button{height:34px;background:#edf4eb;color:#104c29;border:1px solid #dbe6d8}
+.timeline-daylabel b{font-size:12px;color:#24372b}.timeline-daylabel small{font-size:9px;color:#77847b;opacity:1}
+.timeline-toolbar{position:relative;top:auto;padding:9px 12px;background:#fff}
+.timeline-scroll{padding:14px 10px 30px}
+.timeline-board{overflow:visible;background:#fff}
+.timeline-grid{margin-left:54px;height:1320px;padding-top:1px}
+.timeline-hour-label{font-size:8.5px;color:#75827a}
+.timeline-event{
+ left:10px;right:18px;background:#eaf5e7;border:1px solid #c6dcc1;
+ padding:7px 10px;border-radius:10px;overflow:hidden
+}
+.timeline-event .ev-top{padding-right:50px}
+.timeline-event .ev-time{font-size:10px;font-weight:950}
+.timeline-event .ev-name{font-size:11px;font-weight:950;margin-top:3px;color:#1d3926}
+.timeline-event .ev-address{font-size:8.5px;margin-top:2px;color:#65756a}
+.timeline-event .ev-code{font-size:7px;padding:3px 6px}
+.timeline-event.tiny .ev-name{font-size:9px}
+.timeline-event.compact .ev-address{display:block}
+.timeline-vehicle-thumb{
+ position:absolute;right:8px;bottom:7px;width:42px;height:30px;border-radius:8px;
+ display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.66);
+ border:1px solid rgba(16,76,41,.10);overflow:hidden
+}
+.timeline-vehicle-thumb img{max-width:100%;max-height:100%;object-fit:contain}
+.timeline-vehicle-thumb .vehicle-placeholder{font-size:8px;font-weight:950;color:#104c29}
+.timeline-break{left:10px;right:18px;cursor:grab;touch-action:none;user-select:none}
+.timeline-break.dragging{cursor:grabbing;box-shadow:0 7px 20px rgba(65,55,20,.15);opacity:.94;z-index:50}
+.timeline-break:after{content:"⋮⋮";position:absolute;right:8px;top:50%;transform:translateY(-50%) rotate(90deg);color:#aa8c35;font-size:12px;font-weight:900}
+.timeline-free{right:22px}
+@media(max-width:650px){
+ .timeline-grid{height:1200px;margin-left:49px}
+ .timeline-event,.timeline-break{right:12px}
+ .timeline-titlebox strong{font-size:15px}
+}
+</style>
+
+<style id="v23-timeline-tablet-fix">
+/* Tablet: compact usable working-day view instead of an excessively tall 24h sheet */
+.timeline-shell{width:min(980px,100%);margin:auto}
+.timeline-top{padding:12px 18px 10px}
+.timeline-topline{display:grid;grid-template-columns:auto 1fr;align-items:center}
+.timeline-back{width:auto;min-width:128px;padding:0 13px;font-size:10px;display:flex;gap:7px;align-items:center;justify-content:center}
+.timeline-back::after{content:"Zpět na přehled";font-size:9px;font-weight:900}
+.timeline-titlebox strong{font-size:17px}
+.timeline-titlebox span{font-size:10px}
+.timeline-daynav{margin-top:9px}
+.timeline-toolbar{padding:9px 18px}
+.timeline-legend{display:flex!important;gap:18px!important;font-size:10px!important;font-weight:850;color:#506157}
+.timeline-legend span{display:flex;align-items:center;gap:6px}
+.legend-dot{width:10px;height:10px}
+.timeline-scroll{padding:10px 16px 26px}
+.timeline-board{width:100%;border-radius:14px;overflow:hidden}
+.timeline-grid{height:960px;margin-left:60px}
+/* one hour = 40px; still 24h, much less vertical waste */
+.timeline-hour{height:40px}
+.timeline-hour.half:after{top:20px}
+.timeline-hour-label{font-size:9px;right:calc(100% + 11px);top:-6px}
+.timeline-event{left:12px;right:14px;padding:7px 10px}
+.timeline-event .ev-top{padding-right:96px}
+.timeline-event .ev-time{font-size:10px}
+.timeline-event .ev-name{font-size:11px}
+.timeline-event .ev-address{font-size:8.5px}
+.timeline-event .ev-code{
+ position:absolute;right:59px;top:7px;margin:0;height:25px;min-width:31px;
+ display:grid;place-items:center;padding:0 6px;font-size:7.5px;border-radius:7px
+}
+.timeline-vehicle-thumb{
+ right:9px;top:5px;bottom:auto;width:43px;height:29px;border-radius:7px
+}
+.timeline-break{left:12px;right:14px}
+.timeline-free{right:18px}
+@media(max-width:650px){
+ .timeline-shell{width:100%}
+ .timeline-top{padding-left:11px;padding-right:11px}
+ .timeline-back{min-width:105px;padding:0 9px}
+ .timeline-back::after{font-size:8px}
+ .timeline-titlebox strong{font-size:14px}
+ .timeline-titlebox span{font-size:8.5px}
+ .timeline-toolbar{padding-left:10px;padding-right:10px}
+ .timeline-scroll{padding-left:7px;padding-right:7px}
+ .timeline-grid{height:960px;margin-left:50px}
+ .timeline-hour{height:40px}.timeline-hour.half:after{top:20px}
+ .timeline-legend{font-size:9px!important;gap:10px!important}
+}
+</style>
+
+<style id="v24-active-delivery-style">
+.active-run{position:fixed;inset:0;z-index:12000;background:#f4f7f2;display:none;overflow:auto;color:#26372c}
+.active-run.open{display:block}
+.run-shell{width:min(760px,100%);min-height:100vh;margin:auto;background:#f7f9f5}
+.run-head{background:#104c29;color:#fff;padding:15px 17px}
+.run-head-row{display:flex;align-items:center;gap:11px}
+.run-minimize{width:36px;height:36px;border:1px solid rgba(255,255,255,.22);border-radius:10px;background:rgba(255,255,255,.1);color:#fff;font-size:18px;cursor:pointer}
+.run-head-copy{flex:1}.run-kicker{font-size:8px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;opacity:.72}
+.run-head h2{margin:3px 0 0;font-size:19px}.run-stage-pill{background:#fff;color:#104c29;border-radius:9px;padding:7px 9px;font-size:8px;font-weight:950}
+.run-body{padding:13px}
+.run-timer-card{background:#fff;border:1px solid #dce6d9;border-radius:15px;padding:16px;text-align:center;box-shadow:0 4px 15px rgba(25,58,35,.04)}
+.run-timer-label{font-size:8px;font-weight:900;color:#78847c;text-transform:uppercase;letter-spacing:.1em}
+.run-timer{font-size:34px;font-weight:950;color:#104c29;letter-spacing:.03em;margin-top:4px;font-variant-numeric:tabular-nums}
+.run-timer-state{font-size:8.5px;color:#718077;margin-top:3px}
+.run-customer{margin-top:10px;background:#eaf4e7;border:1px solid #cfdfcb;border-radius:14px;padding:12px}
+.run-customer-top{display:flex;align-items:flex-start;gap:10px}
+.run-customer-copy{flex:1;min-width:0}.run-customer-copy small{font-size:7.5px;color:#738077;font-weight:900;text-transform:uppercase}.run-customer-copy strong{display:block;color:#173a23;font-size:14px;margin-top:2px}.run-customer-copy span{display:block;font-size:9px;color:#617067;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.run-vehicle{display:flex;align-items:center;gap:6px}.run-vehicle-code{min-width:40px;height:30px;padding:0 7px;border-radius:8px;background:#104c29;color:#fff;display:grid;place-items:center;font-size:8px;font-weight:950}
+.run-vehicle-image{width:48px;height:34px;border-radius:8px;border:1px solid rgba(16,76,41,.11);background:rgba(255,255,255,.7);display:grid;place-items:center;overflow:hidden}
+.run-vehicle-image img{max-width:100%;max-height:100%;object-fit:contain}.run-vehicle-image span{font-size:7px;font-weight:900;color:#104c29}
+.run-section{margin-top:10px;background:#fff;border:1px solid #dfe7dc;border-radius:14px;padding:12px}
+.run-section-title{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:950;color:#21402a;margin-bottom:9px}
+.run-docs{display:grid;gap:6px}.run-doc{display:flex;align-items:center;gap:8px;border:1px solid #e0e8dd;background:#fafcf9;border-radius:9px;padding:8px;cursor:pointer}
+.run-doc-icon{width:27px;height:27px;border-radius:7px;background:#edf5eb;color:#104c29;display:grid;place-items:center;font-size:12px}.run-doc-name{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:8.5px;font-weight:850;color:#34463a}.run-doc-open{font-size:7px;font-weight:950;color:#104c29}
+.run-no-docs{font-size:8.5px;color:#7a877e;background:#fafcf9;border-radius:9px;padding:9px}
+.run-controls{display:grid;grid-template-columns:1fr 1.35fr;gap:8px;margin-top:12px}
+.run-controls button{height:44px;border-radius:11px;font-size:9px;font-weight:950;cursor:pointer}
+#runPauseBtn{background:#fff;border:2px solid #104c29;color:#104c29}
+#runDoneBtn{background:#104c29;border:2px solid #104c29;color:#fff}
+.run-history{margin-top:10px;padding:0 3px;font-size:8px;color:#7c887f;text-align:center}
+.run-bar{position:fixed;z-index:11950;left:50%;bottom:13px;transform:translateX(-50%);width:min(620px,calc(100% - 24px));display:none;align-items:center;gap:10px;background:#104c29;color:#fff;border-radius:13px;padding:10px 12px;box-shadow:0 9px 30px rgba(9,45,24,.25);cursor:pointer}
+.run-bar.show{display:flex}.run-bar-dot{width:8px;height:8px;border-radius:50%;background:#a9d19d}.run-bar-copy{flex:1}.run-bar-copy strong{display:block;font-size:9px}.run-bar-copy span{font-size:7.5px;opacity:.75}.run-bar-time{font-size:12px;font-weight:950;font-variant-numeric:tabular-nums}
+.start-confirm-overlay{position:fixed;inset:0;z-index:13000;background:rgba(10,27,17,.48);display:none;align-items:center;justify-content:center;padding:18px}.start-confirm-overlay.open{display:flex}
+.start-confirm{width:min(350px,100%);background:#fff;border-radius:17px;overflow:hidden;box-shadow:0 20px 65px rgba(8,35,19,.25)}
+.start-confirm-main{padding:18px}.start-confirm-icon{width:39px;height:39px;border-radius:11px;background:#eaf4e7;color:#104c29;display:grid;place-items:center;font-size:18px;margin-bottom:10px}
+.start-confirm h3{margin:0;color:#173a23;font-size:14px}.start-confirm p{font-size:9px;color:#748078;line-height:1.5;margin:6px 0 0}
+.start-confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 18px 17px}.start-confirm-actions button{height:38px;border-radius:10px;font-size:9px;font-weight:950;cursor:pointer}.start-no{background:#fff;border:1px solid #dce5da;color:#56645b}.start-yes{background:#104c29;border:1px solid #104c29;color:#fff}
+</style>
+
+<style id="v25-workflow">
+.run-stage-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin:10px 0}
+.run-stage-nav button{border:1px solid #dce6d9;background:#fff;border-radius:9px;padding:7px 3px;font-size:7px;font-weight:900;color:#78847c}
+.run-stage-nav button.done{background:#edf5ea;color:#104c29}.run-stage-nav button.current{background:#104c29;color:#fff;border-color:#104c29}
+.run-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.run-info-box{background:#fafcf9;border:1px solid #e2e9df;border-radius:9px;padding:8px}
+.run-info-box small{display:block;font-size:7px;font-weight:900;color:#7a877e;text-transform:uppercase}.run-info-box strong{display:block;margin-top:3px;font-size:9px;color:#263c2d}
+.run-phone{color:#104c29;text-decoration:none}
+.run-stage-times{display:grid;gap:5px}.run-stage-time{display:flex;justify-content:space-between;background:#fafcf9;border-radius:8px;padding:7px 8px;font-size:8px}.run-stage-time b{color:#104c29}
+.run-nav-btn{width:100%;height:39px;border:1px solid #104c29;border-radius:10px;background:#edf5ea;color:#104c29;font-size:9px;font-weight:950;margin-top:8px;cursor:pointer}
+.run-map-placeholder{height:78px;border-radius:10px;background:#edf2eb;border:1px dashed #bacbb7;display:grid;place-items:center;text-align:center;color:#748178;font-size:8px;padding:10px}
+.run-payment{background:#eaf4e7;border:1px solid #cfdfcb;border-radius:11px;padding:10px}
+.run-payment strong{font-size:12px;color:#104c29}.run-payment div{font-size:8.5px;color:#5f6e64;margin-top:4px}
+.run-finish-note{font-size:8px;color:#77847b;text-align:center;margin-top:8px}
+</style>
+
+<style id="v27-stable-history">
+/* Stable back navigation - lives outside the section that v25 redraws. */
+.run-history-nav{display:flex;align-items:center;gap:9px;margin-top:10px}
+.run-back-stage{height:36px;padding:0 13px;border:2px solid #104c29;border-radius:10px;background:#fff;color:#104c29;font-size:8.5px;font-weight:950;cursor:pointer;flex:0 0 auto}
+.run-back-stage:disabled{opacity:.28;cursor:default}
+.run-view-note{font-size:8px;color:#748078;font-weight:850}
+.run-history-panel[hidden]{display:none!important}
+.run-history-panel{margin-top:10px}
+.run-stage-nav button.viewing{outline:2px solid #104c29;outline-offset:1px;background:#edf5ea;color:#104c29}
+.run-time-panel{margin-top:10px}
+.run-time-summary-title{font-size:9px;font-weight:950;color:#263e2d;margin-bottom:7px}
+.run-total-time{display:flex;align-items:center;justify-content:space-between;margin-top:7px;padding:10px 11px;border-radius:10px;background:#104c29;color:#fff;font-size:9px;font-weight:950}
+.run-total-time strong{font-size:13px;font-variant-numeric:tabular-nums}
+.run-history-description{font-size:8.5px;line-height:1.5;color:#66746b}
+.run-history-description b{color:#294232}
+
+/* Timeline hierarchy: delivery time first, estimated block range second. */
+.timeline-event .ev-delivery{
+ display:flex!important;align-items:center!important;gap:7px!important;
+ width:max-content!important;max-width:calc(100% - 94px)!important;
+ margin:0 0 5px!important;padding:4px 7px!important;
+ border-radius:7px!important;background:#104c29!important;color:#fff!important;
+ box-shadow:0 2px 7px rgba(16,76,41,.19)!important
+}
+.timeline-event .ev-delivery span{
+ font-size:6px!important;font-weight:950!important;letter-spacing:.09em!important;
+ opacity:.78!important;white-space:nowrap!important
+}
+.timeline-event .ev-delivery strong{
+ font-size:13px!important;line-height:1!important;font-weight:1000!important;
+ font-variant-numeric:tabular-nums!important;white-space:nowrap!important
+}
+.timeline-event .ev-time{
+ font-size:7.5px!important;font-weight:850!important;color:#708078!important;
+ background:transparent!important;padding:0!important
+}
+.timeline-event .ev-top{align-items:center!important}
+</style>
+
+<style id="v28-single-time-summary">
+#runStageDetails > .run-stage-times{display:none!important}
+#runStageDetails > .run-section-title + .run-stage-times{display:none!important}
+</style>
+
+<style id="v29-remove-empty-time-bubble">
+#runStageDetails > .run-section-title:has(+ .run-stage-times){display:none!important}
+</style>
+
+<style id="v31-payment-readability">
+/* Výraznější a lépe čitelná karta Platba */
+.run-payment{
+ background:#f4f8f2!important;
+ border:2px solid #bfd3ba!important;
+ border-radius:12px!important;
+ padding:13px!important;
+ margin-top:9px!important;
+ color:#263b2d!important;
+}
+.run-payment strong{
+ display:block!important;
+ font-size:15px!important;
+ line-height:1.25!important;
+ font-weight:950!important;
+ color:#104c29!important;
+ margin-bottom:7px!important;
+}
+.run-payment div{
+ font-size:10px!important;
+ line-height:1.45!important;
+ font-weight:750!important;
+ color:#34493a!important;
+ margin-top:5px!important;
+}
+.run-payment div:nth-last-child(-n+3){
+ background:#fff!important;
+ border:1px solid #d8e4d5!important;
+ border-radius:8px!important;
+ padding:7px 8px!important;
+ font-weight:900!important;
+ color:#203d29!important;
+}
+</style>
+
+<style id="v34-mapy-autocomplete">
+#fAddress{padding-right:38px}
+.mapy-address-wrap{position:relative}
+.mapy-suggest-box{position:absolute;z-index:20050;left:0;right:0;top:calc(100% + 5px);display:none;background:#fff;border:1px solid #d7e2d4;border-radius:12px;box-shadow:0 12px 30px rgba(22,58,32,.16);overflow:hidden}
+.mapy-suggest-box.show{display:block}
+.mapy-suggest-item{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #edf1eb;background:#fff;padding:10px 11px;cursor:pointer}
+.mapy-suggest-item:last-of-type{border-bottom:0}
+.mapy-suggest-item:hover,.mapy-suggest-item:focus{background:#f1f7ef;outline:0}
+.mapy-suggest-name{display:block;font-size:9.5px;font-weight:950;color:#193c25}
+.mapy-suggest-location{display:block;font-size:7.5px;color:#748078;margin-top:2px}
+.mapy-powered{display:flex;justify-content:flex-end;align-items:center;gap:5px;padding:5px 8px;background:#fafcf9;font-size:6.5px;color:#8a958d}
+.mapy-powered img{width:48px;height:auto}
+.mapy-address-status{margin-top:6px;font-size:7.5px;color:#77837b}
+.mapy-address-status.ok{color:#104c29;font-weight:850}
+.mapy-address-status.err{color:#a13a32;font-weight:850}
+.mapy-route-card{display:none;margin-top:8px;background:#edf6ea;border:1px solid #cbdcc6;border-radius:11px;padding:10px}
+.mapy-route-card.show{display:block}
+.mapy-route-title{font-size:7px;font-weight:950;color:#718078;text-transform:uppercase;letter-spacing:.08em}
+.mapy-route-values{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:6px}
+.mapy-route-value{background:#fff;border-radius:8px;padding:8px}
+.mapy-route-value small{display:block;font-size:6.5px;color:#7d8981;font-weight:900;text-transform:uppercase}
+.mapy-route-value strong{display:block;margin-top:2px;font-size:11px;color:#104c29}
+</style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+ integrity="sha256-p4NxAoJBhIINfQ3ynhtisRlnhJ+Vkb5MZ96scB2N4Q=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+ integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+
+<style id="v35-complete-mapy">
+/* --- Form: route + map --- */
+.mapy-route-card{padding:11px!important}
+.mapy-route-extra{margin-top:9px;padding-top:9px;border-top:1px solid #cddfc9}
+.mapy-route-address{font-size:8px;line-height:1.4;color:#526359;margin-bottom:8px}
+.mapy-form-map,.pz-info-map,.pz-run-map{
+  width:100%;height:235px;border-radius:13px;overflow:hidden;border:1px solid #cdddc9;background:#e9efe7
+}
+.mapy-form-map{margin-top:9px;display:none}
+.mapy-form-map.show{display:block}
+.mapy-actions,.pz-nav-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.mapy-action-btn,.pz-nav-btn{
+  border:0;border-radius:10px;padding:10px 8px;font-size:7.5px;font-weight:950;cursor:pointer;text-align:center;text-decoration:none
+}
+.mapy-action-btn.primary,.pz-nav-btn.primary{background:#104c29;color:#fff}
+.mapy-action-btn.secondary,.pz-nav-btn.secondary{background:#fff;color:#104c29;border:1px solid #a9c1a6}
+.mapy-start-suggest{margin-top:8px;background:#fff;border-radius:10px;padding:9px;border:1px solid #d8e5d5}
+.mapy-start-suggest small{display:block;font-size:6.5px;text-transform:uppercase;font-weight:950;color:#7a877e}
+.mapy-start-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:4px}
+.mapy-start-row strong{font-size:11px;color:#104c29}
+.mapy-start-row button{border:0;border-radius:8px;background:#dcebd8;color:#104c29;font-size:7px;font-weight:950;padding:7px 9px;cursor:pointer}
+.mapy-route-note{font-size:6.5px;color:#7b887f;margin-top:6px;line-height:1.35}
+
+/* --- INFO modal --- */
+.pz-info-route{margin-top:12px;padding-top:10px;border-top:1px solid #dce5d9}
+.pz-info-route-title{font-size:8px;font-weight:950;color:#104c29;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.pz-info-route-stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.pz-info-route-stat{background:#edf5ea;border-radius:9px;padding:8px}
+.pz-info-route-stat small{display:block;font-size:6.5px;color:#7a877e;font-weight:900;text-transform:uppercase}
+.pz-info-route-stat strong{display:block;color:#104c29;font-size:10px;margin-top:2px}
+
+/* --- Active delivery stable map panel --- */
+#runRouteMapPanel{display:none}
+#runRouteMapPanel.show{display:block}
+.pz-run-route-box{background:#f5f8f3;border:1px solid #dbe5d8;border-radius:14px;padding:10px;margin-top:9px}
+.pz-run-route-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.pz-run-route-head small{display:block;font-size:6.5px;text-transform:uppercase;font-weight:950;color:#7c887f}
+.pz-run-route-head strong{display:block;font-size:10px;color:#104c29;margin-top:2px}
+.pz-run-route-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+.pz-run-route-stat{background:#fff;border-radius:9px;padding:7px;text-align:center}
+.pz-run-route-stat small{font-size:6px;display:block;color:#7e8b82;font-weight:900;text-transform:uppercase}
+.pz-run-route-stat strong{font-size:9px;color:#104c29;display:block;margin-top:2px}
+#runStageDetails .run-map-placeholder,#runStageDetails>.run-nav-btn{display:none!important}
+.pz-route-loading{height:190px;display:flex;align-items:center;justify-content:center;background:#edf3eb;border-radius:13px;font-size:8px;font-weight:850;color:#617065}
+.pz-map-logo img{width:72px!important}
+.leaflet-control-attribution{font-size:8px!important}
+
+/* route badge on cards */
+.pz-card-route-meta{font-size:7.5px;font-weight:850;margin-top:3px;opacity:.9}
+.completed .pz-card-route-meta{opacity:.75}
+</style>
+
+<style id="v36-map-performance">
+.mapy-form-map,.pz-info-map,.pz-run-map{background:#d8ddd5!important}
+.leaflet-container{background:#d8ddd5!important;will-change:auto!important}
+.pz-div-pin{background:transparent!important;border:0!important}
+.pz-pin{width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,.38)}
+.pz-pin span{transform:rotate(45deg);font-size:10px;font-weight:1000;color:#fff}
+.pz-pin.home{background:#104c29}.pz-pin.customer{background:#b13b32}
+</style>
+<style id="v37-static-map">
+.mapy-form-map,.pz-info-map,.pz-run-map{display:none!important}
+.pz-static-map-wrap{position:relative;width:100%;margin-top:9px}
+.pz-static-map-img{display:block;width:100%;height:auto;min-height:190px;max-height:330px;object-fit:cover;border-radius:13px;border:1px solid #cdddc9;background:#d9ded7}
+.pz-static-map-caption{display:flex;justify-content:space-between;gap:8px;margin-top:5px;font-size:6.5px;color:#77837b;font-weight:800}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero">
+      <div class="hero-logo"><img src="https://raw.githubusercontent.com/pilazeleznice-coder/pilazeleznice-assets/main/B%C3%ADl%C3%A9%20zmen%C5%A1en%C3%A9%20logo.png" alt="Pila Železnice"></div>
+      <div class="hero-copy">
+        <div class="hero-eyebrow">PILA ŽELEZNICE</div>
+        <div class="hero-title">Evidence rozvozů</div>
+        
+      </div>
+    </header>
+<section class="stats"><div class="stat"><div class="stat-label">Počet jízd</div><div class="stat-value" id="statTotal">0</div></div><div class="stat"><div class="stat-label">Celkem km</div><div class="stat-value" id="statKm">0</div></div><div class="stat"><div class="stat-label">Splněné</div><div class="stat-value" id="statDone">0</div></div></section>
+<section class="daybar"><button class="daybtn" id="prevDay" aria-label="Předchozí den"><span class="tri left"></span></button><div class="day-center"><div class="relative" id="relativeLabel">Dnes</div><div class="weekday" id="weekdayLabel"></div><div class="date" id="dateLabel"></div></div><button class="daybtn" id="nextDay" aria-label="Následující den"><span class="tri right"></span></button></section>
+<div class="today-return-wrap" id="todayReturnWrap">
+<button type="button" class="today-return-btn" id="todayReturnBtn">↩ Vrátit na dnešek</button>
+</div>
+<section class="work-area"><div class="left-flow"><div class="section-heading"><div class="section-chip">Plánované</div><span class="section-count" id="plannedCount">0</span></div><div id="plannedList"></div><div class="section-heading"><div class="section-chip completed-chip">Splněné</div><span class="section-count done" id="completedCount">0</span></div><div id="completedList"></div></div><aside class="tool-panel"><div class="tool-title">Panel<br>nástrojů</div><button class="tool-btn" id="calendarBtn" title="Kalendář"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M7 3v4M17 3v4M3 9h18"></path><path d="M7 13h2M11 13h2M15 13h2M7 17h2M11 17h2M15 17h2"></path></svg></button><button class="tool-btn" title="Čas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h10M7 21h10"></path><path d="M8 3c0 4 1.6 5.4 4 7 2.4-1.6 4-3 4-7M8 21c0-4 1.6-5.4 4-7 2.4 1.6 4 3 4 7"></path></svg></button><button class="tool-btn" title="Přehled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h8"></path></svg></button><div class="tool-spacer"></div><button class="add-btn" id="addBtn" title="Nová jízda">+</button></aside></section>
+<section class="cancelled-section"><div class="section-heading"><div class="section-chip cancelled-chip">Zrušené</div><span class="section-count cancelled" id="cancelledCount">0</span></div><div id="cancelledList"></div></section>
+</div>
+
+<div class="modal" id="formModal"><div class="sheet"><h2 id="formTitle">Nová plánovaná jízda</h2><div class="form-grid"><div class="field"><label>Datum jízdy</label><input type="date" id="fDate"></div><div class="field"><label>Čas doručení</label><input type="time" id="fTime"></div><div class="field full"><label>Jméno a příjmení</label><input id="fName" placeholder="Např. Pavel Fidrmuc"></div><div class="field full"><label>Adresa</label><input id="fAddress" placeholder="Např. Hradec Králové 23"></div><div class="field"><label>Cena bez DPH</label><input type="number" min="0" step="1" id="fNet" placeholder="0"></div><div class="field"><label>Cena s DPH (21 %)</label><input id="fGross" readonly></div><div class="field"><label>Typ platby</label><select id="fPayment"><option>Hotově</option><option>Kartou</option><option>Faktura</option><option>Zaplaceno předem</option></select></div><div class="field"><label>Typ dopravy</label><select id="fVehicle"><option>AK</option><option>TRM</option><option>TRMS</option><option>TRV</option><option>TRVS</option></select></div><div class="field"><label>Plánovaný začátek</label><input id="fStartTime" type="time"></div>
+<div class="field"><label>Telefon zákazníka</label><input id="fPhone" type="tel" inputmode="tel" placeholder="+420 777 123 456"></div>
+<div class="field">
+<label>Odhad délky</label>
+<button id="durationPickerBtn" class="duration-picker-trigger" type="button">
+  <span class="duration-clock">◷</span><span id="durationPickerText">Nenastaveno</span><span class="duration-chevron">›</span>
+</button>
+<input id="fDuration" type="hidden" value="00:00">
+</div>
+<div class="field full"><label>Číslo objednávky</label><input id="fOrderNo" type="text" placeholder="např. PC/189"></div>
+<div class="field full"><label>Dokumenty</label>
+<div class="upload-card" id="uploadCard">
+  <div class="upload-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M7.5 3.5h6l4 4v13h-10a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2Z"/><path d="M13.5 3.5v4h4"/><path d="M12 17v-6"/><path d="m9.5 13.5 2.5-2.5 2.5 2.5"/></svg>
+  </div>
+  <div class="upload-copy"><strong>Přiložit dokumenty</strong><span>PDF, Word, Excel nebo fotografie</span></div>
+  <span class="upload-plus">+</span>
+  <input id="fDocuments" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.rtf,.jpg,.jpeg,.png">
+</div>
+<div id="documentDraftList" class="document-list"></div>
+</div>
+<div class="field full"><label>Poznámka</label><textarea id="fNote" placeholder="Doplňující informace k jízdě..."></textarea></div><div class="field full" id="cancelReasonField" style="display:none"><label>Důvod zrušení</label><textarea id="fCancelReason" placeholder="Důvod zrušení jízdy (nepovinné)"></textarea></div></div><div class="sheet-actions"><button class="secondary" id="closeForm">Zavřít</button><button class="danger" id="cancelRideBtn" style="display:none">Zrušit jízdu</button><button class="primary" id="saveRide">Uložit</button></div></div></div>
+<div class="modal" id="detailModal"><div class="sheet"><h2>Informace o dopravě</h2><div id="detailContent"></div><div class="sheet-actions"><button class="primary" id="closeDetail">Zavřít</button></div></div></div>
+<div class="modal" id="calendarModal"><div class="sheet"><div class="calendar-head"><h2>Kalendář rozvozů</h2><div class="calendar-switch"><button id="monthViewBtn" class="active">Měsíc</button><button id="weekViewBtn">Týden</button></div></div><div class="calendar-nav"><button id="calPrev">‹</button><div class="calendar-period" id="calendarPeriod"></div><button id="calNext">›</button></div><div id="calendarContent"></div><div class="sheet-actions"><button class="secondary" id="calToday">Dnes</button><button class="primary" id="closeCalendar">Zavřít</button></div></div></div>
+<div class="modal" id="confirmModal"><div class="sheet"><h2>Zrušit jízdu?</h2><p>Jste si jistí, že chcete tuto jízdu zrušit?</p><div class="sheet-actions"><button class="secondary" id="confirmNo">Ne</button><button class="danger" id="confirmYes">Ano</button></div></div></div><div class="modal" id="cancelReasonModal"><div class="sheet">
+<h2>Důvod zrušení jízdy</h2>
+<p style="margin:0 0 12px;color:#6f7c73;font-size:12px">Důvod můžeš napsat, ale nemusíš. Později ho lze doplnit přes Upravit.</p>
+<textarea id="cancelReasonInput" placeholder="Např. zákazník objednávku zrušil…"></textarea>
+<div class="sheet-actions"><button class="secondary" id="skipCancelReason">Bez důvodu</button><button class="primary" id="saveCancelReason">Uložit důvod</button></div>
+</div></div>
+
+<script>
+const STORAGE_KEY="evidenceRozvozu_v4";
+const today=new Date();today.setHours(0,0,0,0);let selectedDate=new Date(today),editingId=null,pendingCancelId=null;let calendarView="month",calendarCursor=new Date(selectedDate);
+const VEHICLE_IMAGES={AK:"",TRM:"",TRMS:"",TRV:"",TRVS:""};
+function iso(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");return `${y}-${m}-${day}`}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);x.setHours(0,0,0,0);return x}
+const seed=[
+{id:1,date:iso(today),time:"09:00",name:"Pavel Fidrmuc",address:"Nádražní 349, 507 13 Železnice",net:2000,payment:"Kartou",vehicle:"TRMS",status:"planned",manualOrder:0,km:0},
+{id:2,date:iso(today),time:"10:00",name:"Pavel Fidrmuc",address:"Nádražní 349, 507 13 Železnice",net:2000,payment:"Kartou",vehicle:"AK",status:"planned",manualOrder:1,km:0},
+{id:3,date:iso(today),time:"11:00",name:"Pavel Fidrmuc",address:"Nádražní 349, 507 13 Železnice",net:2000,payment:"Hotově",vehicle:"TRM",status:"planned",manualOrder:2,km:0},
+{id:4,date:iso(today),time:"11:00",name:"Pavel Fidrmuc",address:"Nádražní 349, 507 13 Železnice",net:2000,payment:"Hotově",vehicle:"TRVS",status:"completed",manualOrder:3,km:0},
+{id:5,date:iso(today),time:"11:00",name:"Pavel Fidrmuc",address:"Nádražní 349, 507 13 Železnice",net:2000,payment:"Hotově",vehicle:"TRVS",status:"cancelled",manualOrder:4,km:0}
+];
+let rides=loadRides();
+function loadRides(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));if(Array.isArray(saved))return saved}catch(e){}localStorage.setItem(STORAGE_KEY,JSON.stringify(seed));return [...seed]}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(rides))}
+function money(n){return new Intl.NumberFormat("cs-CZ",{style:"currency",currency:"CZK",maximumFractionDigits:0}).format(Number(n||0))}
+function gross(net){return Math.round(Number(net||0)*1.21)}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function updateDayHeader(){const diff=Math.round((selectedDate-today)/86400000),wd=new Intl.DateTimeFormat("cs-CZ",{weekday:"long"}).format(selectedDate),weekday=wd.charAt(0).toUpperCase()+wd.slice(1);let relative="";if(diff===0)relative="Dnes";else if(diff===-1)relative="Včera";else if(diff===1)relative="Zítra";relativeLabel.textContent=relative||weekday;weekdayLabel.textContent=relative?weekday:"";dateLabel.textContent=new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric",year:"numeric"}).format(selectedDate)}
+function sortRides(list){return [...list].sort((a,b)=>{const ao=a.manualOrder??9999,bo=b.manualOrder??9999;if(ao!==bo)return ao-bo;return String(a.time).localeCompare(String(b.time))})}
+function vehicleVisual(v){const src=VEHICLE_IMAGES[v];return src?`<img src="${esc(src)}" alt="${esc(v)}">`:`<span class="vehicle-placeholder"></span>`}
+function cardHtml(r,index,status){const cls=status==="planned"?"planned":status==="completed"?"completed":"cancelled";return `<div class="card ${cls}"><div class="card-inner"><div class="card-number">${index+1}.</div><button class="edit-btn" onclick="openEdit(${r.id})" aria-label="Upravit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></button><div class="vehicle-block"><div class="vehicle-code">${esc(r.vehicle)}</div><div class="vehicle-image">${vehicleVisual(r.vehicle)}</div></div><div class="card-content"><div class="time-row">Čas doručení: <span class="time-value">${esc(r.time)}</span></div><div class="data-row name-row">${esc(r.name)}</div><div class="data-row"><strong>Adresa:</strong> ${esc(r.address)}</div><div class="data-row"><strong>Cena bez DPH:</strong> ${money(r.net)}</div><div class="data-row"><strong>Cena s DPH:</strong> ${money(gross(r.net))}</div><div class="data-row"><strong>Typ platby:</strong> ${esc(r.payment)}</div></div><div class="card-actions"><button onclick="showInfo(${r.id})">Info</button><button onclick="startRide(${r.id})">START</button>${status==="planned"?`<button onclick="finishRide(${r.id})">Konec</button>`:status==="completed"?`<button class="return-btn" onclick="returnToPlanned(${r.id})">Vrátit</button>`:`<button disabled>Konec</button>`}</div></div></div>`}
+function renderCancelled(list){cancelledList.innerHTML=list.length?sortRides(list).map((r,i)=>`<div class="cancelled-row">${cardHtml(r,i,"cancelled")}<div class="cancel-x" aria-label="Zrušeno"></div></div>`).join(""):`<div class="empty">Žádné zrušené jízdy</div>`}
+function updateStats(p,c,x){const all=[...p,...c,...x];statTotal.textContent=all.length;statKm.textContent=all.reduce((s,r)=>s+Number(r.km||0),0);statDone.textContent=c.length}
+function render(){updateDayHeader();const d=iso(selectedDate),isPast=selectedDate<today;let p=rides.filter(r=>r.date===d&&r.status==="planned");const c=rides.filter(r=>r.date===d&&r.status==="completed"),x=rides.filter(r=>r.date===d&&r.status==="cancelled");if(isPast)p=[];plannedList.innerHTML=p.length?sortRides(p).map((r,i)=>cardHtml(r,i,"planned")).join(""):`<div class="empty">Žádné plánované jízdy</div>`;completedList.innerHTML=c.length?sortRides(c).map((r,i)=>cardHtml(r,i,"completed")).join(""):`<div class="empty">Žádné splněné jízdy</div>`;renderCancelled(x);updateStats(p,c,x)}
+prevDay.onclick=()=>{selectedDate=addDays(selectedDate,-1);render()};nextDay.onclick=()=>{selectedDate=addDays(selectedDate,1);render()};
+calendarBtn.onclick=()=>{const picked=prompt("Zadejte datum ve formátu RRRR-MM-DD",iso(selectedDate));if(/^\d{4}-\d{2}-\d{2}$/.test(picked||"")){selectedDate=new Date(picked+"T00:00:00");render()}};
+const formModal=document.getElementById("formModal"),detailModal=document.getElementById("detailModal"),confirmModal=document.getElementById("confirmModal");
+addBtn.onclick=()=>openForm();
+function openForm(){editingId=null;formTitle.textContent="Nová plánovaná jízda";cancelRideBtn.style.display="none";fDate.value=iso(selectedDate);fTime.value="";fName.value="";fAddress.value="";fNet.value="";fGross.value="";fPayment.value="Hotově";fVehicle.value="AK";fNote.value="";formModal.classList.add("show")}
+window.openEdit=id=>{const r=rides.find(x=>x.id===id);if(!r)return;editingId=id;formTitle.textContent="Upravit jízdu";cancelRideBtn.style.display=r.status==="cancelled"?"none":"block";fDate.value=r.date;fTime.value=r.time;fName.value=r.name;fAddress.value=r.address;fNet.value=r.net;fGross.value=gross(r.net);fPayment.value=r.payment;fVehicle.value=r.vehicle;fNote.value=r.note||"";formModal.classList.add("show")};
+fNet.addEventListener("input",e=>fGross.value=e.target.value?gross(e.target.value):"");closeForm.onclick=()=>formModal.classList.remove("show");
+saveRide.onclick=()=>{const data={date:fDate.value,time:fTime.value,name:fName.value.trim(),address:fAddress.value.trim(),net:Number(fNet.value||0),payment:fPayment.value,vehicle:fVehicle.value,note:fNote.value.trim()};if(!data.date||!data.time||!data.name||!data.address){alert("Vyplňte datum, čas, jméno a adresu.");return}if(editingId){const i=rides.findIndex(r=>r.id===editingId);rides[i]={...rides[i],...data}}else{const sameDay=rides.filter(r=>r.date===data.date);rides.push({id:Date.now(),...data,status:"planned",manualOrder:sameDay.length,km:0})}save();selectedDate=new Date(data.date+"T00:00:00");formModal.classList.remove("show");render()};
+window.showInfo=id=>{const r=rides.find(x=>x.id===id);if(!r)return;const state=r.status==="planned"?"Plánované":r.status==="completed"?"Splněné":"Zrušené";detailContent.innerHTML=`<div class="detail-line"><b>Datum:</b> ${new Intl.DateTimeFormat("cs-CZ").format(new Date(r.date+"T00:00:00"))}</div><div class="detail-line"><b>Čas doručení:</b> ${esc(r.time)}</div><div class="detail-line"><b>Jméno a příjmení:</b> ${esc(r.name)}</div><div class="detail-line"><b>Adresa:</b> ${esc(r.address)}</div><div class="detail-line"><b>Cena bez DPH:</b> ${money(r.net)}</div><div class="detail-line"><b>Cena s DPH:</b> ${money(gross(r.net))}</div><div class="detail-line"><b>Typ platby:</b> ${esc(r.payment)}</div><div class="detail-line"><b>Typ dopravy:</b> ${esc(r.vehicle)}</div><div class="detail-line"><b>Poznámka:</b> ${r.note?esc(r.note):"Bez poznámky"}</div><div class="detail-line"><b>Stav:</b> ${state}</div>`;detailModal.classList.add("show")};closeDetail.onclick=()=>detailModal.classList.remove("show");
+function mondayOf(date){const d=new Date(date);d.setHours(0,0,0,0);const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d}
+function ridesForDate(date){return rides.filter(r=>r.date===iso(date))}
+function updateCalendarSwitch(){monthViewBtn.classList.toggle("active",calendarView==="month");weekViewBtn.classList.toggle("active",calendarView==="week")}
+function renderCalendar(){if(calendarView==="month"){const y=calendarCursor.getFullYear(),m=calendarCursor.getMonth(),first=new Date(y,m,1),start=mondayOf(first);calendarPeriod.textContent=new Intl.DateTimeFormat("cs-CZ",{month:"long",year:"numeric"}).format(calendarCursor);let h='<div class="cal-weekdays"><div>Po</div><div>Út</div><div>St</div><div>Čt</div><div>Pá</div><div>So</div><div>Ne</div></div><div class="cal-grid">';for(let i=0;i<42;i++){const d=addDays(start,i),rs=ridesForDate(d),cl=`cal-day ${d.getMonth()!==m?"other":""} ${iso(d)===iso(today)?"today":""} ${iso(d)===iso(selectedDate)?"selected":""}`,dots=rs.slice(0,8).map(r=>`<span class="cal-dot ${r.status==="completed"?"done":r.status==="cancelled"?"cancel":""}"></span>`).join("");h+=`<div class="${cl}" onclick="chooseCalendarDate('${iso(d)}')"><div class="cal-num">${d.getDate()}</div><div class="cal-dots">${dots}</div></div>`}calendarContent.innerHTML=h+"</div>"}else{const start=mondayOf(calendarCursor),end=addDays(start,6);calendarPeriod.textContent=`${new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric"}).format(start)} – ${new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric",year:"numeric"}).format(end)}`;let h='<div class="week-list">';for(let i=0;i<7;i++){const d=addDays(start,i),rs=sortRides(ridesForDate(d)),n=new Intl.DateTimeFormat("cs-CZ",{weekday:"long"}).format(d),pills=rs.length?rs.map(r=>`<span class="week-pill ${r.status==="completed"?"done":r.status==="cancelled"?"cancel":""}">${esc(r.time)} ${esc(r.name)}</span>`).join(""):'<span class="week-count">Bez jízd</span>';h+=`<div class="week-day ${iso(d)===iso(selectedDate)?"selected":""}" onclick="chooseCalendarDate('${iso(d)}')"><div class="week-day-head"><span>${n.charAt(0).toUpperCase()+n.slice(1)}</span><span>${new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric"}).format(d)}</span></div><div class="week-rides">${pills}</div></div>`}calendarContent.innerHTML=h+"</div>"}}
+window.chooseCalendarDate=d=>{selectedDate=new Date(d+"T00:00:00");calendarCursor=new Date(selectedDate);render();renderCalendar()};
+monthViewBtn.onclick=()=>{calendarView="month";updateCalendarSwitch();renderCalendar()};weekViewBtn.onclick=()=>{calendarView="week";updateCalendarSwitch();renderCalendar()};calPrev.onclick=()=>{calendarCursor=calendarView==="month"?new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()-1,1):addDays(calendarCursor,-7);renderCalendar()};calNext.onclick=()=>{calendarCursor=calendarView==="month"?new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+1,1):addDays(calendarCursor,7);renderCalendar()};calToday.onclick=()=>{selectedDate=new Date(today);calendarCursor=new Date(today);render();renderCalendar()};closeCalendar.onclick=()=>calendarModal.classList.remove("show");
+
+/* KALENDÁŘ VIZUÁLNÍ */
+const calModalEl=document.getElementById("calendarModal");
+const calContentEl=document.getElementById("calendarContent");
+const calPeriodEl=document.getElementById("calendarPeriod");
+const monthBtnEl=document.getElementById("monthViewBtn");
+const weekBtnEl=document.getElementById("weekViewBtn");
+
+function calMonday(date){
+  const d=new Date(date); d.setHours(0,0,0,0);
+  d.setDate(d.getDate()-((d.getDay()+6)%7));
+  return d;
+}
+function calRides(date){ return rides.filter(r=>r.date===iso(date)); }
+function calSwitch(){
+  monthBtnEl.classList.toggle("active",calendarView==="month");
+  weekBtnEl.classList.toggle("active",calendarView==="week");
+}
+function drawCalendar(){
+  if(calendarView==="month"){
+    const y=calendarCursor.getFullYear(),m=calendarCursor.getMonth();
+    calPeriodEl.textContent=new Intl.DateTimeFormat("cs-CZ",{month:"long",year:"numeric"}).format(calendarCursor);
+    const start=calMonday(new Date(y,m,1));
+    let h='<div class="cal-weekdays"><div>Po</div><div>Út</div><div>St</div><div>Čt</div><div>Pá</div><div>So</div><div>Ne</div></div><div class="cal-grid">';
+    for(let i=0;i<42;i++){
+      const d=addDays(start,i), rs=sortRides(calRides(d));
+      const classes=["cal-day",d.getMonth()!==m?"other":"",iso(d)===iso(today)?"today":"",iso(d)===iso(selectedDate)?"selected":""].join(" ");
+      const ev=rs.slice(0,3).map(r=>{
+        const st=r.status==="completed"?"done":r.status==="cancelled"?"cancel":"";
+        return `<span class="cal-event ${st}">${escapeHtml(r.time)} ${escapeHtml(r.name)}</span>`;
+      }).join("");
+      const more=rs.length>3?`<span class="week-count">+${rs.length-3} další</span>`:"";
+      h+=`<button type="button" class="${classes}" data-date="${iso(d)}"><div class="cal-num">${d.getDate()}</div><div class="cal-events">${ev}${more}</div></button>`;
+    }
+    calContentEl.innerHTML=h+"</div>";
+  }else{
+    const start=calMonday(calendarCursor), end=addDays(start,6);
+    calPeriodEl.textContent=`${new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric"}).format(start)} – ${new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric",year:"numeric"}).format(end)}`;
+    let h='<div class="week-list">';
+    for(let i=0;i<7;i++){
+      const d=addDays(start,i),rs=sortRides(calRides(d));
+      const dn=new Intl.DateTimeFormat("cs-CZ",{weekday:"long"}).format(d);
+      const ev=rs.length?rs.map(r=>{
+        const st=r.status==="completed"?"done":r.status==="cancelled"?"cancel":"";
+        return `<span class="week-pill ${st}">${escapeHtml(r.time)} ${escapeHtml(r.name)}</span>`;
+      }).join(""):'<span class="week-count">Bez jízd</span>';
+      h+=`<button type="button" class="week-day ${iso(d)===iso(selectedDate)?"selected":""}" data-date="${iso(d)}"><div class="week-day-head"><span>${dn.charAt(0).toUpperCase()+dn.slice(1)}</span><span>${new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric"}).format(d)}</span></div><div class="week-rides">${ev}</div></button>`;
+    }
+    calContentEl.innerHTML=h+"</div>";
+  }
+}
+calContentEl.addEventListener("click",e=>{
+  const cell=e.target.closest("[data-date]");
+  if(!cell)return;
+  selectedDate=new Date(cell.dataset.date+"T00:00:00");
+  calendarCursor=new Date(selectedDate);
+  render();
+  calModalEl.classList.remove("show");
+});
+monthBtnEl.onclick=()=>{calendarView="month";calSwitch();drawCalendar()};
+weekBtnEl.onclick=()=>{calendarView="week";calSwitch();drawCalendar()};
+document.getElementById("calPrev").onclick=()=>{
+  calendarCursor=calendarView==="month"?new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()-1,1):addDays(calendarCursor,-7);
+  drawCalendar();
+};
+document.getElementById("calNext").onclick=()=>{
+  calendarCursor=calendarView==="month"?new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+1,1):addDays(calendarCursor,7);
+  drawCalendar();
+};
+document.getElementById("calToday").onclick=()=>{
+  selectedDate=new Date(today);calendarCursor=new Date(today);render();drawCalendar();
+};
+document.getElementById("closeCalendar").onclick=()=>calModalEl.classList.remove("show");
+document.getElementById("calendarBtn").onclick=()=>{
+  calendarCursor=new Date(selectedDate);
+  calendarView="month";
+  calSwitch();
+  drawCalendar();
+  calModalEl.classList.add("show");
+};
+
+window.startRide=()=>alert("Tlačítko START je zatím bez funkce.");
+window.finishRide=id=>{const r=rides.find(x=>x.id===id);if(!r)return;r.status="completed";save();render()};
+window.returnToPlanned=id=>{const r=rides.find(x=>x.id===id);if(!r)return;r.status="planned";save();render()};
+cancelRideBtn.onclick=()=>{if(!editingId)return;pendingCancelId=editingId;formModal.classList.remove("show");confirmModal.classList.add("show")};confirmNo.onclick=()=>{pendingCancelId=null;confirmModal.classList.remove("show")};confirmYes.onclick=()=>{const r=rides.find(x=>x.id===pendingCancelId);if(r){r.status="cancelled";save()}pendingCancelId=null;confirmModal.classList.remove("show");render()};document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("show")}));render();
+</script>
+
+<div id="calendarOverlay" aria-hidden="true">
+  <div class="calbox">
+    <div class="calTop">
+      <div class="calTopTitle">Kalendář rozvozů</div>
+      <div class="calToggle">
+        <button type="button" id="calMonthMode" class="on">Měsíc</button>
+        <button type="button" id="calWeekMode">Týden</button>
+      </div>
+    </div>
+    <div class="calNav">
+      <button type="button" id="calBack">‹</button>
+      <div id="calTitle"></div>
+      <button type="button" id="calForward">›</button>
+    </div>
+    <div id="calBody"></div>
+    <div class="calBottom">
+      <button type="button" id="calGoToday">Dnes</button>
+      <button type="button" id="calClose">Zavřít</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+(function(){
+  const btn=document.getElementById("calendarBtn");
+  const ov=document.getElementById("calendarOverlay");
+  const body=document.getElementById("calBody");
+  const title=document.getElementById("calTitle");
+  const monthBtn=document.getElementById("calMonthMode");
+  const weekBtn=document.getElementById("calWeekMode");
+  if(!btn||!ov||!body) return;
+
+  let mode="month";
+  let cursor=new Date(selectedDate);
+
+  function monday(d){
+    const x=new Date(d); x.setHours(0,0,0,0);
+    x.setDate(x.getDate()-((x.getDay()+6)%7)); return x;
+  }
+  function dayRides(d){return rides.filter(r=>r.date===iso(d))}
+  function e(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+  function modes(){
+    monthBtn.classList.toggle("on",mode==="month");
+    weekBtn.classList.toggle("on",mode==="week");
+  }
+  function draw(){
+    modes();
+    if(mode==="month"){
+      const y=cursor.getFullYear(),m=cursor.getMonth();
+      title.textContent=new Intl.DateTimeFormat("cs-CZ",{month:"long",year:"numeric"}).format(cursor);
+      const start=monday(new Date(y,m,1));
+      let h='<div class="calNames"><div>Po</div><div>Út</div><div>St</div><div>Čt</div><div>Pá</div><div>So</div><div>Ne</div></div><div class="calMonth">';
+      for(let i=0;i<42;i++){
+        const d=addDays(start,i),rs=sortRides(dayRides(d));
+        let cl="cday";
+        if(d.getMonth()!==m)cl+=" dim";
+        if(iso(d)===iso(today))cl+=" now";
+        if(iso(d)===iso(selectedDate))cl+=" sel";
+        const ev=rs.slice(0,3).map(r=>`<span class="cevent ${r.status==="completed"?"done":r.status==="cancelled"?"cancel":""}">${e(r.time)} ${e(r.name)}</span>`).join("");
+        h+=`<button type="button" class="${cl}" data-caldate="${iso(d)}"><span class="cnum">${d.getDate()}</span>${ev}</button>`;
+      }
+      body.innerHTML=h+"</div>";
+    }else{
+      const st=monday(cursor),en=addDays(st,6);
+      title.textContent=new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric"}).format(st)+" – "+new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric",year:"numeric"}).format(en);
+      let h='<div class="calWeek">';
+      for(let i=0;i<7;i++){
+        const d=addDays(st,i),rs=sortRides(dayRides(d));
+        const dn=new Intl.DateTimeFormat("cs-CZ",{weekday:"long"}).format(d);
+        const ev=rs.length?rs.map(r=>`<span class="cevent ${r.status==="completed"?"done":r.status==="cancelled"?"cancel":""}">${e(r.time)} ${e(r.name)}</span>`).join(""):'<span style="font-size:10px;color:#718076">Bez jízd</span>';
+        h+=`<button type="button" class="cweekday" data-caldate="${iso(d)}"><div class="cweekhead"><span>${dn.charAt(0).toUpperCase()+dn.slice(1)}</span><span>${new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric"}).format(d)}</span></div><div class="cweekevents">${ev}</div></button>`;
+      }
+      body.innerHTML=h+"</div>";
+    }
+  }
+  function openCal(){
+    cursor=new Date(selectedDate); mode="month"; draw();
+    ov.classList.add("open"); ov.setAttribute("aria-hidden","false");
+  }
+  btn.onclick=openCal;
+  btn.addEventListener("click",function(ev){ev.preventDefault();ev.stopImmediatePropagation();openCal()},true);
+
+  monthBtn.onclick=()=>{mode="month";draw()};
+  weekBtn.onclick=()=>{mode="week";draw()};
+  document.getElementById("calBack").onclick=()=>{cursor=mode==="month"?new Date(cursor.getFullYear(),cursor.getMonth()-1,1):addDays(cursor,-7);draw()};
+  document.getElementById("calForward").onclick=()=>{cursor=mode==="month"?new Date(cursor.getFullYear(),cursor.getMonth()+1,1):addDays(cursor,7);draw()};
+  document.getElementById("calGoToday").onclick=()=>{cursor=new Date(today);selectedDate=new Date(today);render();draw()};
+  document.getElementById("calClose").onclick=()=>{ov.classList.remove("open");ov.setAttribute("aria-hidden","true")};
+  body.onclick=function(ev){
+    const cell=ev.target.closest("[data-caldate]"); if(!cell)return;
+    selectedDate=new Date(cell.dataset.caldate+"T00:00:00"); 
+const todayReturnBtnEl=document.getElementById("todayReturnBtn");
+if(todayReturnBtnEl){
+  todayReturnBtnEl.onclick=()=>{
+    selectedDate=new Date(today);
+    render();
+  };
+}
+render();
+    ov.classList.remove("open"); ov.setAttribute("aria-hidden","true");
+  };
+  ov.addEventListener("click",ev=>{if(ev.target===ov){ov.classList.remove("open");ov.setAttribute("aria-hidden","true")}});
+})();
+
+function updateTodayReturnVisibility(){
+  const w=document.getElementById("todayReturnWrap");
+  if(w) w.classList.toggle("show",iso(selectedDate)!==iso(today));
+}
+const _renderOriginal=render;
+render=function(){_renderOriginal();updateTodayReturnVisibility();};
+updateTodayReturnVisibility();
+</script>
+
+
+<script>
+(function(){
+  const backWrap=document.getElementById("todayReturnWrap");
+  const backBtn=document.getElementById("todayReturnBtn");
+  if(!backWrap||!backBtn) return;
+
+  function refreshTodayButton(){
+    backWrap.classList.toggle("show", iso(selectedDate)!==iso(today));
+  }
+
+  backBtn.addEventListener("click",function(){
+    selectedDate=new Date(today);
+    render();
+    refreshTodayButton();
+  });
+
+  document.getElementById("prevDay").addEventListener("click",()=>setTimeout(refreshTodayButton,0));
+  document.getElementById("nextDay").addEventListener("click",()=>setTimeout(refreshTodayButton,0));
+  document.getElementById("calBody").addEventListener("click",()=>setTimeout(refreshTodayButton,0));
+
+  refreshTodayButton();
+})();
+</script>
+
+<script id="v11-counts">
+(function(){
+  function updateSectionCounts(){
+    const d=iso(selectedDate);
+    const p=rides.filter(r=>r.date===d&&r.status==="planned").length;
+    const c=rides.filter(r=>r.date===d&&r.status==="completed").length;
+    const x=rides.filter(r=>r.date===d&&r.status==="cancelled").length;
+    const pe=document.getElementById("plannedCount");
+    const ce=document.getElementById("completedCount");
+    const xe=document.getElementById("cancelledCount");
+    if(pe) pe.textContent=p;
+    if(ce) ce.textContent=c;
+    if(xe) xe.textContent=x;
+  }
+  const oldRender=render;
+  render=function(){ oldRender(); updateSectionCounts(); };
+  updateSectionCounts();
+})();
+</script>
+
+
+<script id="v12-card-actions">
+(function(){
+  const originalCardHtml=cardHtml;
+
+  cardHtml=function(r,index,status){
+    let html=originalCardHtml(r,index,status);
+
+    if(status==="planned"){
+      /* Replace the original Konec action with a square checkbox. */
+      html=html.replace(
+        /<button[^>]*onclick="finishRide\(\$\{r\.id\}\)"[^>]*>Konec<\/button>/,
+        `<button type="button" class="finish-check" aria-label="Označit jako splněné" title="Označit jako splněné" onclick="finishRide(${r.id})"><span class="checkmark">✓</span></button>`
+      );
+      html=html.replace(
+        `<button onclick="finishRide(${r.id})">Konec</button>`,
+        `<button type="button" class="finish-check" aria-label="Označit jako splněné" title="Označit jako splněné" onclick="finishRide(${r.id})"><span class="checkmark">✓</span></button>`
+      );
+    }
+
+    if(status==="completed"){
+      /* Put Vrátit zpět and the visibly checked square next to each other. */
+      const oldReturn=`<button class="return-btn" onclick="returnToPlanned(${r.id})">Vrátit</button>`;
+      const newReturn=`<div class="completed-actions"><button class="return-btn" onclick="returnToPlanned(${r.id})">Vrátit zpět</button><button type="button" class="finish-check checked" aria-label="Splněno" title="Splněno" onclick="returnToPlanned(${r.id})"><span class="checkmark">✓</span></button></div>`;
+      html=html.replace(oldReturn,newReturn);
+    }
+    return html;
+  };
+
+  render();
+})();
+</script>
+
+
+<script id="v13-functions">
+(function(){
+  const baseCardHtml=cardHtml;
+
+  cardHtml=function(r,index,status){
+    let html=baseCardHtml(r,index,status);
+
+    /* Ensure name gets stronger semantics regardless of prior wrappers. */
+    html=html.replace(`class="data-row name-row"`,`class="data-row name-row"`);
+
+    if(status==="planned"){
+      html=html.replace(/<button[^>]*>Konec<\/button>/,
+        `<button type="button" class="finish-check" aria-label="Označit jako splněné" title="Označit jako splněné" onclick="finishRide(${r.id})"><span class="checkmark">✓</span></button>`);
+    }
+
+    if(status==="completed"){
+      /* Normalize any prior return/check markup to one clean control group. */
+      html=html.replace(/<div class="completed-actions">[\s\S]*?<\/div>/,
+        `<div class="completed-actions"><button class="return-btn" onclick="returnToPlanned(${r.id})">Vrátit zpět</button><button type="button" class="finish-check checked" aria-label="Splněno" title="Splněno"><span class="checkmark">✓</span></button></div>`);
+      html=html.replace(`<button class="return-btn" onclick="returnToPlanned(${r.id})">Vrátit</button>`,
+        `<div class="completed-actions"><button class="return-btn" onclick="returnToPlanned(${r.id})">Vrátit zpět</button><button type="button" class="finish-check checked" aria-label="Splněno" title="Splněno"><span class="checkmark">✓</span></button></div>`);
+    }
+
+    if(status==="cancelled"){
+      const reason=(r.cancelReason||"").trim();
+      const reasonText=reason ? esc(reason) : "Neuveden";
+      /* Insert reason in the content block after payment. */
+      html=html.replace(
+        `<div class="data-row"><strong>Typ platby:</strong> ${esc(r.payment)}</div></div>`,
+        `<div class="data-row"><strong>Typ platby:</strong> ${esc(r.payment)}</div><div class="cancel-reason"><b>Důvod zrušení:</b> ${reasonText}</div></div>`
+      );
+      /* No START/Konec for cancelled: Info + return only. */
+      html=html.replace(/<div class="card-actions">[\s\S]*?<\/div><\/div><\/div>$/,
+        `<div class="card-actions"><button onclick="showInfo(${r.id})">Info</button><button class="return-btn" onclick="returnToPlanned(${r.id})">Vrátit zpět</button></div></div></div>`);
+    }
+    return html;
+  };
+
+  /* Stat: completed / total non-cancelled rides, e.g. 2/5. */
+  updateStats=function(p,c,x){
+    const all=[...p,...c,...x];
+    statTotal.textContent=all.length;
+    statKm.textContent=all.reduce((sum,r)=>sum+Number(r.km||0),0);
+    statDone.textContent=`${c.length}/${p.length+c.length}`;
+  };
+
+  /* Edit form: cancelled rides expose editable cancellation reason. */
+  const originalOpenEdit=window.openEdit;
+  window.openEdit=function(id){
+    originalOpenEdit(id);
+    const r=rides.find(x=>x.id===id);
+    const field=document.getElementById("cancelReasonField");
+    const input=document.getElementById("fCancelReason");
+    if(field&&input){
+      field.style.display=r&&r.status==="cancelled"?"block":"none";
+      input.value=r&&r.status==="cancelled"?(r.cancelReason||""):"";
+    }
+  };
+
+  /* New ride never shows cancellation reason. */
+  addBtn.addEventListener("click",()=>{
+    const field=document.getElementById("cancelReasonField");
+    const input=document.getElementById("fCancelReason");
+    if(field) field.style.display="none";
+    if(input) input.value="";
+  },true);
+
+  /* Preserve reason when saving an edited cancelled ride. */
+  saveRide.addEventListener("click",function(){
+    if(!editingId)return;
+    const r=rides.find(x=>x.id===editingId);
+    const input=document.getElementById("fCancelReason");
+    if(r&&r.status==="cancelled"&&input){
+      r.cancelReason=input.value.trim();
+      save();
+    }
+  },true);
+
+  /* Cancel flow: confirmation YES -> optional reason modal -> finalize. */
+  const reasonModal=document.getElementById("cancelReasonModal");
+  const reasonInput=document.getElementById("cancelReasonInput");
+  const skipBtn=document.getElementById("skipCancelReason");
+  const reasonSaveBtn=document.getElementById("saveCancelReason");
+
+  function finalizeCancellation(reason){
+    const r=rides.find(x=>x.id===pendingCancelId);
+    if(r){
+      r.status="cancelled";
+      r.cancelReason=(reason||"").trim();
+      save();
+    }
+    pendingCancelId=null;
+    reasonModal.classList.remove("show");
+    render();
+  }
+
+  /* Capture phase prevents old confirmYes handler from immediately cancelling. */
+  confirmYes.addEventListener("click",function(ev){
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+    confirmModal.classList.remove("show");
+    reasonInput.value="";
+    reasonModal.classList.add("show");
+  },true);
+
+  skipBtn.onclick=()=>finalizeCancellation("");
+  reasonSaveBtn.onclick=()=>finalizeCancellation(reasonInput.value);
+
+  /* Info also reports cancellation reason. */
+  const oldShowInfo=window.showInfo;
+  window.showInfo=function(id){
+    oldShowInfo(id);
+    const r=rides.find(x=>x.id===id);
+    if(r&&r.status==="cancelled"){
+      const line=document.createElement("div");
+      line.className="detail-line";
+      line.innerHTML=`<b>Důvod zrušení:</b> ${r.cancelReason?esc(r.cancelReason):"Neuveden"}`;
+      detailContent.appendChild(line);
+    }
+  };
+
+  render();
+})();
+</script>
+<script id="v17">
+(function(){
+const st=document.getElementById("fStartTime"),ph=document.getElementById("fPhone"),dur=document.getElementById("fDuration"),ord=document.getElementById("fOrderNo"),fi=document.getElementById("fDocuments"),dl=document.getElementById("documentDraftList");
+let pending=[];
+const dbp=new Promise((ok,no)=>{const q=indexedDB.open("EvidenceRozvozuFiles",1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains("files"))q.result.createObjectStore("files",{keyPath:"id"})};q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)});
+async function put(id,file){const db=await dbp;return new Promise((ok,no)=>{const tx=db.transaction("files","readwrite");tx.objectStore("files").put({id,blob:file,name:file.name,type:file.type,size:file.size});tx.oncomplete=ok;tx.onerror=()=>no(tx.error)})}
+async function get(id){const db=await dbp;return new Promise((ok,no)=>{const q=db.transaction("files","readonly").objectStore("files").get(id);q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}
+window.openRideDocument=async id=>{try{const f=await get(id);if(!f)return alert("Dokument nebyl nalezen.");const u=URL.createObjectURL(f.blob);window.open(u,"_blank");setTimeout(()=>URL.revokeObjectURL(u),60000)}catch(e){alert("Dokument se nepodařilo otevřít.")}};
+function list(existing=[]){dl.innerHTML=[...existing.map(x=>({...x,old:true})),...pending.map((x,i)=>({name:x.name,i}))].map(x=>`<div class="document-item"><span>📄 ${esc(x.name)}</span>${x.old?"":`<button type="button" data-i="${x.i}">Odebrat</button>`}</div>`).join("")}
+fi.onchange=()=>{pending.push(...fi.files);fi.value="";const r=editingId?rides.find(x=>x.id===editingId):null;list(r?.documents||[])};
+dl.onclick=e=>{const b=e.target.closest("[data-i]");if(b){pending.splice(+b.dataset.i,1);const r=editingId?rides.find(x=>x.id===editingId):null;list(r?.documents||[])}};
+function clear(){st.value="";ph.value="";dur.value="00:00";ord.value="";pending=[];list([])}
+addBtn.addEventListener("click",()=>setTimeout(clear,0),true);
+const oe=window.openEdit;window.openEdit=id=>{oe(id);const r=rides.find(x=>x.id===id);if(!r)return;st.value=r.startTime||"";ph.value=r.phone||"";let n=+r.estimatedMinutes||0;dur.value=String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");ord.value=r.orderNo||"";pending=[];list(r.documents||[])};
+saveRide.addEventListener("click",function(){const eid=editingId,snap={startTime:st.value,phone:ph.value.trim(),estimatedMinutes:(()=>{const p=(dur.value||"00:00").split(":");return (+p[0]||0)*60+Math.min(59,+p[1]||0)})(),orderNo:ord.value.trim()},files=[...pending];setTimeout(async()=>{const r=eid?rides.find(x=>x.id===eid):rides.reduce((a,b)=>!a||+b.id>+a.id?b:a,null);if(!r)return;Object.assign(r,snap);r.documents=r.documents||[];for(const f of files){const id="doc_"+Date.now()+"_"+Math.random().toString(36).slice(2);try{await put(id,f);r.documents.push({id,name:f.name,type:f.type,size:f.size})}catch(e){}}pending=[];save();render()},0)},true);
+const oi=window.showInfo;window.showInfo=id=>{oi(id);const r=rides.find(x=>x.id===id);if(!r)return;let n=+r.estimatedMinutes||0,h=Math.floor(n/60),m=n%60,d=n?(h?`${h} h${m?" "+m+" min":""}`:`${m} min`):"Neuvedeno";const x=document.createElement("div");x.innerHTML=`<div class="detail-line"><b>Plánovaný začátek:</b> ${r.startTime?esc(r.startTime):"Neuvedeno"}</div><div class="detail-line"><b>Odhad délky:</b> ${d}</div><div class="detail-line"><b>Telefon:</b> ${r.phone?`<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>`:"Neuvedeno"}</div><div class="detail-line"><b>Číslo objednávky:</b> ${r.orderNo?esc(r.orderNo):"Neuvedeno"}</div><div class="detail-line"><b>Dokumenty:</b></div><div class="info-documents">${(r.documents||[]).length?(r.documents||[]).map(a=>`<div class="info-document"><span>📄 ${esc(a.name)}</span><button onclick="openRideDocument('${a.id}')">Otevřít</button></div>`).join(""):'<span style="font-size:10px;color:#7a877e">Žádné dokumenty</span>'}</div>`;detailContent.appendChild(x)};
+})();
+</script>
+<script id="v18-behavior" type="text/plain">
+(function(){
+  const form=document.querySelector("#formModal");
+  const dur=document.getElementById("fDuration");
+
+  function normalizeDuration(){
+    let d=(dur.value||"").replace(/\D/g,"").slice(0,4);
+    d=d.padStart(4,"0");
+    let h=d.slice(0,2), m=Math.min(59,Number(d.slice(2,4)));
+    dur.value=h+":"+String(m).padStart(2,"0");
+  }
+  dur.addEventListener("focus",()=>{dur.select()});
+  dur.addEventListener("input",()=>{
+    const digits=dur.value.replace(/\D/g,"").slice(0,4);
+    if(digits.length<=2) dur.value=digits;
+    else dur.value=digits.slice(0,2)+":"+digits.slice(2);
+  });
+  dur.addEventListener("blur",normalizeDuration);
+
+  form.addEventListener("keydown",e=>{
+    if(e.key!=="Enter" || e.shiftKey) return;
+    const t=e.target;
+    if(t.tagName==="TEXTAREA" || t.type==="file" || t.type==="button" || t.type==="checkbox") return;
+    e.preventDefault();
+    if(t===dur) normalizeDuration();
+    const controls=[...form.querySelectorAll("input,select,textarea,button")]
+      .filter(x=>!x.disabled && x.offsetParent!==null && x.type!=="hidden" && x.id!=="cancelRideBtn");
+    const i=controls.indexOf(t);
+    if(i>=0 && i<controls.length-1){
+      const n=controls[i+1];
+      n.focus();
+      if(n.select && (n.tagName==="INPUT" || n.tagName==="TEXTAREA")) n.select();
+    }
+  });
+})();
+</script>
+
+
+<div class="duration-overlay" id="durationOverlay">
+ <div class="duration-dialog">
+  <div class="duration-head"><strong>Odhad délky jízdy</strong><span>Nastav přibližný čas celé jízdy tam i zpět.</span></div>
+  <div class="duration-main">
+   <div class="duration-numbers">
+    <div class="duration-unit"><div class="duration-value" id="durationH">02</div><small>hodiny</small><div class="duration-controls"><button type="button" data-h="-1">−</button><button type="button" data-h="1">+</button></div></div>
+    <div class="duration-colon">:</div>
+    <div class="duration-unit"><div class="duration-value" id="durationM">00</div><small>minuty</small><div class="duration-controls"><button type="button" data-m="-5">−</button><button type="button" data-m="5">+</button></div></div>
+   </div>
+   <div class="quick-title">Rychlá volba</div>
+   <div class="quick-grid">
+    <button type="button" data-q="60">1 h</button><button type="button" data-q="90">1:30</button>
+    <button type="button" data-q="120">2 h</button><button type="button" data-q="150">2:30</button><button type="button" data-q="180">3 h</button>
+   </div>
+  </div>
+  <div class="duration-actions"><button type="button" id="durationCancel">ZRUŠIT</button><button type="button" id="durationConfirm">POTVRDIT</button></div>
+ </div>
+</div>
+
+<script id="v19-behavior">
+(function(){
+ const hidden=document.getElementById("fDuration"), trigger=document.getElementById("durationPickerBtn"),
+ text=document.getElementById("durationPickerText"), ov=document.getElementById("durationOverlay"),
+ hEl=document.getElementById("durationH"),mEl=document.getElementById("durationM");
+ let h=0,m=0, old="00:00";
+ function parse(v){let p=(v||"00:00").split(":");return [Math.max(0,+p[0]||0),Math.max(0,Math.min(59,+p[1]||0))]}
+ function draw(){hEl.textContent=String(h).padStart(2,"0");mEl.textContent=String(m).padStart(2,"0");document.querySelectorAll("[data-q]").forEach(b=>b.classList.toggle("active",+b.dataset.q===h*60+m))}
+ function label(){let n=h*60+m;text.textContent=!n?"Nenastaveno":(h?(h+" h"+(m?" "+m+" min":"")):(m+" min"))}
+ function sync(){[h,m]=parse(hidden.value);label()}
+ trigger.onclick=()=>{old=hidden.value;[h,m]=parse(hidden.value);if(!h&&!m){h=2;m=0}draw();ov.classList.add("open")};
+ document.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>{h=Math.max(0,Math.min(23,h+(+b.dataset.h)));draw()});
+ document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{let total=h*60+m+(+b.dataset.m);total=Math.max(0,Math.min(23*60+55,total));h=Math.floor(total/60);m=total%60;draw()});
+ document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{let n=+b.dataset.q;h=Math.floor(n/60);m=n%60;draw()});
+ document.getElementById("durationCancel").onclick=()=>{hidden.value=old;sync();ov.classList.remove("open")};
+ document.getElementById("durationConfirm").onclick=()=>{hidden.value=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");label();ov.classList.remove("open")};
+ ov.addEventListener("click",e=>{if(e.target===ov)document.getElementById("durationCancel").click()});
+
+ // Keep display synced when New/Edit fills hidden field.
+ const obs=new MutationObserver(sync); obs.observe(hidden,{attributes:true,attributeFilter:["value"]});
+ document.getElementById("addBtn").addEventListener("click",()=>setTimeout(sync,10));
+ const oldEdit=window.openEdit; window.openEdit=function(id){oldEdit(id);setTimeout(sync,0)};
+ sync();
+
+ // Pretty document list; pending removal remains handled by v17.
+ const dl=document.getElementById("documentDraftList");
+ const prettify=()=>{dl.querySelectorAll(".document-item").forEach(row=>{
+   let sp=row.querySelector("span:not(.doc-file-icon)");
+   if(sp){sp.classList.add("doc-name");sp.textContent=sp.textContent.replace(/^📄\s*/,"")}
+   if(!row.querySelector(".doc-file-icon")){let i=document.createElement("span");i.className="doc-file-icon";i.innerHTML='<svg viewBox="0 0 24 24"><path d="M7 3.5h6l4 4v13H7a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2Z"/><path d="M13 3.5v4h4"/></svg>';row.prepend(i)}
+ })};
+ new MutationObserver(prettify).observe(dl,{childList:true,subtree:true});prettify();
+
+ // Enter moves to next logical field; duration opens picker.
+ const modal=document.getElementById("formModal");
+ modal.addEventListener("keydown",e=>{
+   if(e.key!=="Enter"||e.shiftKey)return;
+   let t=e.target;if(t.tagName==="TEXTAREA"||t.type==="file"||t.type==="button"||t.type==="checkbox")return;
+   e.preventDefault();
+   let c=[...modal.querySelectorAll("input:not([type=hidden]),select,textarea,.duration-picker-trigger")].filter(x=>!x.disabled&&x.offsetParent!==null);
+   let i=c.indexOf(t); if(i>=0&&i<c.length-1){c[i+1].focus();if(c[i+1]===trigger)trigger.click()}
+ });
+})();
+</script>
+
+<section class="timeline-page" id="timelinePage">
+ <div class="timeline-shell">
+  <header class="timeline-top">
+   <div class="timeline-topline">
+    <button class="timeline-back" id="timelineBack" type="button">‹</button>
+    <div class="timeline-titlebox"><strong>Časová osa dne</strong><span>24 hodin • plánované jízdy a volný čas</span></div>
+   </div>
+   <div class="timeline-daynav">
+    <button id="timelinePrev" type="button">‹</button>
+    <div class="timeline-daylabel"><b id="timelineDayName"></b><small id="timelineDate"></small></div>
+    <button id="timelineNext" type="button">›</button>
+   </div>
+  </header>
+  <div class="timeline-toolbar">
+   <button class="primary" id="timelineToday" type="button">Dnes</button>
+   <button id="breakAddBtn" type="button">+ Polední pauza</button>
+   <div class="timeline-legend"><span><i class="legend-dot"></i> Jízda</span><span><i class="legend-dot break"></i> Pauza</span></div>
+  </div>
+  <div class="timeline-conflicts" id="timelineConflicts"></div>
+  <div class="timeline-scroll"><div class="timeline-board"><div class="timeline-grid" id="timelineGrid"></div></div></div>
+ </div>
+</section>
+
+<div class="break-overlay" id="breakOverlay">
+ <div class="break-dialog">
+  <div class="break-dialog-head"><strong>Polední pauza</strong><span>Pauzu můžeš pro tento den posunout nebo odstranit.</span></div>
+  <div class="break-dialog-body">
+   <div class="break-time-fields">
+    <label>Od<input type="time" id="breakStart" value="12:00"></label>
+    <label>Do<input type="time" id="breakEnd" value="13:00"></label>
+   </div>
+  </div>
+  <div class="break-actions"><button class="break-remove" id="breakRemove" type="button">ODSTRANIT</button><button class="break-save" id="breakSave" type="button">ULOŽIT</button></div>
+ </div>
+</div>
+
+
+<script id="v20-timeline">
+(function(){
+ const page=document.getElementById("timelinePage"),grid=document.getElementById("timelineGrid"),
+ dayName=document.getElementById("timelineDayName"),dateLabel=document.getElementById("timelineDate"),
+ conflictBox=document.getElementById("timelineConflicts"),breakAdd=document.getElementById("breakAddBtn"),
+ breakOv=document.getElementById("breakOverlay"),breakStart=document.getElementById("breakStart"),breakEnd=document.getElementById("breakEnd");
+ let td=new Date(); td.setHours(0,0,0,0);
+ const BREAK_KEY="evidenceRozvozu_breaks_v20";
+ const days=["Neděle","Pondělí","Úterý","Středa","Čtvrtek","Pátek","Sobota"];
+ const months=["ledna","února","března","dubna","května","června","července","srpna","září","října","listopadu","prosince"];
+ const key=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+ const mins=t=>{let p=(t||"00:00").split(":");return (+p[0]||0)*60+(+p[1]||0)};
+ const fmt=n=>`${Math.floor(n/60)} h ${n%60?String(n%60).padStart(2,"0")+" min":""}`.trim();
+ const hhmm=n=>`${String(Math.floor(n/60)%24).padStart(2,"0")}:${String(n%60).padStart(2,"0")}`;
+ const loadBreaks=()=>{try{return JSON.parse(localStorage.getItem(BREAK_KEY)||"{}")}catch(e){return {}}};
+ const saveBreaks=x=>localStorage.setItem(BREAK_KEY,JSON.stringify(x));
+ function getBreak(d){
+   const b=loadBreaks(),k=key(d);
+   if(Object.prototype.hasOwnProperty.call(b,k)) return b[k];
+   return {start:"12:00",end:"13:00"};
+ }
+ function setBreak(d,val){let b=loadBreaks();b[key(d)]=val;saveBreaks(b)}
+ function rideDate(r){return r.date||r.deliveryDate||r.fDate||""}
+ function visibleRides(){
+   return (window.rides||rides||[]).filter(r=>rideDate(r)===key(td) && (r.status||"planned")==="planned" && r.startTime && Number(r.estimatedMinutes)>0);
+ }
+ function pxPerMinute(){return grid.clientHeight/1440}
+ function render(){
+   dayName.textContent=days[td.getDay()];
+   dateLabel.textContent=`${td.getDate()}. ${months[td.getMonth()]} ${td.getFullYear()}`;
+   grid.innerHTML="";
+   for(let h=0;h<24;h++){
+     let line=document.createElement("div");line.className="timeline-hour half";line.style.top=(h*60/1440*100)+"%";
+     line.innerHTML=`<span class="timeline-hour-label">${String(h).padStart(2,"0")}:00</span>`;grid.appendChild(line);
+   }
+   const rs=visibleRides().map(r=>({kind:"ride",r,start:mins(r.startTime),end:mins(r.startTime)+Number(r.estimatedMinutes)})).sort((a,b)=>a.start-b.start);
+   const br=getBreak(td); let items=[...rs];
+   if(br && br.start && br.end && mins(br.end)>mins(br.start))items.push({kind:"break",start:mins(br.start),end:mins(br.end)});
+   breakAdd.style.display=br?"none":"inline-block";
+   items.sort((a,b)=>a.start-b.start);
+
+   // conflicts
+   let conflictIds=new Set(), conflictTexts=[];
+   for(let i=0;i<items.length;i++)for(let j=i+1;j<items.length;j++){
+     if(items[j].start>=items[i].end)break;
+     let ov=Math.min(items[i].end,items[j].end)-Math.max(items[i].start,items[j].start);
+     if(ov>0){
+       if(items[i].r) conflictIds.add(items[i].r.id);
+       if(items[j].r) conflictIds.add(items[j].r.id);
+       conflictTexts.push(`Překrytí ${ov} min: ${items[i].kind==="break"?"Polední pauza":items[i].r.name||"Jízda"} × ${items[j].kind==="break"?"Polední pauza":items[j].r.name||"Jízda"}`);
+     }
+   }
+   conflictBox.style.display=conflictTexts.length?"block":"none";
+   conflictBox.innerHTML=conflictTexts.length?"⚠ "+conflictTexts.join(" • "):"";
+
+   if(!rs.length){let em=document.createElement("div");em.className="timeline-empty";em.textContent="Pro tento den zatím nejsou naplánované žádné jízdy.";grid.appendChild(em)}
+   rs.forEach(x=>{
+     let el=document.createElement("div"), dur=x.end-x.start;
+     el.className="timeline-event"+(dur<45?" tiny":dur<80?" compact":"")+(conflictIds.has(x.r.id)?" conflict":"");
+     el.style.top=(x.start/1440*100)+"%";el.style.height=(Math.max(18,dur/1440*grid.clientHeight))+"px";
+     el.innerHTML=`<div class="ev-delivery"><span>ČAS DORUČENÍ</span><strong>${esc(x.r.time||x.r.deliveryTime||"—")}</strong></div><div class="ev-top"><span class="ev-time">Odhad ${hhmm(x.start)}–${hhmm(x.end)}</span><span class="ev-code">${esc(x.r.vehicle||"")}</span></div><div class="ev-name">${esc(x.r.name||"Bez jména")}</div><div class="ev-address">${esc(x.r.address||"")}</div>`;
+     el.onclick=()=>{page.classList.remove("open");showInfo(x.r.id)};grid.appendChild(el);
+   });
+   if(br){
+     let a=mins(br.start),b=mins(br.end),el=document.createElement("div");el.className="timeline-break";
+     el.style.top=(a/1440*100)+"%";el.style.height=(Math.max(22,(b-a)/1440*grid.clientHeight))+"px";
+     el.innerHTML=`<div class="break-top">☕ Polední pauza <span class="break-time">${br.start}–${br.end}</span></div>`;
+     el.onclick=openBreak;grid.appendChild(el);
+   }
+
+   // Free-time labels between scheduled objects (rides + break), only gaps >= 10 min.
+   let occupied=items.map(x=>({start:x.start,end:x.end})).sort((a,b)=>a.start-b.start), merged=[];
+   occupied.forEach(x=>{let last=merged[merged.length-1];if(!last||x.start>last.end)merged.push({...x});else last.end=Math.max(last.end,x.end)});
+   for(let i=0;i<merged.length-1;i++){let gap=merged[i+1].start-merged[i].end;if(gap>=10){let lab=document.createElement("div");lab.className="timeline-free";lab.style.top=((merged[i].end+gap/2)/1440*100)+"%";lab.textContent="Volno "+fmt(gap);grid.appendChild(lab)}}
+
+   // current-time line
+   let now=new Date();
+   if(key(now)===key(td)){let n=now.getHours()*60+now.getMinutes(),line=document.createElement("div");line.className="timeline-now";line.style.top=(n/1440*100)+"%";line.innerHTML=`<span>${hhmm(n)}</span>`;grid.appendChild(line)}
+ }
+ function openBreak(){let b=getBreak(td)||{start:"12:00",end:"13:00"};breakStart.value=b.start;breakEnd.value=b.end;breakOv.classList.add("open")}
+ document.getElementById("breakSave").onclick=()=>{if(mins(breakEnd.value)<=mins(breakStart.value))return alert("Konec pauzy musí být později než začátek.");setBreak(td,{start:breakStart.value,end:breakEnd.value});breakOv.classList.remove("open");render()};
+ document.getElementById("breakRemove").onclick=()=>{setBreak(td,null);breakOv.classList.remove("open");render()};
+ breakAdd.onclick=()=>{breakStart.value="12:00";breakEnd.value="13:00";breakOv.classList.add("open")};
+ breakOv.onclick=e=>{if(e.target===breakOv)breakOv.classList.remove("open")};
+ document.getElementById("timelineBack").onclick=()=>page.classList.remove("open");
+ document.getElementById("timelinePrev").onclick=()=>{td.setDate(td.getDate()-1);render()};
+ document.getElementById("timelineNext").onclick=()=>{td.setDate(td.getDate()+1);render()};
+ document.getElementById("timelineToday").onclick=()=>{td=new Date();td.setHours(0,0,0,0);render()};
+
+ // Find the hourglass/tool button in the existing right tool panel.
+ function openTimeline(){
+   try{
+     if(typeof selectedDate!=="undefined" && selectedDate instanceof Date) td=new Date(selectedDate);
+     else if(typeof currentDate!=="undefined" && currentDate instanceof Date) td=new Date(currentDate);
+     else td=new Date();
+   }catch(e){td=new Date()}
+   td.setHours(0,0,0,0);page.classList.add("open");render();
+   setTimeout(()=>{if(key(new Date())===key(td)){let now=new Date(),y=(now.getHours()*60+now.getMinutes())/1440*grid.clientHeight;document.querySelector(".timeline-scroll").scrollTop=Math.max(0,y-250)}},50);
+ }
+ let candidates=[...document.querySelectorAll(".tool-panel button,.tool-panel .tool-btn,.tool-panel [role=button]")];
+ let hourglass=candidates.find(x=>(x.textContent||"").includes("⌛")||(x.textContent||"").includes("⏳")||(x.getAttribute("aria-label")||"").toLowerCase().includes("čas"));
+ if(hourglass){hourglass.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();openTimeline()},true)}
+ else{
+   /* The app already has a Timeline/hourglass control directly below Calendar.
+      Reuse that existing control and never create a duplicate icon. */
+   const panel=document.querySelector(".tool-panel");
+   const existing=panel ? [...panel.querySelectorAll("button,.tool-btn,[role=button]")] : [];
+   const timelineControl=existing.length>1 ? existing[1] : null;
+   if(timelineControl) timelineControl.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();openTimeline()},true);
+ }
+ window.openTimeline=openTimeline;
+})();
+</script>
+
+
+<script id="v22-timeline-enhancements">
+(function(){
+ const grid=document.getElementById("timelineGrid");
+ if(!grid)return;
+
+ /* Add richer content + vehicle thumbnail after every timeline render. */
+ const observer=new MutationObserver(()=>{
+   grid.querySelectorAll(".timeline-event").forEach(el=>{
+     if(el.querySelector(".timeline-vehicle-thumb")) return;
+     const code=(el.querySelector(".ev-code")?.textContent||"").trim();
+     const thumb=document.createElement("div");
+     thumb.className="timeline-vehicle-thumb";
+     const url=(window.VEHICLE_IMAGES&&window.VEHICLE_IMAGES[code])||"";
+     thumb.innerHTML=url?`<img src="${url}" alt="${code}">`:`<span class="vehicle-placeholder">${code||"—"}</span>`;
+     el.appendChild(thumb);
+   });
+   bindBreakDrag();
+ });
+ observer.observe(grid,{childList:true,subtree:true});
+
+ let dragBound=null;
+ function bindBreakDrag(){
+   const el=grid.querySelector(".timeline-break");
+   if(!el || el===dragBound)return;
+   dragBound=el;
+   let active=false,startY=0,startTop=0,duration=60,moved=false;
+
+   const begin=(clientY)=>{
+     const brStart=document.getElementById("breakStart"),brEnd=document.getElementById("breakEnd");
+     const toMin=v=>{let p=(v||"00:00").split(":");return (+p[0]||0)*60+(+p[1]||0)};
+     duration=Math.max(5,toMin(brEnd.value)-toMin(brStart.value));
+     startY=clientY;startTop=parseFloat(el.style.top)||0;active=true;moved=false;
+     el.classList.add("dragging");
+   };
+   const move=(clientY)=>{
+     if(!active)return;
+     const rect=grid.getBoundingClientRect();
+     let pct=startTop+(clientY-startY)/rect.height*100;
+     const maxPct=(1440-duration)/1440*100;
+     pct=Math.max(0,Math.min(maxPct,pct));
+     el.style.top=pct+"%";moved=true;
+   };
+   const finish=()=>{
+     if(!active)return; active=false;el.classList.remove("dragging");
+     if(!moved)return;
+     const pct=parseFloat(el.style.top)||0;
+     let start=Math.round((pct/100*1440)/5)*5;
+     start=Math.max(0,Math.min(1440-duration,start));
+     const fmt=n=>String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");
+     document.getElementById("breakStart").value=fmt(start);
+     document.getElementById("breakEnd").value=fmt(start+duration);
+     document.getElementById("breakSave").click();
+   };
+   el.addEventListener("pointerdown",e=>{e.preventDefault();begin(e.clientY);el.setPointerCapture?.(e.pointerId)});
+   el.addEventListener("pointermove",e=>move(e.clientY));
+   el.addEventListener("pointerup",finish);
+   el.addEventListener("pointercancel",finish);
+   /* prevent click editor after an actual drag */
+   el.addEventListener("click",e=>{if(moved){e.preventDefault();e.stopImmediatePropagation();moved=false}},true);
+ }
+})();
+</script>
+
+<script id="v23-timeline-scroll-fix">
+(function(){
+ const page=document.getElementById("timelinePage");
+ if(!page)return;
+ const scroll=document.querySelector(".timeline-scroll");
+ const grid=document.getElementById("timelineGrid");
+ const back=document.getElementById("timelineBack");
+ if(back) back.setAttribute("aria-label","Zpět na přehled");
+
+ function smartPosition(){
+   /* Timeline page itself scrolls; bring the useful morning portion into view,
+      but never crop/delete midnight from the timeline. */
+   const first=grid.querySelector(".timeline-event,.timeline-break");
+   let minute=7*60;
+   if(first){
+     const pct=parseFloat(first.style.top)||0;
+     minute=Math.max(0,Math.round(pct/100*1440)-60);
+   }
+   const y=(minute/1440)*grid.clientHeight;
+   const board=document.querySelector(".timeline-board");
+   if(board){
+     const target=board.offsetTop+y-80;
+     page.scrollTop=Math.max(0,target);
+   }
+ }
+ const mo=new MutationObserver(()=>setTimeout(smartPosition,20));
+ mo.observe(grid,{childList:true});
+})();
+</script>
+
+<section class="active-run" id="activeRun">
+ <div class="run-shell">
+  <header class="run-head">
+   <div class="run-head-row">
+    <button class="run-minimize" id="runMinimize" type="button" title="Minimalizovat">⌄</button>
+    <div class="run-head-copy"><div class="run-kicker">Probíhající rozvoz</div><h2>Nakládka</h2></div>
+    <div class="run-stage-pill">1 / 5</div>
+   </div>
+  </header>
+  <main class="run-body">
+   <div class="run-timer-card">
+    <div class="run-timer-label">Čas nakládky</div>
+    <div class="run-timer" id="runTimer">00:00:00</div>
+    <div class="run-timer-state" id="runTimerState">Čas právě běží</div>
+   </div>
+   <div class="run-customer">
+    <div class="run-customer-top">
+     <div class="run-customer-copy"><small>Zákazník</small><strong id="runName">—</strong><span id="runAddress">—</span></div>
+     <div class="run-vehicle"><div class="run-vehicle-code" id="runVehicleCode">—</div><div class="run-vehicle-image" id="runVehicleImage"><span>—</span></div></div>
+    </div>
+   </div>
+   <div class="run-stage-nav" id="runStageNav"></div>
+   <div class="run-history-nav" id="runHistoryNav">
+    <button class="run-back-stage" id="runBackStage" type="button">← ZPĚT</button>
+    <span class="run-view-note" id="runViewNote">Aktuální etapa</span>
+   </div>
+   <section class="run-section run-history-panel" id="runHistoricalPanel" hidden></section>
+   <section class="run-section" id="runStageDetails"></section>
+   <section class="run-section run-time-panel" id="runTimePanel"></section>
+   <section class="run-section">
+    <div class="run-section-title">▤ Dokumenty k jízdě</div>
+    <div class="run-docs" id="runDocuments"></div>
+   </section>
+   <div class="run-controls"><button id="runPauseBtn" type="button">POZASTAVIT</button><button id="runDoneBtn" type="button">HOTOVO</button></div>
+   <div class="run-history">Po dokončení Nakládky se automaticky spustí etapa Výjezd.</div>
+  </main>
+ </div>
+</section>
+<div class="run-bar" id="runBar"><span class="run-bar-dot"></span><div class="run-bar-copy"><strong id="runBarTitle">Probíhající rozvoz • Nakládka</strong><span>Klepnutím otevřít</span></div><div class="run-bar-time" id="runBarTime">00:00:00</div></div>
+<div class="start-confirm-overlay" id="startConfirmOverlay">
+ <div class="start-confirm">
+  <div class="start-confirm-main"><div class="start-confirm-icon">▶</div><h3>Zahájit jízdu?</h3><p id="startConfirmText">Jste si jistí, že chcete začít tuto jízdu?</p></div>
+  <div class="start-confirm-actions"><button class="start-no" id="startNo" type="button">NE</button><button class="start-yes" id="startYes" type="button">ANO, ZAČÍT</button></div>
+ </div>
+</div>
+
+<script id="v24-active-delivery">
+(function(){
+ const KEY="evidenceRozvozu_activeRun_v24";
+ const run=document.getElementById("activeRun"),bar=document.getElementById("runBar"),
+ overlay=document.getElementById("startConfirmOverlay");
+ let pendingRide=null,tick=null;
+
+ const getRides=()=>{try{return window.rides||rides||[]}catch(e){return []}};
+ const getRide=id=>getRides().find(r=>String(r.id)===String(id));
+ const fmt=ms=>{let sec=Math.max(0,Math.floor(ms/1000)),h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return [h,m,s].map(x=>String(x).padStart(2,"0")).join(":")};
+ const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){return null}};
+ const save=x=>localStorage.setItem(KEY,JSON.stringify(x));
+ const clear=()=>localStorage.removeItem(KEY);
+ function elapsed(a){
+   if(!a)return 0;
+   let total=a.accumulatedMs||0;
+   if(!a.paused && a.segmentStartedAt) total+=Date.now()-a.segmentStartedAt;
+   return total;
+ }
+ function paint(){
+   let a=load(); if(!a){bar.classList.remove("show");return}
+   let r=getRide(a.rideId); if(!r){clear();bar.classList.remove("show");return}
+   let t=fmt(elapsed(a));
+   document.getElementById("runTimer").textContent=t;document.getElementById("runBarTime").textContent=t;
+   document.getElementById("runTimerState").textContent=a.paused?"Čas je pozastavený":"Čas právě běží";
+   document.getElementById("runPauseBtn").textContent=a.paused?"POKRAČOVAT":"POZASTAVIT";
+   document.getElementById("runName").textContent=r.name||"Bez jména";
+   document.getElementById("runAddress").textContent=r.address||"Adresa neuvedena";
+   let code=r.vehicle||"—";document.getElementById("runVehicleCode").textContent=code;
+   let vi=document.getElementById("runVehicleImage"),url=(window.VEHICLE_IMAGES&&window.VEHICLE_IMAGES[code])||"";
+   vi.innerHTML=url?`<img src="${url}" alt="${code}">`:`<span>${code}</span>`;
+   let docs=document.getElementById("runDocuments"),arr=r.documents||[];
+   docs.innerHTML=arr.length?arr.map(d=>`<div class="run-doc" data-file="${d.id||d.fileId||""}"><span class="run-doc-icon">▤</span><span class="run-doc-name">${escapeHtml(d.name||"Dokument")}</span><span class="run-doc-open">OTEVŘÍT</span></div>`).join(""):`<div class="run-no-docs">K této jízdě nejsou přiložené žádné dokumenty.</div>`;
+   docs.querySelectorAll(".run-doc").forEach(x=>x.onclick=()=>{let id=x.dataset.file;if(id&&typeof window.openRideDocument==="function")window.openRideDocument(id)});
+ }
+ function escapeHtml(x){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+ function openRun(){paint();run.classList.add("open");bar.classList.remove("show")}
+ function startRide(r){
+   let a={rideId:r.id,stage:"loading",segmentStartedAt:Date.now(),accumulatedMs:0,paused:false,startedAt:Date.now()};
+   save(a);overlay.classList.remove("open");openRun();startTick();
+ }
+ function startTick(){clearInterval(tick);tick=setInterval(paint,500);paint()}
+ function requestStart(r){
+   if(load()){openRun();return}
+   pendingRide=r;document.getElementById("startConfirmText").textContent=`Jste si jistí, že chcete začít jízdu pro ${r.name||"tohoto zákazníka"}?`;
+   overlay.classList.add("open");
+ }
+ document.getElementById("startNo").onclick=()=>{pendingRide=null;overlay.classList.remove("open")};
+ document.getElementById("startYes").onclick=()=>{if(pendingRide)startRide(pendingRide)};
+ overlay.onclick=e=>{if(e.target===overlay)document.getElementById("startNo").click()};
+ document.getElementById("runPauseBtn").onclick=()=>{
+   let a=load();if(!a)return;
+   if(a.paused){a.paused=false;a.segmentStartedAt=Date.now()}
+   else{a.accumulatedMs=elapsed(a);a.paused=true;a.segmentStartedAt=null}
+   save(a);paint();
+ };
+ document.getElementById("runMinimize").onclick=()=>{run.classList.remove("open");bar.classList.add("show");paint()};
+ bar.onclick=openRun;
+ document.getElementById("runDoneBtn").onclick=()=>{
+   let a=load();if(!a)return;
+   a.accumulatedMs=elapsed(a);a.paused=true;a.segmentStartedAt=null;a.loadingDurationMs=a.accumulatedMs;
+   save(a);
+   alert("Nakládka dokončena. Čas nakládky: "+fmt(a.loadingDurationMs)+".\n\nV dalším kroku napojíme obrazovku Výjezd.");
+   run.classList.remove("open");bar.classList.add("show");paint();
+ };
+
+ /* Capture existing START buttons without changing card rendering. */
+ document.addEventListener("click",e=>{
+   const btn=e.target.closest("button");
+   if(!btn || (btn.textContent||"").trim().toUpperCase()!=="START")return;
+   if(btn.closest("#activeRun,#startConfirmOverlay"))return;
+   let card=btn.closest(".card"); if(!card)return;
+   let id=card.dataset.id||card.getAttribute("data-ride-id")||card.getAttribute("data-id");
+   let r=id?getRide(id):null;
+   if(!r){
+     const name=(card.querySelector(".name-row,.customer-name,.name")?.textContent||"").trim();
+     r=getRides().find(x=>x.name===name && (x.status||"planned")==="planned");
+   }
+   if(r){e.preventDefault();e.stopImmediatePropagation();requestStart(r)}
+ },true);
+
+ if(load()){bar.classList.add("show");startTick()}
+})();
+</script>
+
+<script id="v25-full-workflow">
+(function(){
+ const KEY="evidenceRozvozu_activeRun_v24";
+ const STAGES=["loading","outbound","unloading","payment","return"];
+ const LABEL={loading:"Nakládka",outbound:"Výjezd",unloading:"Vykládka",payment:"Platba",return:"Cesta zpět"};
+ const HOME="Pila Železnice, Nádražní 349, Železnice";
+ const $=id=>document.getElementById(id);
+ const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){return null}};
+ const save=a=>localStorage.setItem(KEY,JSON.stringify(a));
+ const rides=()=>{try{return window.rides||window.eval("rides")||[]}catch(e){return []}};
+ const ride=id=>rides().find(x=>String(x.id)===String(id));
+ const elapsed=a=>{let x=a.accumulatedMs||0;if(!a.paused&&a.segmentStartedAt)x+=Date.now()-a.segmentStartedAt;return x};
+ const fmt=ms=>{let z=Math.floor((ms||0)/1000),h=Math.floor(z/3600),m=Math.floor(z%3600/60),q=z%60;return [h,m,q].map(v=>String(v).padStart(2,"0")).join(":")};
+ const esc=x=>String(x||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ function duration(a,stage){return a.durations?.[stage]||((a.stage===stage)?elapsed(a):0)}
+ function navUrl(dest){return "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(dest)}
+ function render(){
+   let a=load();if(!a)return;let r=ride(a.rideId);if(!r)return;
+   let ix=STAGES.indexOf(a.stage); if(ix<0)ix=0;
+   document.querySelector(".run-head h2").textContent=LABEL[a.stage];
+   document.querySelector(".run-stage-pill").textContent=(ix+1)+" / 5";
+   $("runBarTitle").textContent="Probíhající rozvoz • "+LABEL[a.stage];
+   $("runStageNav").innerHTML=STAGES.map((x,i)=>`<button type="button" class="${i<ix?"done":i===ix?"current":""}" data-stage="${x}">${i<ix?"✓ ":""}${LABEL[x]}</button>`).join("");
+   $("runStageNav").querySelectorAll("button").forEach(b=>b.onclick=()=>{
+     let target=b.dataset.stage,ti=STAGES.indexOf(target);
+     if(ti<=ix) showHistorical(target,a,r);
+   });
+   let timerCard=document.querySelector(".run-timer-card"),pause=$("runPauseBtn");
+   timerCard.style.display=a.stage==="payment"?"none":"block";pause.style.display=a.stage==="payment"?"none":"block";
+   $("runDoneBtn").textContent=a.stage==="return"?"POTVRDIT A UKONČIT":"HOTOVO";
+   let d=$("runStageDetails");
+   let times=STAGES.slice(0,ix).filter(x=>x!=="payment").map(x=>`<div class="run-stage-time"><span>${LABEL[x]}</span><b>${fmt(a.durations?.[x])}</b></div>`).join("");
+   if(a.stage==="loading") d.innerHTML='<div class="run-section-title">Příprava rozvozu</div><div class="run-info-grid"><div class="run-info-box"><small>Objednávka</small><strong>'+esc(r.orderNo||"—")+'</strong></div><div class="run-info-box"><small>Čas doručení</small><strong>'+esc(r.time||r.deliveryTime||"—")+'</strong></div></div>';
+   if(a.stage==="outbound") d.innerHTML='<div class="run-section-title">Cesta k zákazníkovi</div><div class="run-info-grid"><div class="run-info-box"><small>Telefon</small><strong><a class="run-phone" href="tel:'+esc(r.phone)+'">'+esc(r.phone||"—")+'</a></strong></div><div class="run-info-box"><small>Počet km</small><strong>'+(r.km||r.distance||"—")+'</strong></div></div><div class="run-map-placeholder">Mapa trasy bude napojena v mapovém kroku.<br>'+esc(r.address||"")+'</div><button class="run-nav-btn" type="button" onclick="window.open(\''+navUrl(r.address||"")+'\',\'_blank\')">NAVIGOVAT • GOOGLE MAPS</button>';
+   if(a.stage==="unloading") d.innerHTML='<div class="run-section-title">Dosavadní časy</div><div class="run-stage-times">'+times+'</div>';
+   if(a.stage==="payment") d.innerHTML='<div class="run-section-title">Souhrn a platba</div><div class="run-stage-times">'+times+'</div><div class="run-payment"><strong>'+esc(r.name||"—")+'</strong><div>'+esc(r.phone||"")+'</div><div>Č. objednávky: '+esc(r.orderNo||"—")+'</div><div>Cena bez DPH: '+esc(r.net||r.priceNet||"—")+'</div><div>Cena s DPH: '+esc(r.gross||r.priceGross||"—")+'</div><div>Platba: '+esc(r.payment||"—")+'</div></div>';
+   if(a.stage==="return") d.innerHTML='<div class="run-section-title">Cesta zpět</div><div class="run-stage-times">'+times+'</div><div class="run-map-placeholder">'+HOME+'</div><button class="run-nav-btn" type="button" onclick="window.open(\''+navUrl(HOME)+'\',\'_blank\')">NAVIGOVAT DOMŮ • GOOGLE MAPS</button><div class="run-finish-note">Po potvrzení se jízda automaticky přesune mezi Splněné.</div>';
+ }
+ function showHistorical(stage,a,r){
+   let d=$("runStageDetails");
+   d.innerHTML='<div class="run-section-title">'+LABEL[stage]+' • dokončeno</div><div class="run-stage-time"><span>Naměřený čas</span><b>'+fmt(a.durations?.[stage])+'</b></div><div class="run-finish-note">Toto je pouze náhled dokončené etapy. Její čas se už nemění.</div>';
+ }
+ function next(){
+   let a=load();if(!a)return;let r=ride(a.rideId);if(!r)return;
+   a.durations=a.durations||{};
+   if(a.stage!=="payment")a.durations[a.stage]=elapsed(a);
+   let ix=STAGES.indexOf(a.stage);
+   if(a.stage==="return"){
+     try{
+       r.status="completed";
+       if(typeof window.saveRides==="function")window.saveRides();
+       else if(typeof saveRides==="function")saveRides();
+       if(typeof window.render==="function")window.render();
+     }catch(e){}
+     localStorage.removeItem(KEY);
+     $("activeRun").classList.remove("open");$("runBar").classList.remove("show");
+     alert("Rozvoz byl dokončen.");
+     return;
+   }
+   a.stage=STAGES[ix+1];
+   a.accumulatedMs=0;a.paused=false;a.segmentStartedAt=a.stage==="payment"?null:Date.now();
+   if(a.stage==="payment")a.paused=true;
+   save(a);render();
+ }
+ /* Override v24 HOTOVO with capture handler, so all stages advance. */
+ $("runDoneBtn").addEventListener("click",e=>{e.preventDefault();e.stopImmediatePropagation();next()},true);
+ /* keep stage-specific screen refreshed; v24 handles actual timer */
+ setInterval(render,700);
+ setTimeout(render,0);
+})();
+</script>
+
+<script id="v27-stable-history-js">
+(function(){
+ const KEY="evidenceRozvozu_activeRun_v24";
+ const ST=["loading","outbound","unloading","payment","return"];
+ const LB={loading:"Nakládka",outbound:"Výjezd",unloading:"Vykládka",payment:"Platba",return:"Cesta zpět"};
+ let viewed=null;
+ const $=id=>document.getElementById(id);
+ const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){return null}};
+ const allRides=()=>{try{return window.rides||window.eval("rides")||[]}catch(e){return []}};
+ const getRide=id=>allRides().find(r=>String(r.id)===String(id));
+ const fmt=ms=>{let z=Math.max(0,Math.floor((ms||0)/1000)),h=Math.floor(z/3600),m=Math.floor((z%3600)/60),q=z%60;return [h,m,q].map(v=>String(v).padStart(2,"0")).join(":")};
+ const live=a=>(a.accumulatedMs||0)+(!a.paused&&a.segmentStartedAt?Date.now()-a.segmentStartedAt:0);
+ const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+ function msFor(a,stage){
+   if(a.durations && a.durations[stage]!=null) return a.durations[stage];
+   if(stage===a.stage && stage!=="payment") return live(a);
+   return 0;
+ }
+
+ function summary(a,displayStage){
+   let upto=ST.indexOf(displayStage), rows="", total=0;
+   ST.slice(0,upto+1).forEach(stage=>{
+     if(stage==="payment") return;
+     const ms=msFor(a,stage);
+     total+=ms;
+     rows+=`<div class="run-stage-time"><span>${LB[stage]}</span><b>${fmt(ms)}</b></div>`;
+   });
+   return `<div class="run-time-summary-title">Dosavadní časy</div>
+           <div class="run-stage-times">${rows}</div>
+           <div class="run-total-time"><span>Celkový čas</span><strong>${fmt(total)}</strong></div>`;
+ }
+
+ function historicalContent(stage,a,r){
+   const time=`<div class="run-stage-time"><span>Naměřený čas</span><b>${stage==="payment"?"Bez časování":fmt(msFor(a,stage))}</b></div>`;
+   if(stage==="loading") return `<div class="run-section-title">Nakládka • dokončeno</div>${time}<div class="run-history-description"><b>Objednávka:</b> ${esc(r.orderNo||"—")}<br><b>Čas doručení:</b> ${esc(r.time||"—")}</div>`;
+   if(stage==="outbound") return `<div class="run-section-title">Výjezd • dokončeno</div>${time}<div class="run-history-description"><b>Zákazník:</b> ${esc(r.name||"—")}<br><b>Telefon:</b> ${esc(r.phone||"—")}<br><b>Adresa:</b> ${esc(r.address||"—")}<br><b>Počet km:</b> ${esc(r.km||r.distance||"—")}</div>`;
+   if(stage==="unloading") return `<div class="run-section-title">Vykládka • dokončeno</div>${time}<div class="run-history-description">Etapa je uzavřená. Její naměřený čas se při tomto náhledu už nemění.</div>`;
+   if(stage==="payment") return `<div class="run-section-title">Platba • dokončeno</div><div class="run-history-description"><b>Zákazník:</b> ${esc(r.name||"—")}<br><b>Objednávka:</b> ${esc(r.orderNo||"—")}<br><b>Platba:</b> ${esc(r.payment||"—")}<br><b>Cena s DPH:</b> ${esc(r.gross||r.priceGross||"—")}</div>`;
+   return `<div class="run-section-title">${LB[stage]}</div>${time}`;
+ }
+
+ function refresh(){
+   const a=load(), normal=$("runStageDetails"), hist=$("runHistoricalPanel"), panel=$("runTimePanel"), back=$("runBackStage"), note=$("runViewNote");
+   if(!a||!normal||!hist||!panel||!back||!note) return;
+   const r=getRide(a.rideId); if(!r) return;
+   const ai=ST.indexOf(a.stage);
+   if(viewed && ST.indexOf(viewed)>ai) viewed=null;
+   const display=viewed||a.stage, di=ST.indexOf(display);
+
+   back.disabled=di<=0;
+   note.textContent=viewed ? `Prohlížíte: ${LB[display]} • ${LB[a.stage]} běží dál` : "Aktuální etapa";
+
+   if(viewed){
+     normal.style.display="none";
+     hist.hidden=false;
+     hist.innerHTML=historicalContent(display,a,r);
+   }else{
+     normal.style.display="";
+     hist.hidden=true;
+   }
+
+   panel.innerHTML=summary(a,display);
+
+   document.querySelectorAll("#runStageNav button").forEach(b=>{
+     b.classList.toggle("viewing",viewed===b.dataset.stage);
+   });
+ }
+
+ $("runBackStage")?.addEventListener("click",()=>{
+   const a=load(); if(!a)return;
+   const current=viewed||a.stage, i=ST.indexOf(current);
+   if(i>0){viewed=ST[i-1];refresh()}
+ });
+
+ /* Stable delegated navigation: v25 keeps recreating these buttons. */
+ $("runStageNav")?.addEventListener("click",e=>{
+   const b=e.target.closest("button[data-stage]"); if(!b)return;
+   const a=load(); if(!a)return;
+   const target=b.dataset.stage;
+   if(ST.indexOf(target)<=ST.indexOf(a.stage)){
+     e.preventDefault(); e.stopPropagation();
+     viewed=(target===a.stage)?null:target;
+     refresh();
+   }
+ },true);
+
+ /* When a new stage starts, automatically return to the live/current card. */
+ let lastStage=null;
+ setInterval(()=>{
+   const a=load();
+   if(a && lastStage!==null && a.stage!==lastStage) viewed=null;
+   if(a) lastStage=a.stage;
+   refresh();
+ },400);
+
+ refresh();
+})();
+</script>
+
+<style id="v30-remove-empty-stage-card">
+#runStageDetails.v30-empty-stage-card{display:none!important}
+</style>
+<script id="v30-remove-empty-stage-card-js">
+(function(){
+ const box=document.getElementById("runStageDetails");
+ if(!box)return;
+ function clean(){
+   const visible=[...box.children].filter(el=>{
+     const cs=getComputedStyle(el);
+     return cs.display!=="none" && cs.visibility!=="hidden" &&
+            ((el.textContent||"").trim() || el.querySelector("button,a,input,img"));
+   });
+   box.classList.toggle("v30-empty-stage-card", visible.length===0);
+ }
+ new MutationObserver(clean).observe(box,{childList:true,subtree:true,characterData:true});
+ setInterval(clean,700);
+ clean();
+})();
+</script>
+
+<style id="v32-payment-timer">
+/* Platba je nyní plnohodnotná časovaná etapa */
+body .run-timer-card.v32-payment-active{display:block!important}
+body #runPauseBtn.v32-payment-active{display:block!important}
+</style>
+
+<script id="v32-payment-timer-js">
+(function(){
+ const KEY="evidenceRozvozu_activeRun_v24";
+ const $=id=>document.getElementById(id);
+ const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){return null}};
+ const save=a=>localStorage.setItem(KEY,JSON.stringify(a));
+ const elapsed=a=>{
+   let x=a.accumulatedMs||0;
+   if(!a.paused && a.segmentStartedAt) x+=Date.now()-a.segmentStartedAt;
+   return x;
+ };
+ const fmt=ms=>{
+   let z=Math.max(0,Math.floor((ms||0)/1000)),
+       h=Math.floor(z/3600),m=Math.floor((z%3600)/60),q=z%60;
+   return [h,m,q].map(v=>String(v).padStart(2,"0")).join(":");
+ };
+
+ function ensurePaymentRunning(){
+   const a=load();
+   if(!a || a.stage!=="payment") return;
+   // Older v25 code entered Payment paused with no start timestamp.
+   // Convert that state once into a live timestamp-based timer.
+   if(a.paused || !a.segmentStartedAt){
+     a.paused=false;
+     a.segmentStartedAt=Date.now();
+     a.accumulatedMs=a.accumulatedMs||0;
+     save(a);
+   }
+ }
+
+ function paintPayment(){
+   const a=load();
+   const card=document.querySelector(".run-timer-card");
+   const pause=$("runPauseBtn");
+   if(!a || !card || !pause) return;
+
+   const active=a.stage==="payment";
+   card.classList.toggle("v32-payment-active",active);
+   pause.classList.toggle("v32-payment-active",active);
+
+   if(active){
+     ensurePaymentRunning();
+     const fresh=load();
+     const t=fmt(elapsed(fresh));
+     $("runTimer").textContent=t;
+     $("runBarTime").textContent=t;
+     $("runTimerState").textContent=fresh.paused?"Čas je pozastavený":"Čas platby právě běží";
+     pause.textContent=fresh.paused?"POKRAČOVAT":"POZASTAVIT";
+   }
+ }
+
+ /* Capture HOTOVO on Payment before the older workflow advances to Return.
+    Save the Payment duration so it appears in Dosavadní časy and Celkový čas. */
+ $("runDoneBtn")?.addEventListener("click",function(e){
+   const a=load();
+   if(!a || a.stage!=="payment") return;
+
+   a.durations=a.durations||{};
+   a.durations.payment=elapsed(a);
+   a.accumulatedMs=a.durations.payment;
+   save(a);
+
+   // Let the existing v25 handler advance to Cesta zpět.
+   // Its old code skips saving payment, but our duration is already persisted.
+ },true);
+
+ /* Patch the summary display generated by v27: include Payment in totals. */
+ function repairSummary(){
+   const a=load(), panel=$("runTimePanel");
+   if(!a || !panel) return;
+   const stageOrder=["loading","outbound","unloading","payment","return"];
+   const labels={loading:"Nakládka",outbound:"Výjezd",unloading:"Vykládka",payment:"Platba",return:"Cesta zpět"};
+   const upto=stageOrder.indexOf(a.stage);
+   let total=0, rows="";
+   stageOrder.slice(0,upto+1).forEach(st=>{
+     let ms=0;
+     if(a.durations && a.durations[st]!=null) ms=a.durations[st];
+     else if(st===a.stage) ms=elapsed(a);
+     total+=ms;
+     rows+=`<div class="run-stage-time"><span>${labels[st]}</span><b>${fmt(ms)}</b></div>`;
+   });
+   panel.innerHTML=`<div class="run-time-summary-title">Dosavadní časy</div>
+     <div class="run-stage-times">${rows}</div>
+     <div class="run-total-time"><span>Celkový čas</span><strong>${fmt(total)}</strong></div>`;
+ }
+
+ setInterval(()=>{
+   paintPayment();
+   repairSummary();
+ },350);
+
+ paintPayment();
+ repairSummary();
+})();
+</script>
+
+<style id="v33-stable-time">
+#runTimePanel{display:none!important}
+#v33TimePanel{margin-top:10px;background:#fff;border:1px solid #dfe7dc;border-radius:14px;padding:12px}
+.v33-title{font-size:9px;font-weight:950;color:#263e2d;margin-bottom:7px}
+.v33-row{display:flex;justify-content:space-between;background:#fafcf9;border-radius:8px;padding:7px 8px;font-size:8px;margin-top:5px}
+.v33-row b{color:#104c29;font-variant-numeric:tabular-nums}
+.v33-total{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:10px 11px;border-radius:10px;background:#104c29;color:#fff;font-size:9px;font-weight:950}
+.v33-total b{font-size:13px;font-variant-numeric:tabular-nums}
+</style>
+<script id="v33-stable-time-js">
+(function(){
+const K="evidenceRozvozu_activeRun_v24",O=["loading","outbound","unloading","payment","return"],L={loading:"Nakládka",outbound:"Výjezd",unloading:"Vykládka",payment:"Platba",return:"Cesta zpět"};
+const load=()=>{try{return JSON.parse(localStorage.getItem(K)||"null")}catch(e){return null}};
+const elapsed=a=>(a.accumulatedMs||0)+(!a.paused&&a.segmentStartedAt?Date.now()-a.segmentStartedAt:0);
+const fmt=ms=>{let z=Math.max(0,Math.floor((ms||0)/1000)),h=Math.floor(z/3600),m=Math.floor(z%3600/60),q=z%60;return[h,m,q].map(v=>String(v).padStart(2,"0")).join(":")};
+const old=document.getElementById("runTimePanel");if(!old)return;
+const p=document.createElement("section");p.id="v33TimePanel";p.innerHTML='<div class="v33-title">Dosavadní časy</div><div id="v33Rows"></div><div class="v33-total"><span>Celkový čas</span><b id="v33Total">00:00:00</b></div>';old.after(p);
+let key="";
+function paint(){
+ let a=load();if(!a){p.style.display="none";return}p.style.display="";
+ let n=O.indexOf(a.stage);if(n<0)return;let stages=O.slice(0,n+1),k=stages.join(",");
+ if(k!==key){key=k;document.getElementById("v33Rows").innerHTML=stages.map(x=>'<div class="v33-row" data-st="'+x+'"><span>'+L[x]+'</span><b>00:00:00</b></div>').join("")}
+ let total=0;
+ stages.forEach(x=>{let ms=a.durations&&a.durations[x]!=null?a.durations[x]:(x===a.stage?elapsed(a):0);total+=ms;let b=p.querySelector('[data-st="'+x+'"] b'),v=fmt(ms);if(b&&b.textContent!==v)b.textContent=v});
+ let t=document.getElementById("v33Total"),v=fmt(total);if(t.textContent!==v)t.textContent=v;
+}
+setInterval(paint,250);paint();
+})();
+</script>
+
+<script id="v34-mapy-autocomplete">
+/* ============================================================
+   MAPY.COM API – SEM VLOŽ SVŮJ API KLÍČ
+   Klíč nech mezi uvozovkami.
+   ============================================================ */
+const MAPY_API_KEY = "SEM_VLOŽ_SVŮJ_MAPY_COM_API_KLÍČ";
+
+(function(){
+ const API="https://api.mapy.cz/v1";
+ const ORIGIN_ADDRESS="Nádražní 349, Železnice";
+ const input=document.getElementById("fAddress");
+ const saveBtn=document.getElementById("saveRide");
+ if(!input||!saveBtn)return;
+
+ let selected=null, routeData=null, timer=null, controller=null;
+ let origin=null;
+ try{origin=JSON.parse(localStorage.getItem("evidenceRozvozu_mapyOrigin_v34")||"null")}catch(e){}
+
+ const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const keyReady=()=>MAPY_API_KEY && !MAPY_API_KEY.includes("SEM_VLOŽ");
+
+ // Build UI directly around the existing address field.
+ const parent=input.parentElement;
+ const wrap=document.createElement("div");wrap.className="mapy-address-wrap";
+ parent.insertBefore(wrap,input);wrap.appendChild(input);
+ const box=document.createElement("div");box.className="mapy-suggest-box";wrap.appendChild(box);
+ const status=document.createElement("div");status.className="mapy-address-status";status.textContent="Začni psát adresu – našeptává Mapy.com.";parent.appendChild(status);
+ const route=document.createElement("div");route.className="mapy-route-card";
+ route.innerHTML='<div class="mapy-route-title">Trasa • Pila Železnice → zadaná adresa</div><div class="mapy-route-values"><div class="mapy-route-value"><small>Vzdálenost</small><strong id="mapyRouteKm">—</strong></div><div class="mapy-route-value"><small>Doba jízdy</small><strong id="mapyRouteTime">—</strong></div></div>';
+ parent.appendChild(route);
+
+ function setStatus(text,type=""){
+   status.textContent=text;status.className="mapy-address-status"+(type?" "+type:"");
+ }
+ function hide(){box.classList.remove("show")}
+ function positionOf(item){
+   const p=item?.position;
+   if(!p)return null;
+   if(Array.isArray(p))return {lon:+p[0],lat:+p[1]};
+   return {lon:+p.lon,lat:+p.lat};
+ }
+ function fullAddress(item){
+   return [item.name,item.location].filter(Boolean).join(", ");
+ }
+ async function api(path,params){
+   if(!keyReady())throw new Error("Nejdřív vlož MAPY_API_KEY.");
+   const u=new URL(API+path);
+   Object.entries({...params,apikey:MAPY_API_KEY}).forEach(([k,v])=>u.searchParams.set(k,v));
+   const res=await fetch(u,{mode:"cors"});
+   if(!res.ok)throw new Error("Mapy.com API: "+res.status);
+   return res.json();
+ }
+ async function getOrigin(){
+   if(origin?.lon&&origin?.lat)return origin;
+   const j=await api("/geocode",{lang:"cs",limit:"1",type:"regional.address",query:ORIGIN_ADDRESS});
+   const item=j.items?.[0]; const p=positionOf(item);
+   if(!p)throw new Error("Nepodařilo se určit polohu Pily Železnice.");
+   origin=p;localStorage.setItem("evidenceRozvozu_mapyOrigin_v34",JSON.stringify(origin));
+   return origin;
+ }
+ function duration(sec){
+   const m=Math.round(sec/60),h=Math.floor(m/60),mm=m%60;
+   return h?`${h} h ${mm} min`:`${m} min`;
+ }
+ async function calculateRoute(dest){
+   setStatus("Počítám trasu z Pily Železnice…");
+   const o=await getOrigin();
+   const j=await api("/routing/route",{
+     lang:"cs",
+     start:`${o.lon},${o.lat}`,
+     end:`${dest.lon},${dest.lat}`,
+     routeType:"car_fast_traffic",
+     avoidToll:"false",
+     format:"geojson"
+   });
+   routeData={
+     km:Math.round((j.length/1000)*10)/10,
+     routeMeters:j.length,
+     routeDurationSeconds:j.duration,
+     routeMinutes:Math.round(j.duration/60),
+     routeGeometry:j.geometry||null,
+     destinationLon:dest.lon,
+     destinationLat:dest.lat
+   };
+   document.getElementById("mapyRouteKm").textContent=routeData.km.toLocaleString("cs-CZ")+" km";
+   document.getElementById("mapyRouteTime").textContent=duration(j.duration);
+   route.classList.add("show");
+   setStatus("Adresa ověřena • trasa vypočítána","ok");
+   if(window.PZMapyV35 && typeof window.PZMapyV35.onFormRoute==="function"){
+     window.PZMapyV35.onFormRoute({selected,routeData,origin});
+   }
+ }
+ async function suggest(q){
+   if(controller)controller.abort();
+   controller=new AbortController();
+   if(!keyReady()){setStatus('V kódu nejdřív nahraď „SEM_VLOŽ_SVŮJ_MAPY_COM_API_KLÍČ“ svým klíčem.','err');return}
+   try{
+     const u=new URL(API+"/suggest");
+     [["lang","cs"],["limit","6"],["type","regional.address"],["locality","cz"],["apikey",MAPY_API_KEY],["query",q]].forEach(([k,v])=>u.searchParams.set(k,v));
+     const res=await fetch(u,{mode:"cors",signal:controller.signal});
+     if(!res.ok)throw new Error("API "+res.status);
+     const j=await res.json(),items=j.items||[];
+     if(input.value.trim()!==q)return;
+     if(!items.length){box.innerHTML='<div class="mapy-suggest-item"><span class="mapy-suggest-name">Žádná adresa nenalezena</span></div>';box.classList.add("show");return}
+     box.innerHTML=items.map((it,i)=>`<button type="button" class="mapy-suggest-item" data-i="${i}"><span class="mapy-suggest-name">${esc(it.name)}</span><span class="mapy-suggest-location">${esc(it.location||it.label||"")}</span></button>`).join("")+
+       '<div class="mapy-powered"><span>Powered by</span><img src="https://api.mapy.cz/img/api/logo-small.svg" alt="Mapy.com"></div>';
+     box.classList.add("show");
+     box.querySelectorAll("button[data-i]").forEach(b=>b.onclick=async()=>{
+       const it=items[+b.dataset.i],p=positionOf(it);if(!p)return;
+       selected={...p,address:fullAddress(it),name:it.name,location:it.location||""};
+       input.value=selected.address;hide();routeData=null;route.classList.remove("show");
+       try{await calculateRoute(p)}catch(e){console.error(e);setStatus("Adresa vybrána, ale trasu se nepodařilo spočítat.","err")}
+     });
+   }catch(e){if(e.name!=="AbortError"){console.error(e);setStatus("Našeptávač se nepodařilo načíst. Zkontroluj API klíč.","err")}}
+ }
+ input.addEventListener("input",()=>{
+   selected=null;routeData=null;route.classList.remove("show");clearTimeout(timer);
+   const q=input.value.trim();if(q.length<3){hide();setStatus("Napiš alespoň 3 znaky adresy.");return}
+   timer=setTimeout(()=>suggest(q),280);
+ });
+ input.addEventListener("focus",()=>{if(box.children.length&&input.value.trim().length>=3)box.classList.add("show")});
+ document.addEventListener("pointerdown",e=>{if(!wrap.contains(e.target))hide()});
+
+ // When opening a new/edit form, reset only the temporary Mapy state.
+ const observer=new MutationObserver(()=>{
+   const modal=document.getElementById("formModal");
+   if(modal?.classList.contains("show") && input.dataset.mapyLast!==input.value){
+     input.dataset.mapyLast=input.value;selected=null;routeData=null;route.classList.remove("show");
+     setStatus(keyReady()?"Začni psát adresu – našeptává Mapy.com.":'Vlož svůj MAPY_API_KEY do označeného řádku v kódu.');
+   }
+ });
+ observer.observe(document.getElementById("formModal"),{attributes:true,attributeFilter:["class"]});
+
+ // Save Mapy data onto the ride after the existing save logic creates/updates it.
+ saveBtn.addEventListener("click",()=>{
+   if(!selected||!routeData)return;
+   const snapshot={...selected,...routeData};
+   const editing=typeof editingId!=="undefined"?editingId:null;
+   setTimeout(()=>{
+     let r=editing?rides.find(x=>String(x.id)===String(editing)):rides.reduce((a,b)=>!a||+b.id>+a.id?b:a,null);
+     if(!r)return;
+     r.address=snapshot.address;
+     r.addressLon=snapshot.lon;r.addressLat=snapshot.lat;
+     r.km=snapshot.km;
+     r.routeMeters=snapshot.routeMeters;
+     r.routeDurationSeconds=snapshot.routeDurationSeconds;
+     r.routeMinutes=snapshot.routeMinutes;
+     r.routeGeometry=snapshot.routeGeometry||null;
+     save();render();
+   },40);
+ },true);
+
+ if(!keyReady())setStatus('KROK 1: v kódu najdi MAPY_API_KEY a vlož svůj klíč mezi uvozovky.','err');
+})();
+</script>
+
+<script id="v35-complete-mapy-js">
+(function(){
+  const API="https://api.mapy.com/v1";
+  const HOME_LABEL="Pila Železnice, Nádražní 349, Železnice";
+  const ACTIVE_KEY="evidenceRozvozu_activeRun_v24";
+  const ORIGIN_CACHE="evidenceRozvozu_mapyOrigin_v34";
+  let formMap=null, infoMap=null, runMap=null;
+  let lastRunSignature="";
+  let returnLoading=false;
+
+  const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const keyReady=()=>typeof MAPY_API_KEY!=="undefined" && MAPY_API_KEY && !MAPY_API_KEY.includes("SEM_VLOŽ");
+  const allRides=()=>{try{return window.rides||window.eval("rides")||[]}catch(e){return []}};
+  const getRide=id=>allRides().find(r=>String(r.id)===String(id));
+  const saveAll=()=>{try{if(typeof window.save==="function")window.save();else window.eval("save()")}catch(e){}};
+  const renderAll=()=>{try{if(typeof window.render==="function")window.render();else window.eval("render()")}catch(e){}};
+
+  function fmtDuration(sec){
+    sec=Number(sec||0); const m=Math.max(0,Math.round(sec/60));
+    const h=Math.floor(m/60), mm=m%60;
+    return h?`${h} h ${mm} min`:`${m} min`;
+  }
+  function fmtKm(m){return (Math.round((Number(m||0)/1000)*10)/10).toLocaleString("cs-CZ")+" km"}
+  function hhmm(date){return date.toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"})}
+
+  async function api(path,params={}){
+    if(!keyReady())throw new Error("Chybí MAPY_API_KEY");
+    const u=new URL(API+path);
+    Object.entries({...params,apikey:MAPY_API_KEY}).forEach(([k,v])=>{
+      if(v!==undefined&&v!==null&&v!=="")u.searchParams.set(k,String(v));
+    });
+    const res=await fetch(u,{mode:"cors"});
+    if(!res.ok)throw new Error("Mapy.com API "+res.status);
+    return res.json();
+  }
+  function pos(item){
+    const p=item?.position;
+    if(Array.isArray(p))return {lon:+p[0],lat:+p[1]};
+    if(p && p.lon!=null && p.lat!=null)return {lon:+p.lon,lat:+p.lat};
+    return null;
+  }
+  async function getOrigin(){
+    try{
+      const c=JSON.parse(localStorage.getItem(ORIGIN_CACHE)||"null");
+      if(c?.lon&&c?.lat)return c;
+    }catch(e){}
+    const j=await api("/geocode",{lang:"cs",limit:1,type:"regional.address",query:HOME_LABEL});
+    const p=pos(j.items?.[0]);
+    if(!p)throw new Error("Nelze určit polohu pily.");
+    localStorage.setItem(ORIGIN_CACHE,JSON.stringify(p));
+    return p;
+  }
+  async function geocodeAddress(address){
+    const j=await api("/geocode",{lang:"cs",limit:1,type:"regional.address",query:address});
+    const p=pos(j.items?.[0]);
+    if(!p)throw new Error("Adresa nebyla nalezena.");
+    return p;
+  }
+  async function routeBetween(start,end){
+    const j=await api("/routing/route",{
+      lang:"cs",
+      start:`${start.lon},${start.lat}`,
+      end:`${end.lon},${end.lat}`,
+      routeType:"car_fast_traffic",
+      avoidToll:"false",
+      format:"geojson"
+    });
+    return {
+      km:Math.round((j.length/1000)*10)/10,
+      meters:j.length,
+      seconds:j.duration,
+      minutes:Math.round(j.duration/60),
+      geometry:j.geometry||null
+    };
+  }
+  async function ensureRideRoute(r){
+    if(!r)return null;
+    let dest=(r.addressLon!=null&&r.addressLat!=null)?{lon:+r.addressLon,lat:+r.addressLat}:null;
+    if(!dest){
+      dest=await geocodeAddress(r.address);
+      r.addressLon=dest.lon;r.addressLat=dest.lat;
+    }
+    if(r.routeGeometry && r.routeDurationSeconds && r.routeMeters){
+      return {start:await getOrigin(),end:dest,km:+r.km||r.routeMeters/1000,meters:r.routeMeters,seconds:r.routeDurationSeconds,minutes:r.routeMinutes||Math.round(r.routeDurationSeconds/60),geometry:r.routeGeometry};
+    }
+    const start=await getOrigin(), rr=await routeBetween(start,dest);
+    r.km=rr.km;r.routeMeters=rr.meters;r.routeDurationSeconds=rr.seconds;r.routeMinutes=rr.minutes;r.routeGeometry=rr.geometry;
+    saveAll();renderAll();
+    return {start,end:dest,...rr};
+  }
+  async function ensureReturnRoute(r){
+    if(!r)return null;
+    let dest=(r.addressLon!=null&&r.addressLat!=null)?{lon:+r.addressLon,lat:+r.addressLat}:null;
+    if(!dest){dest=await geocodeAddress(r.address);r.addressLon=dest.lon;r.addressLat=dest.lat}
+    const home=await getOrigin();
+    if(r.returnRouteGeometry && r.returnRouteDurationSeconds && r.returnRouteMeters){
+      return {start:dest,end:home,km:r.returnRouteMeters/1000,meters:r.returnRouteMeters,seconds:r.returnRouteDurationSeconds,minutes:r.returnRouteMinutes||Math.round(r.returnRouteDurationSeconds/60),geometry:r.returnRouteGeometry};
+    }
+    const rr=await routeBetween(dest,home);
+    r.returnRouteMeters=rr.meters;r.returnRouteDurationSeconds=rr.seconds;r.returnRouteMinutes=rr.minutes;r.returnRouteGeometry=rr.geometry;
+    saveAll();renderAll();
+    return {start:dest,end:home,...rr};
+  }
+
+  function mapyRouteUrl(start,end,navigate=true){
+    const u=new URL("https://mapy.com/fnc/v1/route");
+    u.searchParams.set("mapset","traffic");
+    u.searchParams.set("start",`${start.lon},${start.lat}`);
+    u.searchParams.set("end",`${end.lon},${end.lat}`);
+    u.searchParams.set("routeType","car_fast_traffic");
+    if(navigate)u.searchParams.set("navigate","true");
+    return u.toString();
+  }
+  function googleRouteUrl(start,end){
+    const u=new URL("https://www.google.com/maps/dir/");
+    u.searchParams.set("api","1");
+    u.searchParams.set("origin",`${start.lat},${start.lon}`);
+    u.searchParams.set("destination",`${end.lat},${end.lon}`);
+    u.searchParams.set("travelmode","driving");
+    u.searchParams.set("dir_action","navigate");
+    return u.toString();
+  }
+
+  function addMapyLogo(map){
+    if(!window.L)return;
+    const Logo=L.Control.extend({
+      options:{position:"bottomleft"},
+      onAdd:function(){
+        const c=L.DomUtil.create("div","pz-map-logo");
+        const a=L.DomUtil.create("a","",c);
+        a.href="https://mapy.com/";a.target="_blank";
+        a.innerHTML='<img src="https://api.mapy.com/img/api/logo.svg" alt="Mapy.com">';
+        L.DomEvent.disableClickPropagation(a);
+        return c;
+      }
+    });
+    new Logo().addTo(map);
+  }
+  function makeMap(el){
+    if(!window.L||!el)return null;
+    const map=L.map(el,{zoomControl:true,attributionControl:true});
+    L.tileLayer(`https://api.mapy.com/v1/maptiles/aerial/256/{z}/{x}/{y}?apikey=${MAPY_API_KEY}`,{
+      minZoom:0,maxZoom:19,
+      updateWhenIdle:true,
+      updateWhenZooming:false,
+      keepBuffer:1,
+      attribution:'<a href="https://api.mapy.com/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>'
+    }).addTo(map);
+    addMapyLogo(map);
+    return map;
+  }
+  function drawRoute(map,routeObj){
+    if(!map||!routeObj)return;
+    map.eachLayer(layer=>{
+      if(layer instanceof L.Marker || layer instanceof L.Polyline || layer instanceof L.GeoJSON) map.removeLayer(layer);
+    });
+    const bounds=[];
+    if(routeObj.geometry){
+      try{
+        const gj=L.geoJSON({type:"Feature",properties:{},geometry:routeObj.geometry},{style:{weight:5,opacity:.88}});
+        gj.addTo(map); bounds.push(gj.getBounds());
+      }catch(e){console.warn("Route geometry",e)}
+    }
+    const pin=(label,kind)=>L.divIcon({
+      className:"pz-div-pin",
+      html:`<div class="pz-pin ${kind}"><span>${label}</span></div>`,
+      iconSize:[34,42],iconAnchor:[17,40],popupAnchor:[0,-38]
+    });
+    const a=L.marker([routeObj.start.lat,routeObj.start.lon],{icon:pin("P","home")}).addTo(map).bindPopup("<strong>Pila Železnice</strong>");
+    const b=L.marker([routeObj.end.lat,routeObj.end.lon],{icon:pin("C","customer")}).addTo(map).bindPopup("<strong>Zadaná adresa</strong>");
+    if(bounds.length)map.fitBounds(bounds[0],{padding:[24,24],maxZoom:17});
+    else map.fitBounds(L.latLngBounds([[routeObj.start.lat,routeObj.start.lon],[routeObj.end.lat,routeObj.end.lon]]),{padding:[24,24],maxZoom:17});
+    setTimeout(()=>map.invalidateSize({pan:false}),100);
+  }
+
+  /* ---------- Form map + navigation + start suggestion ---------- */
+  const routeCard=document.querySelector(".mapy-route-card");
+  let formMapEl=null, formExtra=null;
+  if(routeCard){
+    formExtra=document.createElement("div");formExtra.className="mapy-route-extra";
+    formExtra.innerHTML=`
+      <div class="mapy-route-address" id="mapyRouteAddress"></div>
+      <div class="mapy-form-map" id="mapyFormMap"></div>
+      <div class="mapy-actions">
+        <a class="mapy-action-btn primary" id="mapyFormNavMapy" target="_blank">NAVIGOVAT • MAPY.COM</a>
+        <a class="mapy-action-btn secondary" id="mapyFormNavGoogle" target="_blank">GOOGLE MAPS</a>
+      </div>
+      <div class="mapy-start-suggest" id="mapyStartSuggest">
+        <small>Doporučený začátek</small>
+        <div class="mapy-start-row"><strong id="mapyStartValue">—</strong><button type="button" id="mapyUseStart">POUŽÍT</button></div>
+        <div class="mapy-route-note">Počítáno: cesta + 35 min nakládka + 10 min rezerva.</div>
+      </div>`;
+    routeCard.appendChild(formExtra);
+    formMapEl=document.getElementById("mapyFormMap");
+  }
+  function suggestedStart(routeMinutes){
+    const t=document.getElementById("fTime")?.value;
+    if(!t)return "";
+    const [h,m]=t.split(":").map(Number);
+    const total=h*60+m-Number(routeMinutes||0)-45;
+    const normalized=(total+1440)%1440;
+    return String(Math.floor(normalized/60)).padStart(2,"0")+":"+String(normalized%60).padStart(2,"0");
+  }
+  async function renderFormRoute(payload){
+    if(!payload?.selected||!payload?.routeData)return;
+    const o=payload.origin||await getOrigin();
+    const d={lon:+payload.selected.lon,lat:+payload.selected.lat};
+    const rr={
+      start:o,end:d,
+      km:payload.routeData.km,meters:payload.routeData.routeMeters,
+      seconds:payload.routeData.routeDurationSeconds,minutes:payload.routeData.routeMinutes,
+      geometry:payload.routeData.routeGeometry
+    };
+    document.getElementById("mapyRouteAddress").textContent=payload.selected.address||document.getElementById("fAddress")?.value||"";
+    const sm=suggestedStart(rr.minutes);
+    document.getElementById("mapyStartValue").textContent=sm||"Doplň čas doručení";
+    document.getElementById("mapyUseStart").onclick=()=>{if(sm)document.getElementById("fStartTime").value=sm};
+    document.getElementById("mapyFormNavMapy").href=mapyRouteUrl(o,d,true);
+    document.getElementById("mapyFormNavGoogle").href=googleRouteUrl(o,d);
+    formMapEl.classList.add("show");
+    if(formMap){formMap.remove();formMap=null}
+    formMap=makeMap(formMapEl);drawRoute(formMap,rr);
+  }
+  window.PZMapyV35={onFormRoute:renderFormRoute,ensureRideRoute,ensureReturnRoute};
+
+  /* Existing ride opened for edit: restore route info/map without another address search. */
+  const originalEdit=window.openEdit;
+  if(typeof originalEdit==="function"){
+    window.openEdit=function(id){
+      originalEdit(id);
+      const r=getRide(id);
+      setTimeout(async()=>{
+        if(!r || !r.addressLon || !r.addressLat)return;
+        try{
+          const rr=await ensureRideRoute(r);
+          const routeBox=document.querySelector(".mapy-route-card");
+          if(routeBox)routeBox.classList.add("show");
+          const km=document.getElementById("mapyRouteKm"),tm=document.getElementById("mapyRouteTime");
+          if(km)km.textContent=(+r.km||rr.km).toLocaleString("cs-CZ")+" km";
+          if(tm)tm.textContent=fmtDuration(r.routeDurationSeconds||rr.seconds);
+          renderFormRoute({
+            selected:{lon:+r.addressLon,lat:+r.addressLat,address:r.address},
+            routeData:{km:r.km,routeMeters:r.routeMeters,routeDurationSeconds:r.routeDurationSeconds,routeMinutes:r.routeMinutes,routeGeometry:r.routeGeometry},
+            origin:rr.start
+          });
+        }catch(e){console.warn(e)}
+      },80);
+    }
+  }
+
+  /* ---------- INFO modal: route details + map ---------- */
+  const originalInfo=window.showInfo;
+  if(typeof originalInfo==="function"){
+    window.showInfo=function(id){
+      originalInfo(id);
+      const r=getRide(id);
+      setTimeout(async()=>{
+        const c=document.getElementById("detailContent");
+        if(!c||!r)return;
+        let holder=document.createElement("div");holder.className="pz-info-route";
+        holder.innerHTML=`<div class="pz-info-route-title">Trasa rozvozu</div><div class="pz-route-loading">Načítám trasu…</div>`;
+        c.appendChild(holder);
+        try{
+          const rr=await ensureRideRoute(r);
+          holder.innerHTML=`
+            <div class="pz-info-route-title">Trasa rozvozu</div>
+            <div class="pz-info-route-stats">
+              <div class="pz-info-route-stat"><small>Vzdálenost</small><strong>${fmtKm(rr.meters)}</strong></div>
+              <div class="pz-info-route-stat"><small>Doba jízdy</small><strong>${fmtDuration(rr.seconds)}</strong></div>
+            </div>
+            <div class="pz-info-map" id="pzInfoMap"></div>
+            <div class="pz-nav-actions">
+              <a class="pz-nav-btn primary" target="_blank" href="${esc(mapyRouteUrl(rr.start,rr.end,true))}">NAVIGOVAT • MAPY.COM</a>
+              <a class="pz-nav-btn secondary" target="_blank" href="${esc(googleRouteUrl(rr.start,rr.end))}">GOOGLE MAPS</a>
+            </div>`;
+          if(infoMap){infoMap.remove();infoMap=null}
+          infoMap=makeMap(document.getElementById("pzInfoMap"));drawRoute(infoMap,rr);
+        }catch(e){
+          holder.innerHTML=`<div class="pz-info-route-title">Trasa rozvozu</div><div class="mapy-address-status err">Trasu se nepodařilo načíst.</div>`;
+        }
+      },40);
+    }
+  }
+
+  /* ---------- Cards: add route meta where available ---------- */
+  const oldCardHtml=window.cardHtml;
+  if(typeof oldCardHtml==="function"){
+    window.cardHtml=function(r,index,status){
+      let html=oldCardHtml(r,index,status);
+      if(r.routeDurationSeconds||r.km){
+        const meta=`<div class="pz-card-route-meta">Trasa: ${Number(r.km||0).toLocaleString("cs-CZ")} km • ${fmtDuration(r.routeDurationSeconds||0)}</div>`;
+        html=html.replace(`<div class="data-row"><strong>Cena bez DPH:</strong>`,meta+`<div class="data-row"><strong>Cena bez DPH:</strong>`);
+      }
+      return html;
+    };
+    setTimeout(renderAll,50);
+  }
+
+  /* ---------- Active delivery: stable map panel ---------- */
+  const details=document.getElementById("runStageDetails");
+  let runPanel=document.getElementById("runRouteMapPanel");
+  if(details && !runPanel){
+    runPanel=document.createElement("section");
+    runPanel.id="runRouteMapPanel";runPanel.className="run-section";
+    details.insertAdjacentElement("afterend",runPanel);
+  }
+  function active(){
+    try{return JSON.parse(localStorage.getItem(ACTIVE_KEY)||"null")}catch(e){return null}
+  }
+  async function renderRunRoute(){
+    if(!runPanel)return;
+    const a=active();
+    if(!a || !["outbound","return"].includes(a.stage)){
+      runPanel.classList.remove("show");lastRunSignature="";return;
+    }
+    const r=getRide(a.rideId);if(!r)return;
+    const sig=`${a.rideId}|${a.stage}|${r.routeGeometry?"g":"n"}|${r.returnRouteGeometry?"rg":"n"}`;
+    if(sig===lastRunSignature)return;
+    lastRunSignature=sig;
+    runPanel.classList.add("show");
+    runPanel.innerHTML=`<div class="pz-run-route-box"><div class="pz-route-loading">Načítám mapu a trasu…</div></div>`;
+    try{
+      let rr;
+      if(a.stage==="outbound") rr=await ensureRideRoute(r);
+      else{
+        if(returnLoading)return;
+        returnLoading=true;
+        try{rr=await ensureReturnRoute(r)}finally{returnLoading=false}
+      }
+      const title=a.stage==="outbound"?"Cesta k zákazníkovi":"Cesta zpět na pilu";
+      const destination=a.stage==="outbound"?(r.address||"Zákazník"):HOME_LABEL;
+      const eta=hhmm(new Date(Date.now()+rr.seconds*1000));
+      runPanel.innerHTML=`
+        <div class="pz-run-route-box">
+          <div class="pz-run-route-head"><div><small>${title}</small><strong>${esc(destination)}</strong></div></div>
+          <div class="pz-run-route-stats">
+            <div class="pz-run-route-stat"><small>Vzdálenost</small><strong>${fmtKm(rr.meters)}</strong></div>
+            <div class="pz-run-route-stat"><small>Doba jízdy</small><strong>${fmtDuration(rr.seconds)}</strong></div>
+            <div class="pz-run-route-stat"><small>Příjezd cca</small><strong>${eta}</strong></div>
+          </div>
+          <div class="pz-run-map" id="pzRunMap"></div>
+          <div class="pz-nav-actions">
+            <a class="pz-nav-btn primary" target="_blank" href="${esc(mapyRouteUrl(rr.start,rr.end,true))}">SPUSTIT NAVIGACI • MAPY.COM</a>
+            <a class="pz-nav-btn secondary" target="_blank" href="${esc(googleRouteUrl(rr.start,rr.end))}">GOOGLE MAPS</a>
+          </div>
+        </div>`;
+      if(runMap){runMap.remove();runMap=null}
+      runMap=makeMap(document.getElementById("pzRunMap"));drawRoute(runMap,rr);
+    }catch(e){
+      console.error(e);
+      runPanel.innerHTML=`<div class="pz-run-route-box"><div class="mapy-address-status err">Mapu nebo trasu se nepodařilo načíst.</div></div>`;
+    }
+  }
+  setInterval(renderRunRoute,900);
+  setTimeout(renderRunRoute,120);
+
+  /* When delivery time changes after route was selected, refresh suggested start. */
+  document.getElementById("fTime")?.addEventListener("change",()=>{
+    const minText=document.getElementById("mapyRouteTime")?.textContent||"";
+    const r=document.querySelector(".mapy-route-card");
+    if(!r?.classList.contains("show"))return;
+    // If editing an existing ride, use its stored route minutes.
+    const id=typeof editingId!=="undefined"?editingId:null;
+    const ride=id?getRide(id):null;
+    const mins=ride?.routeMinutes;
+    if(mins){
+      const sm=suggestedStart(mins);
+      const v=document.getElementById("mapyStartValue");if(v)v.textContent=sm||"—";
+      const b=document.getElementById("mapyUseStart");if(b)b.onclick=()=>{if(sm)document.getElementById("fStartTime").value=sm};
+    }
+  });
+})();
+</script>
+
+
+<script id="v37-static-map-js">
+(function(){
+  function keyOK(){return typeof MAPY_API_KEY!=="undefined"&&MAPY_API_KEY&&!MAPY_API_KEY.includes("SEM_VLOŽ")}
+  function staticMapUrl(start,end,geometry){
+    const u=new URL("https://api.mapy.com/v1/static/map");
+    u.searchParams.set("width","900");
+    u.searchParams.set("height","430");
+    u.searchParams.set("format","webp");
+    u.searchParams.set("mapset","aerial");
+    u.searchParams.set("padding","45");
+    u.searchParams.append("markers",`color:green;size:large;label:P;${start.lon},${start.lat}`);
+    u.searchParams.append("markers",`color:red;size:large;label:C;${end.lon},${end.lat}`);
+    // Routing geometry is GeoJSON [lon,lat]. Draw a decimated path to keep URL compact.
+    const coords=geometry?.coordinates;
+    if(Array.isArray(coords)&&coords.length>1){
+      const max=85, step=Math.max(1,Math.ceil(coords.length/max));
+      const pts=[];
+      for(let i=0;i<coords.length;i+=step)pts.push(`${coords[i][0]},${coords[i][1]}`);
+      const last=coords[coords.length-1], lastS=`${last[0]},${last[1]}`;
+      if(pts[pts.length-1]!==lastS)pts.push(lastS);
+      u.searchParams.append("shapes",`color:#104c29;width:5;path:[(${pts.join(";")})]`);
+    }
+    u.searchParams.set("apikey",MAPY_API_KEY);
+    return u.toString();
+  }
+  function injectAfter(hiddenMap,routeObj,caption){
+    if(!hiddenMap||!routeObj||!keyOK())return;
+    let wrap=hiddenMap.nextElementSibling;
+    if(!wrap||!wrap.classList.contains("pz-static-map-wrap")){
+      wrap=document.createElement("div");wrap.className="pz-static-map-wrap";
+      hiddenMap.insertAdjacentElement("afterend",wrap);
+    }
+    wrap.innerHTML=`<img class="pz-static-map-img" alt="Satelitní mapa trasy Pila Železnice – zákazník"><div class="pz-static-map-caption"><span>🟢 P = Pila Železnice</span><span>🔴 C = zadaná adresa</span></div>`;
+    const img=wrap.querySelector("img");
+    img.src=staticMapUrl(routeObj.start,routeObj.end,routeObj.geometry);
+    img.onerror=()=>{wrap.innerHTML='<div class="mapy-address-status err">Mapu se nepodařilo načíst.</div>'};
+  }
+
+  // Replace form map after the existing v35 handler finishes.
+  const old=window.PZMapyV35?.onFormRoute;
+  if(old){
+    window.PZMapyV35.onFormRoute=async function(payload){
+      await old(payload);
+      try{
+        const o=payload.origin||JSON.parse(localStorage.getItem("evidenceRozvozu_mapyOrigin_v34")||"null");
+        const d={lon:+payload.selected.lon,lat:+payload.selected.lat};
+        injectAfter(document.getElementById("mapyFormMap"),{
+          start:o,end:d,geometry:payload.routeData.routeGeometry
+        },"Trasa");
+      }catch(e){console.warn(e)}
+    }
+  }
+
+  // INFO and active-run maps are created asynchronously by older code.
+  const seen=new WeakSet();
+  function scan(){
+    document.querySelectorAll("#pzInfoMap,#pzRunMap").forEach(el=>{
+      if(seen.has(el))return;
+      const a=(()=>{
+        try{return JSON.parse(localStorage.getItem("evidenceRozvozu_activeRun_v24")||"null")}catch(e){return null}
+      })();
+      let r=null;
+      try{
+        if(el.id==="pzRunMap"&&a)r=rides.find(x=>String(x.id)===String(a.rideId));
+        else{
+          const id=typeof detailRideId!=="undefined"?detailRideId:null;
+          if(id!=null)r=rides.find(x=>String(x.id)===String(id));
+        }
+      }catch(e){}
+      if(!r)return;
+      (async()=>{
+        try{
+          let rr;
+          if(el.id==="pzRunMap"&&a?.stage==="return") rr=await window.PZMapyV35.ensureReturnRoute(r);
+          else rr=await window.PZMapyV35.ensureRideRoute(r);
+          injectAfter(el,rr,"Trasa");
+          seen.add(el);
+        }catch(e){console.warn(e)}
+      })();
+    });
+  }
+  setInterval(scan,500);
+})();
+</script>
+</body>
+</html>
