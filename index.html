@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
@@ -1347,6 +1347,95 @@ input:focus,select:focus,textarea:focus{
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
  integrity="sha256-p4NxAoJBhIINfQ3ynhtisRlnhJ+Vkb5MZ96scB2N4Q=" crossorigin="">
+
+<style id="v42-11-leaflet-core-local">
+/* Leaflet core layout — local fallback for CodePen.
+   Leaflet JS cannot lay out tile panes correctly without these rules. */
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box {
+  position:absolute;
+  left:0;
+  top:0;
+}
+.leaflet-container{overflow:hidden}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-user-drag:none}
+.leaflet-tile::selection{background:transparent}
+.leaflet-safari .leaflet-tile{image-rendering:-webkit-optimize-contrast}
+.leaflet-safari .leaflet-tile-container{width:1600px;height:1600px;-webkit-transform-origin:0 0}
+.leaflet-marker-icon,
+.leaflet-marker-shadow{display:block}
+.leaflet-container .leaflet-overlay-pane svg{max-width:none!important;max-height:none!important}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile{max-width:none!important;max-height:none!important;width:auto;padding:0}
+.leaflet-container.leaflet-touch-zoom{-ms-touch-action:pan-x pan-y;touch-action:pan-x pan-y}
+.leaflet-container.leaflet-touch-drag{-ms-touch-action:pinch-zoom;touch-action:none;touch-action:pinch-zoom}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{-ms-touch-action:none;touch-action:none}
+.leaflet-container{-webkit-tap-highlight-color:transparent}
+.leaflet-container a{-webkit-tap-highlight-color:rgba(51,181,229,.4)}
+.leaflet-tile{filter:inherit;visibility:hidden}
+.leaflet-tile-loaded{visibility:inherit}
+.leaflet-zoom-box{width:0;height:0;-moz-box-sizing:border-box;box-sizing:border-box;z-index:800}
+.leaflet-overlay-pane svg{-moz-user-select:none}
+.leaflet-pane{z-index:400}
+.leaflet-tile-pane{z-index:200}
+.leaflet-overlay-pane{z-index:400}
+.leaflet-shadow-pane{z-index:500}
+.leaflet-marker-pane{z-index:600}
+.leaflet-tooltip-pane{z-index:650}
+.leaflet-popup-pane{z-index:700}
+.leaflet-map-pane canvas{z-index:100}
+.leaflet-map-pane svg{z-index:200}
+.leaflet-vml-shape{width:1px;height:1px}
+.lvml{behavior:url(#default#VML);display:inline-block;position:absolute}
+.leaflet-control{position:relative;z-index:800;pointer-events:visiblePainted;pointer-events:auto}
+.leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}
+.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}
+.leaflet-control{float:left;clear:both}
+.leaflet-right .leaflet-control{float:right}
+.leaflet-top .leaflet-control{margin-top:10px}
+.leaflet-bottom .leaflet-control{margin-bottom:10px}
+.leaflet-left .leaflet-control{margin-left:10px}
+.leaflet-right .leaflet-control{margin-right:10px}
+.leaflet-fade-anim .leaflet-popup{opacity:0;transition:opacity .2s linear}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup{opacity:1}
+.leaflet-zoom-animated{transform-origin:0 0}
+svg.leaflet-zoom-animated{will-change:transform}
+.leaflet-zoom-anim .leaflet-zoom-animated{transition:transform .25s cubic-bezier(0,0,.25,1)}
+.leaflet-zoom-anim .leaflet-tile,.leaflet-pan-anim .leaflet-tile{transition:none}
+.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}
+.leaflet-interactive{cursor:pointer}
+.leaflet-grab{cursor:-webkit-grab;cursor:grab}
+.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive{cursor:crosshair}
+.leaflet-popup-pane,.leaflet-control{cursor:auto}
+.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive{cursor:move;cursor:-webkit-grabbing;cursor:grabbing}
+.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-image-layer,.leaflet-pane>svg path,.leaflet-tile-container{pointer-events:none}
+.leaflet-marker-icon.leaflet-interactive,.leaflet-image-layer.leaflet-interactive,.leaflet-pane>svg path.leaflet-interactive,svg.leaflet-image-layer.leaflet-interactive path{pointer-events:auto}
+.leaflet-bar{box-shadow:0 1px 5px rgba(0,0,0,.65);border-radius:4px}
+.leaflet-bar a{background:#fff;border-bottom:1px solid #ccc;width:26px;height:26px;line-height:26px;display:block;text-align:center;text-decoration:none;color:#000}
+.leaflet-bar a:hover,.leaflet-bar a:focus{background:#f4f4f4}
+.leaflet-bar a:first-child{border-top-left-radius:4px;border-top-right-radius:4px}
+.leaflet-bar a:last-child{border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom:none}
+.leaflet-bar a.leaflet-disabled{cursor:default;background:#f4f4f4;color:#bbb}
+.leaflet-touch .leaflet-bar a{width:30px;height:30px;line-height:30px}
+.leaflet-control-zoom-in,.leaflet-control-zoom-out{font:bold 18px 'Lucida Console',Monaco,monospace;text-indent:1px}
+.leaflet-touch .leaflet-control-zoom-in{font-size:22px}
+.leaflet-touch .leaflet-control-zoom-out{font-size:20px}
+.leaflet-control-attribution{background:rgba(255,255,255,.8);margin:0;padding:0 5px;color:#333}
+.leaflet-control-attribution a{text-decoration:none}
+.leaflet-control-attribution a:hover,.leaflet-control-attribution a:focus{text-decoration:underline}
+</style>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
@@ -1411,11 +1500,185 @@ input:focus,select:focus,textarea:focus{
 .pz-pin span{transform:rotate(45deg);font-size:10px;font-weight:1000;color:#fff}
 .pz-pin.home{background:#104c29}.pz-pin.customer{background:#b13b32}
 </style>
-<style id="v37-static-map">
-.mapy-form-map,.pz-info-map,.pz-run-map{display:none!important}
-.pz-static-map-wrap{position:relative;width:100%;margin-top:9px}
-.pz-static-map-img{display:block;width:100%;height:auto;min-height:190px;max-height:330px;object-fit:cover;border-radius:13px;border:1px solid #cdddc9;background:#d9ded7}
-.pz-static-map-caption{display:flex;justify-content:space-between;gap:8px;margin-top:5px;font-size:6.5px;color:#77837b;font-weight:800}
+<style id="v38-ui">
+/* Map: stronger route visual note */
+.pz-static-map-caption{font-size:7px!important}
+.pz-route-line-note{display:inline-flex;align-items:center;gap:5px}
+.pz-route-line-swatch{width:22px;height:4px;border-radius:99px;background:#d82323;display:inline-block}
+.pz-google-only{grid-template-columns:1fr!important}
+.pz-google-only .pz-nav-btn{font-size:9px!important;padding:12px 10px!important}
+
+/* Delete on ride cards */
+.v38-delete-btn{
+  background:#fff!important;color:#9d2f2a!important;border:1.5px solid #d6aaa7!important;
+  font-weight:950!important
+}
+.v38-delete-btn:hover{background:#fff4f3!important}
+
+/* Trash tool icon */
+#trashToolBtn{position:relative}
+#trashToolCount{
+ position:absolute;right:-5px;top:-5px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;
+ background:#fff;color:#104c29;border:2px solid #168500;font-size:8px;font-weight:1000;
+ display:none;align-items:center;justify-content:center
+}
+#trashToolCount.show{display:flex}
+
+/* Shared confirmation */
+.v38-confirm-overlay,.v38-trash-overlay{
+ position:fixed;inset:0;z-index:23000;background:rgba(18,37,24,.48);
+ display:none;align-items:center;justify-content:center;padding:16px
+}
+.v38-confirm-overlay.open,.v38-trash-overlay.open{display:flex}
+.v38-confirm-box{
+ width:min(430px,100%);background:#fff;border-radius:18px;border:1px solid #d7e3d4;
+ box-shadow:0 18px 55px rgba(13,45,24,.22);overflow:hidden
+}
+.v38-confirm-main{padding:20px 18px 15px;text-align:center}
+.v38-confirm-icon{
+ width:48px;height:48px;border-radius:50%;margin:0 auto 10px;background:#edf5ea;color:#104c29;
+ display:grid;place-items:center
+}
+.v38-confirm-icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8}
+.v38-confirm-main h3{margin:0;color:#104c29;font-size:16px}
+.v38-confirm-main p{margin:8px 0 0;color:#66746a;font-size:10px;line-height:1.45}
+.v38-confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 16px}
+.v38-confirm-actions button{border:0;border-radius:10px;padding:11px;font-size:9px;font-weight:1000;cursor:pointer}
+.v38-no{background:#ba3b35!important;color:#fff!important}
+.v38-yes{background:#104c29!important;color:#fff!important}
+
+/* Trash */
+.v38-trash-shell{
+ width:min(760px,100%);max-height:min(86vh,780px);background:#f7faf6;border-radius:18px;
+ border:1px solid #d7e3d4;box-shadow:0 18px 60px rgba(13,45,24,.25);display:flex;flex-direction:column;overflow:hidden
+}
+.v38-trash-head{background:#104c29;color:#fff;padding:14px 15px;display:flex;align-items:center;gap:10px}
+.v38-trash-head svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8}
+.v38-trash-head-copy{flex:1}
+.v38-trash-head h2{font-size:16px;margin:0}
+.v38-trash-head p{font-size:8px;margin:3px 0 0;opacity:.78}
+.v38-trash-close{width:34px;height:34px;border-radius:9px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;font-size:18px}
+.v38-trash-body{padding:12px;overflow:auto}
+.v38-trash-empty{text-align:center;padding:35px 10px;color:#718077;font-size:10px}
+.v38-trash-item{background:#fff;border:1px solid #dce6d9;border-radius:13px;padding:11px;margin-bottom:8px}
+.v38-trash-top{display:flex;justify-content:space-between;gap:10px}
+.v38-trash-time{font-size:13px;font-weight:1000;color:#104c29}
+.v38-trash-name{font-size:11px;font-weight:1000;color:#283b2e;margin-top:3px}
+.v38-trash-address{font-size:8px;color:#718077;margin-top:4px;line-height:1.35}
+.v38-trash-actions{display:flex;justify-content:flex-end;margin-top:9px}
+.v38-restore{border:1.5px solid #104c29;background:#fff;color:#104c29;border-radius:9px;padding:8px 11px;font-size:8px;font-weight:1000}
+.v38-trash-footer{padding:10px 12px 12px;border-top:1px solid #dde6da;background:#fff}
+#emptyTrashBtn{width:100%;border:1.5px solid #b83b35;background:#fff;color:#a2312c;border-radius:10px;padding:10px;font-size:9px;font-weight:1000}
+#emptyTrashBtn:disabled{opacity:.35}
+
+/* Payment stage: keep heading and timer visually separate and stable */
+body.v38-payment-stage .run-head h2{white-space:nowrap}
+body.v38-payment-stage .run-timer-card{margin-top:0!important}
+body.v38-payment-stage #runTimerState{min-height:13px;white-space:nowrap}
+</style>
+
+
+<style id="v39-master-planning-css">
+/* Remove the two old manual planning inputs completely from the visible form. */
+#fStartTime{display:none!important}
+#fStartTime.closest-placeholder{display:none}
+#durationPickerBtn,#fDuration{display:none!important}
+.field:has(> #fStartTime),
+.field:has(> #durationPickerBtn){display:none!important}
+
+/* Old v35 "suggested start" and form navigation are obsolete in the new master planner. */
+.mapy-start-suggestion,.mapy-route-note,
+#mapyFormNavMapy,#mapyFormNavGoogle{display:none!important}
+
+/* INFO never contains navigation buttons. Navigation belongs only to Výjezd / Cesta zpět. */
+#detailContent .pz-nav-actions{display:none!important}
+
+/* Custom delivery-time control */
+.v39-time-field{grid-column:1/-1}
+.v39-time-picker{
+  border:1px solid #d9e5d6;background:#f7faf6;border-radius:14px;padding:12px;
+}
+.v39-time-label{font-size:8px;font-weight:1000;letter-spacing:.08em;color:#617267;text-transform:uppercase;margin-bottom:8px}
+.v39-time-row{display:flex;align-items:center;justify-content:center;gap:8px}
+.v39-time-unit{display:flex;align-items:center;gap:6px}
+.v39-time-btn{
+  width:36px;height:36px;border-radius:10px;border:1.5px solid #b8cfb3;background:#fff;color:#104c29;
+  font-size:18px;font-weight:1000;line-height:1;cursor:pointer
+}
+.v39-time-value{
+  min-width:54px;text-align:center;font-size:26px;line-height:1;font-weight:1000;color:#104c29;
+  font-variant-numeric:tabular-nums
+}
+.v39-time-colon{font-size:24px;font-weight:1000;color:#104c29}
+.v39-time-quick{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.v39-time-quick button{
+  border:1px solid #cbdac7;background:#fff;color:#31553b;border-radius:8px;padding:6px 9px;
+  font-size:8px;font-weight:950;cursor:pointer
+}
+.v39-time-quick button.active{background:#104c29;color:#fff;border-color:#104c29}
+
+/* Master planner */
+#v39Planning{grid-column:1/-1;display:none}
+#v39Planning.show{display:block}
+.v39-plan{
+  border:1px solid #cfdfcb;border-radius:16px;background:#fff;overflow:hidden;
+  box-shadow:0 7px 22px rgba(16,76,41,.06)
+}
+.v39-plan-head{padding:12px 14px;background:#edf5ea;border-bottom:1px solid #d9e6d5}
+.v39-plan-head small{display:block;color:#718078;font-size:7px;font-weight:1000;letter-spacing:.1em;text-transform:uppercase}
+.v39-plan-head strong{display:block;color:#104c29;font-size:14px;margin-top:2px}
+.v39-plan-section{padding:12px 14px;border-bottom:1px solid #e3ebe0}
+.v39-plan-section:last-child{border-bottom:0}
+.v39-section-title{font-size:8px;font-weight:1000;letter-spacing:.09em;color:#64746a;text-transform:uppercase;margin-bottom:9px}
+.v39-auto-row,.v39-result-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 0}
+.v39-auto-row span,.v39-result-row span{font-size:9px;color:#5d6c63}
+.v39-auto-row strong{font-size:10px;color:#263c2d;font-variant-numeric:tabular-nums}
+.v39-auto-row.total{border-top:1px dashed #d5e0d2;margin-top:4px;padding-top:9px}
+.v39-auto-row.total span,.v39-auto-row.total strong{font-weight:1000;color:#104c29}
+
+.v39-adjust-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:6px 0}
+.v39-adjust-copy strong{display:block;font-size:9px;color:#263c2d}
+.v39-adjust-copy small{display:block;font-size:7px;color:#859087;margin-top:2px}
+.v39-stepper{display:flex;align-items:center;gap:5px}
+.v39-stepper button{
+  width:29px;height:29px;border:1px solid #c8d9c4;border-radius:8px;background:#fff;color:#104c29;
+  font-size:16px;font-weight:1000
+}
+.v39-stepper strong{
+  min-width:55px;text-align:center;font-size:10px;color:#104c29;font-variant-numeric:tabular-nums
+}
+.v39-reserve-options{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.v39-reserve-options button{
+  border:1px solid #c8d9c4;background:#fff;color:#31553b;border-radius:8px;padding:7px 9px;font-size:8px;font-weight:950
+}
+.v39-reserve-options button.active{background:#104c29;color:#fff;border-color:#104c29}
+
+.v39-results{background:#f5f9f3}
+.v39-result-row strong{font-size:12px;color:#104c29;font-variant-numeric:tabular-nums}
+.v39-result-row.delivery strong{font-size:14px}
+.v39-result-total{
+  margin-top:7px;padding-top:9px;border-top:1px solid #d5e1d2;display:flex;justify-content:space-between;align-items:center
+}
+.v39-result-total span{font-size:9px;font-weight:1000;color:#506158}
+.v39-result-total strong{font-size:15px;color:#104c29}
+
+/* INFO planning */
+.v39-info-plan{margin-top:12px;border:1px solid #d3e1cf;border-radius:14px;overflow:hidden;background:#fff}
+.v39-info-plan-head{background:#edf5ea;padding:10px 12px;color:#104c29;font-size:12px;font-weight:1000}
+.v39-info-section{padding:10px 12px;border-top:1px solid #e2ebe0}
+.v39-info-section-title{font-size:7px;font-weight:1000;letter-spacing:.08em;color:#77857c;text-transform:uppercase;margin-bottom:5px}
+.v39-info-row{display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-size:9px}
+.v39-info-row span{color:#657269}.v39-info-row strong{color:#263c2d;font-variant-numeric:tabular-nums}
+.v39-info-row.main strong{color:#104c29;font-size:11px}
+</style>
+
+
+<style id="v48StatsCss">
+#v48Stats{position:fixed;inset:0;z-index:10060;background:#f4f7f2;display:none;overflow:auto;color:#173c24;font-family:inherit}
+#v48Stats.open{display:block}.v48-wrap{width:min(1050px,100%);margin:0 auto;padding:18px 18px 44px}.v48-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}.v48-back{width:42px;height:42px;border:1px solid #d7e2d4;border-radius:12px;background:#fff;color:#104c29;font-size:22px;font-weight:900;cursor:pointer}.v48-title{font-size:22px;font-weight:950;letter-spacing:-.02em}.v48-period-card,.v48-panel{background:#fff;border:1px solid #dfe8dc;border-radius:18px;box-shadow:0 5px 18px rgba(16,61,36,.06)}.v48-period-card{padding:14px 16px;margin-bottom:12px}.v48-period-nav{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;gap:8px}.v48-period-nav button{height:38px;border:1px solid #dce6d9;border-radius:11px;background:#f8faf7;color:#104c29;font-size:24px;font-weight:900;cursor:pointer}.v48-period-label{text-align:center;font-size:17px;font-weight:950}.v48-tabs{display:flex;justify-content:center;gap:7px;margin-top:12px}.v48-tab{border:1px solid #d8e4d5;background:#f8faf7;color:#54705c;border-radius:10px;padding:8px 17px;font-size:10px;font-weight:950;cursor:pointer}.v48-tab.active{background:#104c29;color:#fff;border-color:#104c29}.v48-current-wrap{text-align:center;height:0;overflow:visible}.v48-current{transform:translateY(8px);border:1px solid #cfe0cc;background:#edf5ea;color:#104c29;border-radius:9px;padding:6px 11px;font-size:9px;font-weight:900;cursor:pointer}.v48-current[hidden]{display:none}
+.v48-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 12px}.v48-kpi{background:#fff;border:1px solid #dfe8dc;border-radius:16px;padding:16px 10px;text-align:center;box-shadow:0 4px 14px rgba(16,61,36,.05)}.v48-kpi small{display:block;font-size:9px;font-weight:900;color:#708076;letter-spacing:.08em}.v48-kpi strong{display:block;margin:5px 0 3px;font-size:25px;color:#104c29}.v48-kpi span{font-size:9px;color:#849087;font-weight:700}.v48-panel{padding:17px;margin-top:12px}.v48-panel-title{font-size:12px;font-weight:950;letter-spacing:.04em;margin-bottom:4px}.v48-sub{font-size:9px;color:#7c897f;margin-bottom:14px}.v48-chart-scroll{overflow-x:auto;padding-bottom:4px}.v48-chart{height:245px;min-width:620px;display:flex;align-items:stretch;gap:8px;border-bottom:1px solid #dfe7dc;padding:8px 4px 0}.v48-bar-col{flex:1;min-width:14px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;cursor:pointer}.v48-bar-value{font-size:8px;font-weight:900;color:#56705d;min-height:12px}.v48-bar-track{height:180px;width:100%;display:flex;align-items:flex-end;justify-content:center}.v48-bar{width:min(25px,78%);min-height:2px;background:#269b32;border-radius:6px 6px 2px 2px;transition:.18s}.v48-bar-col:hover .v48-bar,.v48-bar-col.active .v48-bar{background:#104c29}.v48-bar-label{font-size:8px;color:#6e7e72;white-space:nowrap}.v48-chart-detail{margin-top:10px;min-height:31px;border-radius:10px;background:#f2f7f0;padding:8px 11px;font-size:10px;color:#34533c;font-weight:800}.v48-three{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}.v48-avg{background:#f7faf6;border:1px solid #e0e9dd;border-radius:13px;text-align:center;padding:13px 8px}.v48-avg b{font-size:11px}.v48-avg strong{display:block;font-size:21px;color:#104c29;margin:5px 0}.v48-avg small{font-size:8px;color:#7d8a81}.v48-table{width:100%;border-collapse:separate;border-spacing:0 7px;margin-top:8px}.v48-table th{font-size:8px;color:#728078;text-align:center;padding:3px}.v48-table th:first-child{text-align:left}.v48-table td{background:#f7faf6;border-top:1px solid #e2eade;border-bottom:1px solid #e2eade;padding:10px;font-size:10px;text-align:center}.v48-table td:first-child{border-left:1px solid #e2eade;border-radius:10px 0 0 10px;font-weight:950;text-align:left}.v48-table td:last-child{border-right:1px solid #e2eade;border-radius:0 10px 10px 0}.v48-table strong{display:block;color:#104c29;font-size:14px}.v48-table small{display:block;color:#7e8b82;font-size:8px;margin-top:2px}.v48-na{color:#a0aaa3!important;background:#f2f3f2!important}.v48-precision{background:#f2f8ef;border-color:#cfe0ca}.v48-data-row{display:flex;justify-content:space-between;gap:15px;padding:9px 2px;border-bottom:1px solid #dfe9db;font-size:10px}.v48-data-row strong{font-size:11px}.v48-reserve-title{font-size:9px;font-weight:950;letter-spacing:.08em;margin:16px 0 8px}.v48-reserves{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.v48-reserve{background:#fff;border:1px solid #d8e5d4;border-radius:11px;padding:10px;text-align:center}.v48-reserve b{font-size:10px}.v48-reserve strong{display:block;font-size:17px;color:#104c29;margin-top:3px}.v48-reserve small{display:block;font-size:7.5px;color:#7d8a81;margin-top:3px}.v48-top{display:flex;align-items:center;gap:15px}.v48-trophy{width:48px;height:48px;border-radius:14px;background:#edf5ea;display:grid;place-items:center;font-size:25px}.v48-top-date{font-size:13px;font-weight:950}.v48-top-km{font-size:23px;font-weight:950;color:#104c29}.v48-empty{color:#839087;font-size:10px;padding:8px 0}.v48-note{font-size:8px;color:#7b887f;margin-top:8px}
+.v49-chart-layout{display:flex;align-items:stretch;gap:7px}.v49-yaxis{position:relative;flex:0 0 38px;height:245px;padding:8px 0 27px;box-sizing:border-box}.v49-yaxis-inner{position:relative;height:180px;margin-top:12px}.v49-y-tick{position:absolute;right:0;transform:translateY(50%);font-size:8px;font-weight:850;color:#6e7e72;white-space:nowrap}.v49-y-unit{position:absolute;top:-22px;right:0;font-size:7px;font-weight:900;color:#87928a}.v49-chart-scroll{flex:1;min-width:0;overflow-x:auto;padding-bottom:4px}.v49-chart-scroll .v48-chart{position:relative}.v49-grid{position:absolute;left:4px;right:4px;top:20px;height:180px;pointer-events:none;z-index:0}.v49-grid-line{position:absolute;left:0;right:0;border-top:1px dashed #e2e9df}.v49-chart-scroll .v48-bar-col{position:relative;z-index:1}
+@media(max-width:620px){.v48-wrap{padding:12px 10px 34px}.v48-title{font-size:19px}.v48-kpis{gap:6px}.v48-kpi{padding:12px 5px}.v48-kpi strong{font-size:18px}.v48-kpi small{font-size:7.5px}.v48-panel{padding:13px}.v48-three{gap:5px}.v48-avg{padding:10px 4px}.v48-avg strong{font-size:17px}.v48-table td{padding:8px 4px}.v48-reserves{gap:5px}.v48-chart{min-width:560px}}
 </style>
 </head>
 <body>
@@ -1433,7 +1696,7 @@ input:focus,select:focus,textarea:focus{
 <div class="today-return-wrap" id="todayReturnWrap">
 <button type="button" class="today-return-btn" id="todayReturnBtn">↩ Vrátit na dnešek</button>
 </div>
-<section class="work-area"><div class="left-flow"><div class="section-heading"><div class="section-chip">Plánované</div><span class="section-count" id="plannedCount">0</span></div><div id="plannedList"></div><div class="section-heading"><div class="section-chip completed-chip">Splněné</div><span class="section-count done" id="completedCount">0</span></div><div id="completedList"></div></div><aside class="tool-panel"><div class="tool-title">Panel<br>nástrojů</div><button class="tool-btn" id="calendarBtn" title="Kalendář"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M7 3v4M17 3v4M3 9h18"></path><path d="M7 13h2M11 13h2M15 13h2M7 17h2M11 17h2M15 17h2"></path></svg></button><button class="tool-btn" title="Čas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h10M7 21h10"></path><path d="M8 3c0 4 1.6 5.4 4 7 2.4-1.6 4-3 4-7M8 21c0-4 1.6-5.4 4-7 2.4 1.6 4 3 4 7"></path></svg></button><button class="tool-btn" title="Přehled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h8"></path></svg></button><div class="tool-spacer"></div><button class="add-btn" id="addBtn" title="Nová jízda">+</button></aside></section>
+<section class="work-area"><div class="left-flow"><div class="section-heading"><div class="section-chip">Plánované</div><span class="section-count" id="plannedCount">0</span></div><div id="plannedList"></div><div class="section-heading"><div class="section-chip completed-chip">Splněné</div><span class="section-count done" id="completedCount">0</span></div><div id="completedList"></div></div><aside class="tool-panel"><div class="tool-title">Panel<br>nástrojů</div><button class="tool-btn" id="calendarBtn" title="Kalendář"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M7 3v4M17 3v4M3 9h18"></path><path d="M7 13h2M11 13h2M15 13h2M7 17h2M11 17h2M15 17h2"></path></svg></button><button class="tool-btn" title="Čas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h10M7 21h10"></path><path d="M8 3c0 4 1.6 5.4 4 7 2.4-1.6 4-3 4-7M8 21c0-4 1.6-5.4 4-7 2.4 1.6 4 3 4 7"></path></svg></button><button class="tool-btn" title="Přehled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h8"></path></svg></button><button class="tool-btn" id="statsToolBtn" title="Statistiky" aria-label="Statistiky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10h4v10M10 20V6h4v14M16 20V3h4v17"></path><path d="M3 20.5h18"></path><path d="m5 8 5-3 4 1 5-4"></path></svg></button><div class="tool-spacer"></div><button class="add-btn" id="addBtn" title="Nová jízda">+</button></aside></section>
 <section class="cancelled-section"><div class="section-heading"><div class="section-chip cancelled-chip">Zrušené</div><span class="section-count cancelled" id="cancelledCount">0</span></div><div id="cancelledList"></div></section>
 </div>
 
@@ -1471,7 +1734,14 @@ input:focus,select:focus,textarea:focus{
 <script>
 const STORAGE_KEY="evidenceRozvozu_v4";
 const today=new Date();today.setHours(0,0,0,0);let selectedDate=new Date(today),editingId=null,pendingCancelId=null;let calendarView="month",calendarCursor=new Date(selectedDate);
-const VEHICLE_IMAGES={AK:"",TRM:"",TRMS:"",TRV:"",TRVS:""};
+const VEHICLE_IMAGES={
+  AK:"https://raw.githubusercontent.com/pilazeleznice-coder/evidence-rozvozu-app/main/AK.png",
+  TRM:"https://raw.githubusercontent.com/pilazeleznice-coder/evidence-rozvozu-app/main/TRM.png",
+  TRMS:"https://raw.githubusercontent.com/pilazeleznice-coder/evidence-rozvozu-app/main/TRMS.png",
+  TRV:"https://raw.githubusercontent.com/pilazeleznice-coder/evidence-rozvozu-app/main/TRV.png",
+  TRVS:"https://raw.githubusercontent.com/pilazeleznice-coder/evidence-rozvozu-app/main/TRVS.png"
+};
+window.VEHICLE_IMAGES=VEHICLE_IMAGES;
 function iso(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");return `${y}-${m}-${day}`}
 function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);x.setHours(0,0,0,0);return x}
 const seed=[
@@ -1497,6 +1767,24 @@ function render(){updateDayHeader();const d=iso(selectedDate),isPast=selectedDat
 prevDay.onclick=()=>{selectedDate=addDays(selectedDate,-1);render()};nextDay.onclick=()=>{selectedDate=addDays(selectedDate,1);render()};
 calendarBtn.onclick=()=>{const picked=prompt("Zadejte datum ve formátu RRRR-MM-DD",iso(selectedDate));if(/^\d{4}-\d{2}-\d{2}$/.test(picked||"")){selectedDate=new Date(picked+"T00:00:00");render()}};
 const formModal=document.getElementById("formModal"),detailModal=document.getElementById("detailModal"),confirmModal=document.getElementById("confirmModal");
+/* v42R: explicit references for CodePen/modern browsers.
+   This changes no form layout and no map UI. */
+const fDate=document.getElementById("fDate"),
+      fTime=document.getElementById("fTime"),
+      fName=document.getElementById("fName"),
+      fAddress=document.getElementById("fAddress"),
+      fNet=document.getElementById("fNet"),
+      fGross=document.getElementById("fGross"),
+      fPayment=document.getElementById("fPayment"),
+      fVehicle=document.getElementById("fVehicle"),
+      fNote=document.getElementById("fNote"),
+      formTitle=document.getElementById("formTitle"),
+      cancelRideBtn=document.getElementById("cancelRideBtn"),
+      saveRide=document.getElementById("saveRide"),
+      closeForm=document.getElementById("closeForm"),
+      detailContent=document.getElementById("detailContent"),
+      closeDetail=document.getElementById("closeDetail");
+
 addBtn.onclick=()=>openForm();
 function openForm(){editingId=null;formTitle.textContent="Nová plánovaná jízda";cancelRideBtn.style.display="none";fDate.value=iso(selectedDate);fTime.value="";fName.value="";fAddress.value="";fNet.value="";fGross.value="";fPayment.value="Hotově";fVehicle.value="AK";fNote.value="";formModal.classList.add("show")}
 window.openEdit=id=>{const r=rides.find(x=>x.id===id);if(!r)return;editingId=id;formTitle.textContent="Upravit jízdu";cancelRideBtn.style.display=r.status==="cancelled"?"none":"block";fDate.value=r.date;fTime.value=r.time;fName.value=r.name;fAddress.value=r.address;fNet.value=r.net;fGross.value=gross(r.net);fPayment.value=r.payment;fVehicle.value=r.vehicle;fNote.value=r.note||"";formModal.classList.add("show")};
@@ -2444,7 +2732,7 @@ const oi=window.showInfo;window.showInfo=id=>{oi(id);const r=rides.find(x=>x.id=
    if(a.stage==="loading") d.innerHTML='<div class="run-section-title">Příprava rozvozu</div><div class="run-info-grid"><div class="run-info-box"><small>Objednávka</small><strong>'+esc(r.orderNo||"—")+'</strong></div><div class="run-info-box"><small>Čas doručení</small><strong>'+esc(r.time||r.deliveryTime||"—")+'</strong></div></div>';
    if(a.stage==="outbound") d.innerHTML='<div class="run-section-title">Cesta k zákazníkovi</div><div class="run-info-grid"><div class="run-info-box"><small>Telefon</small><strong><a class="run-phone" href="tel:'+esc(r.phone)+'">'+esc(r.phone||"—")+'</a></strong></div><div class="run-info-box"><small>Počet km</small><strong>'+(r.km||r.distance||"—")+'</strong></div></div><div class="run-map-placeholder">Mapa trasy bude napojena v mapovém kroku.<br>'+esc(r.address||"")+'</div><button class="run-nav-btn" type="button" onclick="window.open(\''+navUrl(r.address||"")+'\',\'_blank\')">NAVIGOVAT • GOOGLE MAPS</button>';
    if(a.stage==="unloading") d.innerHTML='<div class="run-section-title">Dosavadní časy</div><div class="run-stage-times">'+times+'</div>';
-   if(a.stage==="payment") d.innerHTML='<div class="run-section-title">Souhrn a platba</div><div class="run-stage-times">'+times+'</div><div class="run-payment"><strong>'+esc(r.name||"—")+'</strong><div>'+esc(r.phone||"")+'</div><div>Č. objednávky: '+esc(r.orderNo||"—")+'</div><div>Cena bez DPH: '+esc(r.net||r.priceNet||"—")+'</div><div>Cena s DPH: '+esc(r.gross||r.priceGross||"—")+'</div><div>Platba: '+esc(r.payment||"—")+'</div></div>';
+   if(a.stage==="payment") d.innerHTML='<div class="run-section-title">Souhrn a platba</div><div class="run-stage-times">'+times+'</div><div class="run-payment"><strong>'+esc(r.name||"—")+'</strong><div>'+esc(r.phone||"")+'</div><div>Č. objednávky: '+esc(r.orderNo||"—")+'</div><div>Cena bez DPH: '+esc(r.net||r.priceNet||"—")+'</div><div>Cena s DPH: '+esc((r.gross??r.priceGross)!=null?(typeof money==="function"?money(Number(r.gross??r.priceGross)):String(r.gross??r.priceGross)):(typeof money==="function"?money(typeof gross==="function"?gross(Number(r.net??r.priceNet??0)):Math.round(Number(r.net??r.priceNet??0)*1.21)):String(Math.round(Number(r.net??r.priceNet??0)*1.21))))+'</div><div>Platba: '+esc(r.payment||"—")+'</div></div>';
    if(a.stage==="return") d.innerHTML='<div class="run-section-title">Cesta zpět</div><div class="run-stage-times">'+times+'</div><div class="run-map-placeholder">'+HOME+'</div><button class="run-nav-btn" type="button" onclick="window.open(\''+navUrl(HOME)+'\',\'_blank\')">NAVIGOVAT DOMŮ • GOOGLE MAPS</button><div class="run-finish-note">Po potvrzení se jízda automaticky přesune mezi Splněné.</div>';
  }
  function showHistorical(stage,a,r){
@@ -2519,7 +2807,7 @@ const oi=window.showInfo;window.showInfo=id=>{oi(id);const r=rides.find(x=>x.id=
    if(stage==="loading") return `<div class="run-section-title">Nakládka • dokončeno</div>${time}<div class="run-history-description"><b>Objednávka:</b> ${esc(r.orderNo||"—")}<br><b>Čas doručení:</b> ${esc(r.time||"—")}</div>`;
    if(stage==="outbound") return `<div class="run-section-title">Výjezd • dokončeno</div>${time}<div class="run-history-description"><b>Zákazník:</b> ${esc(r.name||"—")}<br><b>Telefon:</b> ${esc(r.phone||"—")}<br><b>Adresa:</b> ${esc(r.address||"—")}<br><b>Počet km:</b> ${esc(r.km||r.distance||"—")}</div>`;
    if(stage==="unloading") return `<div class="run-section-title">Vykládka • dokončeno</div>${time}<div class="run-history-description">Etapa je uzavřená. Její naměřený čas se při tomto náhledu už nemění.</div>`;
-   if(stage==="payment") return `<div class="run-section-title">Platba • dokončeno</div><div class="run-history-description"><b>Zákazník:</b> ${esc(r.name||"—")}<br><b>Objednávka:</b> ${esc(r.orderNo||"—")}<br><b>Platba:</b> ${esc(r.payment||"—")}<br><b>Cena s DPH:</b> ${esc(r.gross||r.priceGross||"—")}</div>`;
+   if(stage==="payment") return `<div class="run-section-title">Platba • dokončeno</div><div class="run-history-description"><b>Zákazník:</b> ${esc(r.name||"—")}<br><b>Objednávka:</b> ${esc(r.orderNo||"—")}<br><b>Platba:</b> ${esc(r.payment||"—")}<br><b>Cena s DPH:</b> ${esc((r.gross??r.priceGross)!=null?(typeof money==="function"?money(Number(r.gross??r.priceGross)):String(r.gross??r.priceGross)):(typeof money==="function"?money(typeof gross==="function"?gross(Number(r.net??r.priceNet??0)):Math.round(Number(r.net??r.priceNet??0)*1.21)):String(Math.round(Number(r.net??r.priceNet??0)*1.21))))}</div>`;
    return `<div class="run-section-title">${LB[stage]}</div>${time}`;
  }
 
@@ -2654,7 +2942,7 @@ body #runPauseBtn.v32-payment-active{display:block!important}
      const t=fmt(elapsed(fresh));
      $("runTimer").textContent=t;
      $("runBarTime").textContent=t;
-     $("runTimerState").textContent=fresh.paused?"Čas je pozastavený":"Čas platby právě běží";
+     $("runTimerState").textContent=fresh.paused?"Čas je pozastavený":"Čas právě běží";
      pause.textContent=fresh.paused?"POKRAČOVAT":"POZASTAVIT";
    }
  }
@@ -3012,6 +3300,15 @@ const MAPY_API_KEY = "SEM_VLOŽ_SVŮJ_MAPY_COM_API_KLÍČ";
     u.searchParams.set("dir_action","navigate");
     return u.toString();
   }
+  function googleAddressRouteUrl(originAddress,destinationAddress){
+    const u=new URL("https://www.google.com/maps/dir/");
+    u.searchParams.set("api","1");
+    u.searchParams.set("origin",originAddress);
+    u.searchParams.set("destination",destinationAddress);
+    u.searchParams.set("travelmode","driving");
+    u.searchParams.set("dir_action","navigate");
+    return u.toString();
+  }
 
   function addMapyLogo(map){
     if(!window.L)return;
@@ -3030,39 +3327,152 @@ const MAPY_API_KEY = "SEM_VLOŽ_SVŮJ_MAPY_COM_API_KLÍČ";
   }
   function makeMap(el){
     if(!window.L||!el)return null;
-    const map=L.map(el,{zoomControl:true,attributionControl:true});
-    L.tileLayer(`https://api.mapy.com/v1/maptiles/aerial/256/{z}/{x}/{y}?apikey=${MAPY_API_KEY}`,{
-      minZoom:0,maxZoom:19,
-      updateWhenIdle:true,
-      updateWhenZooming:false,
-      keepBuffer:1,
-      attribution:'<a href="https://api.mapy.com/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>'
-    }).addTo(map);
+
+    const map=L.map(el,{
+      zoomControl:true,
+      attributionControl:true,
+      dragging:true,
+      touchZoom:true,
+      scrollWheelZoom:true,
+      doubleClickZoom:true,
+      zoomAnimation:false,
+      fadeAnimation:false,
+      markerZoomAnimation:false
+    });
+
+    const tiles=L.tileLayer(
+      `https://api.mapy.com/v1/maptiles/aerial/256/{z}/{x}/{y}?apikey=${MAPY_API_KEY}`,
+      {
+        tileSize:256,
+        minZoom:0,
+        maxZoom:20,
+        updateWhenIdle:false,
+        updateWhenZooming:true,
+        keepBuffer:4,
+        reuseTiles:false,
+        attribution:'<a href="https://api.mapy.com/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>'
+      }
+    ).addTo(map);
+
     addMapyLogo(map);
+
+    /* Kanonické řešení velikosti mapy:
+       Leaflet musí reagovat na SKUTEČNOU velikost kontejneru, ne na časovač.
+       ResizeObserver se spustí jen při reálné změně rozměru. */
+    if(window.ResizeObserver){
+      const ro=new ResizeObserver(entries=>{
+        const r=entries[0]?.contentRect;
+        if(!r || r.width<40 || r.height<40)return;
+        requestAnimationFrame(()=>{
+          try{map.invalidateSize({pan:false,animate:false})}catch(e){}
+        });
+      });
+      ro.observe(el);
+      map.once("unload",()=>{try{ro.disconnect()}catch(e){}});
+    }
+
     return map;
   }
   function drawRoute(map,routeObj){
-    if(!map||!routeObj)return;
+    if(!map||!routeObj?.start||!routeObj?.end)return;
+
+    /* Odstraníme jen starou trasu/markery, podkladové dlaždice zůstávají. */
     map.eachLayer(layer=>{
-      if(layer instanceof L.Marker || layer instanceof L.Polyline || layer instanceof L.GeoJSON) map.removeLayer(layer);
+      if(layer instanceof L.Marker || layer instanceof L.Polyline || layer instanceof L.GeoJSON){
+        map.removeLayer(layer);
+      }
     });
-    const bounds=[];
-    if(routeObj.geometry){
-      try{
-        const gj=L.geoJSON({type:"Feature",properties:{},geometry:routeObj.geometry},{style:{weight:5,opacity:.88}});
-        gj.addTo(map); bounds.push(gj.getBounds());
-      }catch(e){console.warn("Route geometry",e)}
+
+    const start={
+      lon:Number(routeObj.start.lon),
+      lat:Number(routeObj.start.lat)
+    };
+    const end={
+      lon:Number(routeObj.end.lon),
+      lat:Number(routeObj.end.lat)
+    };
+    if(!Number.isFinite(start.lon)||!Number.isFinite(start.lat)||
+       !Number.isFinite(end.lon)||!Number.isFinite(end.lat)){
+      console.warn("Map: neplatné souřadnice P/C",routeObj);
+      return;
     }
+
     const pin=(label,kind)=>L.divIcon({
       className:"pz-div-pin",
       html:`<div class="pz-pin ${kind}"><span>${label}</span></div>`,
-      iconSize:[34,42],iconAnchor:[17,40],popupAnchor:[0,-38]
+      iconSize:[34,42],
+      iconAnchor:[17,40],
+      popupAnchor:[0,-38]
     });
-    const a=L.marker([routeObj.start.lat,routeObj.start.lon],{icon:pin("P","home")}).addTo(map).bindPopup("<strong>Pila Železnice</strong>");
-    const b=L.marker([routeObj.end.lat,routeObj.end.lon],{icon:pin("C","customer")}).addTo(map).bindPopup("<strong>Zadaná adresa</strong>");
-    if(bounds.length)map.fitBounds(bounds[0],{padding:[24,24],maxZoom:17});
-    else map.fitBounds(L.latLngBounds([[routeObj.start.lat,routeObj.start.lon],[routeObj.end.lat,routeObj.end.lon]]),{padding:[24,24],maxZoom:17});
-    setTimeout(()=>map.invalidateSize({pan:false}),100);
+
+    /* Body P a C se kreslí VŽDY, nezávisle na geometrii trasy. */
+    L.marker([start.lat,start.lon],{
+      icon:pin("P","home"),
+      zIndexOffset:1000
+    }).addTo(map).bindPopup("<strong>Pila Železnice</strong>");
+
+    L.marker([end.lat,end.lon],{
+      icon:pin("C","customer"),
+      zIndexOffset:1000
+    }).addTo(map).bindPopup("<strong>Zadaná adresa</strong>");
+
+    const fitPoints=[[start.lat,start.lon],[end.lat,end.lon]];
+    let routeBounds=null;
+
+    if(routeObj.geometry){
+      try{
+        const raw=routeObj.geometry;
+        const gjObj =
+          (raw?.type==="Feature" || raw?.type==="FeatureCollection") ? raw :
+          (raw?.type && Array.isArray(raw.coordinates)) ? {type:"Feature",properties:{},geometry:raw} :
+          raw?.geometry?.type ? (raw.type==="Feature"?raw:{type:"Feature",properties:{},geometry:raw.geometry}) :
+          null;
+
+        if(gjObj){
+          const gj=L.geoJSON(gjObj,{
+            style:{
+              color:"#d52b27",
+              weight:6,
+              opacity:.95,
+              lineCap:"round",
+              lineJoin:"round"
+            }
+          }).addTo(map);
+          const b=gj.getBounds();
+          if(b?.isValid?.())routeBounds=b;
+        }
+      }catch(e){
+        console.warn("Map: route geometry ignored",e);
+      }
+    }
+
+    /* Nejdřív necháme Leaflet znát reálnou velikost mapy,
+       až POTOM nastavíme výsledný výřez. */
+    requestAnimationFrame(()=>{
+      try{
+        map.invalidateSize({pan:false,animate:false});
+
+        const bounds=routeBounds && routeBounds.isValid()
+          ? routeBounds.extend(fitPoints[0]).extend(fitPoints[1])
+          : L.latLngBounds(fitPoints);
+
+        map.fitBounds(bounds,{
+          padding:[28,28],
+          maxZoom:17,
+          animate:false
+        });
+
+        /* Po fitBounds znovu přepočítáme dlaždice pro finální viewport. */
+        requestAnimationFrame(()=>{
+          try{
+            map.invalidateSize({pan:false,animate:false});
+            map.fire("moveend");
+          }catch(e){}
+        });
+      }catch(e){
+        console.warn("Map: fitBounds failed",e);
+      }
+    });
   }
 
   /* ---------- Form map + navigation + start suggestion ---------- */
@@ -3110,8 +3520,17 @@ const MAPY_API_KEY = "SEM_VLOŽ_SVŮJ_MAPY_COM_API_KLÍČ";
     document.getElementById("mapyFormNavMapy").href=mapyRouteUrl(o,d,true);
     document.getElementById("mapyFormNavGoogle").href=googleRouteUrl(o,d);
     formMapEl.classList.add("show");
+
+    /* Vytvoříme mapu až ve chvíli, kdy má její kontejner reálné rozměry. */
+    const rect=formMapEl.getBoundingClientRect();
+    if(rect.width<40 || rect.height<40){
+      console.warn("Map: kontejner ještě nemá platné rozměry",rect);
+      return;
+    }
+
     if(formMap){formMap.remove();formMap=null}
-    formMap=makeMap(formMapEl);drawRoute(formMap,rr);
+    formMap=makeMap(formMapEl);
+    if(formMap)drawRoute(formMap,rr);
   }
   window.PZMapyV35={onFormRoute:renderFormRoute,ensureRideRoute,ensureReturnRoute};
 
@@ -3161,12 +3580,28 @@ const MAPY_API_KEY = "SEM_VLOŽ_SVŮJ_MAPY_COM_API_KLÍČ";
               <div class="pz-info-route-stat"><small>Doba jízdy</small><strong>${fmtDuration(rr.seconds)}</strong></div>
             </div>
             <div class="pz-info-map" id="pzInfoMap"></div>
-            <div class="pz-nav-actions">
-              <a class="pz-nav-btn primary" target="_blank" href="${esc(mapyRouteUrl(rr.start,rr.end,true))}">NAVIGOVAT • MAPY.COM</a>
-              <a class="pz-nav-btn secondary" target="_blank" href="${esc(googleRouteUrl(rr.start,rr.end))}">GOOGLE MAPS</a>
+            <div class="pz-nav-actions pz-google-only">
+              <a class="pz-nav-btn primary" target="_blank" href="${esc(googleRouteUrl(rr.start,rr.end))}">NAVIGOVAT</a>
             </div>`;
+          /* INFO pořadí je pevné:
+             1) CELÁ sekce MAPA
+             2) hned pod ní CELÁ sekce PLÁN ROZVOZU.
+             Obsah obou sekcí se nemění. */
+          const placeInfoSections=()=>{
+            const planBox=c.querySelector(".v39-info-plan");
+            if(!planBox || !holder.isConnected)return;
+            if(holder.nextElementSibling!==planBox){
+              holder.insertAdjacentElement("afterend",planBox);
+            }
+          };
+          placeInfoSections();
+
           if(infoMap){infoMap.remove();infoMap=null}
           infoMap=makeMap(document.getElementById("pzInfoMap"));drawRoute(infoMap,rr);
+
+          /* v39 může plán doplnit až po vykreslení INFO; po dokončení aktuálního
+             DOM cyklu pouze jednou potvrdíme výsledné pořadí sekcí. */
+          queueMicrotask(placeInfoSections);
         }catch(e){
           holder.innerHTML=`<div class="pz-info-route-title">Trasa rozvozu</div><div class="mapy-address-status err">Trasu se nepodařilo načíst.</div>`;
         }
@@ -3231,9 +3666,12 @@ const MAPY_API_KEY = "SEM_VLOŽ_SVŮJ_MAPY_COM_API_KLÍČ";
             <div class="pz-run-route-stat"><small>Příjezd cca</small><strong>${eta}</strong></div>
           </div>
           <div class="pz-run-map" id="pzRunMap"></div>
-          <div class="pz-nav-actions">
-            <a class="pz-nav-btn primary" target="_blank" href="${esc(mapyRouteUrl(rr.start,rr.end,true))}">SPUSTIT NAVIGACI • MAPY.COM</a>
-            <a class="pz-nav-btn secondary" target="_blank" href="${esc(googleRouteUrl(rr.start,rr.end))}">GOOGLE MAPS</a>
+          <div class="pz-nav-actions pz-google-only">
+            <a class="pz-nav-btn primary" target="_blank" href="${esc(
+              a.stage==="outbound"
+                ? googleAddressRouteUrl(HOME_LABEL,r.address||`${rr.end.lat},${rr.end.lon}`)
+                : googleAddressRouteUrl(r.address||`${rr.start.lat},${rr.start.lon}`,HOME_LABEL)
+            )}">NAVIGACE – GOOGLE MAPY</a>
           </div>
         </div>`;
       if(runMap){runMap.remove();runMap=null}
@@ -3243,8 +3681,29 @@ const MAPY_API_KEY = "SEM_VLOŽ_SVŮJ_MAPY_COM_API_KLÍČ";
       runPanel.innerHTML=`<div class="pz-run-route-box"><div class="mapy-address-status err">Mapu nebo trasu se nepodařilo načíst.</div></div>`;
     }
   }
-  setInterval(renderRunRoute,900);
+  /* V42.12: mapu aktivního rozvozu nepollujeme.
+     Překreslí se pouze při skutečné změně aktivního rozvozu / kroku. */
   setTimeout(renderRunRoute,120);
+
+  window.addEventListener("storage",e=>{
+    if(e.key===ACTIVE_KEY){
+      lastRunSignature="";
+      renderRunRoute();
+    }
+  });
+
+  document.addEventListener("click",e=>{
+    const b=e.target.closest("button,a");
+    if(!b)return;
+    const txt=(b.textContent||"").trim().toUpperCase();
+    if(txt==="START" || txt==="HOTOVO" || txt.includes("POKRAČOVAT") ||
+       txt.includes("CESTA TAM") || txt.includes("CESTA ZPĚT")){
+      setTimeout(()=>{
+        lastRunSignature="";
+        renderRunRoute();
+      },80);
+    }
+  },true);
 
   /* When delivery time changes after route was selected, refresh suggested start. */
   document.getElementById("fTime")?.addEventListener("change",()=>{
@@ -3265,89 +3724,2781 @@ const MAPY_API_KEY = "SEM_VLOŽ_SVŮJ_MAPY_COM_API_KLÍČ";
 </script>
 
 
-<script id="v37-static-map-js">
+<div class="v38-confirm-overlay" id="v38ConfirmOverlay">
+  <div class="v38-confirm-box">
+    <div class="v38-confirm-main">
+      <div class="v38-confirm-icon">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>
+      </div>
+      <h3 id="v38ConfirmTitle">Smazat jízdu?</h3>
+      <p id="v38ConfirmText">Jste si jistí?</p>
+    </div>
+    <div class="v38-confirm-actions">
+      <button type="button" class="v38-no" id="v38ConfirmNo">NE</button>
+      <button type="button" class="v38-yes" id="v38ConfirmYes">ANO</button>
+    </div>
+  </div>
+</div>
+
+<div class="v38-trash-overlay" id="v38TrashOverlay">
+  <section class="v38-trash-shell">
+    <header class="v38-trash-head">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>
+      <div class="v38-trash-head-copy"><h2>Koš</h2><p>Odstraněné jízdy je možné obnovit.</p></div>
+      <button class="v38-trash-close" id="v38TrashClose" type="button">×</button>
+    </header>
+    <div class="v38-trash-body" id="v38TrashBody"></div>
+    <footer class="v38-trash-footer">
+      <button type="button" id="emptyTrashBtn">VYSYPAT KOŠ</button>
+    </footer>
+  </section>
+</div>
+
+
+<script id="v38-functions">
 (function(){
-  function keyOK(){return typeof MAPY_API_KEY!=="undefined"&&MAPY_API_KEY&&!MAPY_API_KEY.includes("SEM_VLOŽ")}
-  function staticMapUrl(start,end,geometry){
-    const u=new URL("https://api.mapy.com/v1/static/map");
-    u.searchParams.set("width","900");
-    u.searchParams.set("height","430");
-    u.searchParams.set("format","webp");
-    u.searchParams.set("mapset","aerial");
-    u.searchParams.set("padding","45");
-    u.searchParams.append("markers",`color:green;size:large;label:P;${start.lon},${start.lat}`);
-    u.searchParams.append("markers",`color:red;size:large;label:C;${end.lon},${end.lat}`);
-    // Routing geometry is GeoJSON [lon,lat]. Draw a decimated path to keep URL compact.
-    const coords=geometry?.coordinates;
-    if(Array.isArray(coords)&&coords.length>1){
-      const max=85, step=Math.max(1,Math.ceil(coords.length/max));
-      const pts=[];
-      for(let i=0;i<coords.length;i+=step)pts.push(`${coords[i][0]},${coords[i][1]}`);
-      const last=coords[coords.length-1], lastS=`${last[0]},${last[1]}`;
-      if(pts[pts.length-1]!==lastS)pts.push(lastS);
-      u.searchParams.append("shapes",`color:#104c29;width:5;path:[(${pts.join(";")})]`);
-    }
-    u.searchParams.set("apikey",MAPY_API_KEY);
-    return u.toString();
-  }
-  function injectAfter(hiddenMap,routeObj,caption){
-    if(!hiddenMap||!routeObj||!keyOK())return;
-    let wrap=hiddenMap.nextElementSibling;
-    if(!wrap||!wrap.classList.contains("pz-static-map-wrap")){
-      wrap=document.createElement("div");wrap.className="pz-static-map-wrap";
-      hiddenMap.insertAdjacentElement("afterend",wrap);
-    }
-    wrap.innerHTML=`<img class="pz-static-map-img" alt="Satelitní mapa trasy Pila Železnice – zákazník"><div class="pz-static-map-caption"><span>🟢 P = Pila Železnice</span><span>🔴 C = zadaná adresa</span></div>`;
-    const img=wrap.querySelector("img");
-    img.src=staticMapUrl(routeObj.start,routeObj.end,routeObj.geometry);
-    img.onerror=()=>{wrap.innerHTML='<div class="mapy-address-status err">Mapu se nepodařilo načíst.</div>'};
-  }
+  const TRASH_KEY="evidenceRozvozu_trash_v38";
+  const ACTIVE_KEY="evidenceRozvozu_activeRun_v24";
+  const $=id=>document.getElementById(id);
+  const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-  // Replace form map after the existing v35 handler finishes.
-  const old=window.PZMapyV35?.onFormRoute;
-  if(old){
-    window.PZMapyV35.onFormRoute=async function(payload){
-      await old(payload);
-      try{
-        const o=payload.origin||JSON.parse(localStorage.getItem("evidenceRozvozu_mapyOrigin_v34")||"null");
-        const d={lon:+payload.selected.lon,lat:+payload.selected.lat};
-        injectAfter(document.getElementById("mapyFormMap"),{
-          start:o,end:d,geometry:payload.routeData.routeGeometry
-        },"Trasa");
-      }catch(e){console.warn(e)}
+  /* -------------------------------------------------------------
+     Payment flicker diagnosis/fix:
+     v24 refreshes runTimerState every 500 ms and v32 refreshed it
+     every 350 ms with a different sentence during payment.
+     v38 makes the text identical and keeps the stage class stable.
+     ------------------------------------------------------------- */
+  function stabilizePayment(){
+    let a=null;
+    try{a=JSON.parse(localStorage.getItem(ACTIVE_KEY)||"null")}catch(e){}
+    const payment=a?.stage==="payment";
+    document.body.classList.toggle("v38-payment-stage",payment);
+    if(payment){
+      const state=$("runTimerState");
+      if(state){
+        const desired=a.paused?"Čas je pozastavený":"Čas právě běží";
+        if(state.textContent!==desired) state.textContent=desired;
+      }
     }
   }
+  setInterval(stabilizePayment,180);
+  stabilizePayment();
 
-  // INFO and active-run maps are created asynchronously by older code.
-  const seen=new WeakSet();
-  function scan(){
-    document.querySelectorAll("#pzInfoMap,#pzRunMap").forEach(el=>{
-      if(seen.has(el))return;
-      const a=(()=>{
-        try{return JSON.parse(localStorage.getItem("evidenceRozvozu_activeRun_v24")||"null")}catch(e){return null}
-      })();
-      let r=null;
+  /* -------------------------------------------------------------
+     New ride date follows the day currently shown in overview.
+     The original app mostly did this already; this is a safeguard
+     after all later form overrides.
+     ------------------------------------------------------------- */
+  $("addBtn")?.addEventListener("click",()=>{
+    setTimeout(()=>{
       try{
-        if(el.id==="pzRunMap"&&a)r=rides.find(x=>String(x.id)===String(a.rideId));
-        else{
-          const id=typeof detailRideId!=="undefined"?detailRideId:null;
-          if(id!=null)r=rides.find(x=>String(x.id)===String(id));
+        if(typeof selectedDate!=="undefined" && selectedDate instanceof Date && $("fDate")){
+          const y=selectedDate.getFullYear(),m=String(selectedDate.getMonth()+1).padStart(2,"0"),d=String(selectedDate.getDate()).padStart(2,"0");
+          $("fDate").value=`${y}-${m}-${d}`;
         }
       }catch(e){}
-      if(!r)return;
-      (async()=>{
+    },20);
+  },true);
+
+  /* -------------------------------------------------------------
+     Trash persistence
+     ------------------------------------------------------------- */
+  function trash(){
+    try{return JSON.parse(localStorage.getItem(TRASH_KEY)||"[]")}catch(e){return []}
+  }
+  function saveTrash(x){localStorage.setItem(TRASH_KEY,JSON.stringify(x));updateTrashBadge()}
+  function currentRides(){
+    try{return window.rides||window.eval("rides")||[]}catch(e){return []}
+  }
+  function saveCurrent(){
+    try{
+      if(typeof window.save==="function")window.save();else window.eval("save()");
+      if(typeof window.render==="function")window.render();else window.eval("render()");
+    }catch(e){}
+  }
+  function rideIdFromCard(card){
+    const edit=card?.querySelector(".edit-btn");
+    const raw=edit?.getAttribute("onclick")||"";
+    const m=raw.match(/openEdit\((\d+)\)/);
+    return m?Number(m[1]):null;
+  }
+
+  /* Tool icon below the current document/overview icon */
+  const panel=document.querySelector(".tool-panel");
+  if(panel && !$("trashToolBtn")){
+    const spacer=panel.querySelector(".tool-spacer");
+    const b=document.createElement("button");
+    b.type="button";b.className="tool-btn";b.id="trashToolBtn";b.title="Koš";
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg><span id="trashToolCount">0</span>';
+    panel.insertBefore(b,spacer||null);
+  }
+
+  function updateTrashBadge(){
+    const n=trash().length,c=$("trashToolCount");
+    if(!c)return;c.textContent=n>99?"99+":n;c.classList.toggle("show",n>0);
+  }
+
+  /* Shared custom confirmation */
+  let confirmAction=null;
+  function ask(title,text,action){
+    confirmAction=action;
+    $("v38ConfirmTitle").textContent=title;
+    $("v38ConfirmText").textContent=text;
+    $("v38ConfirmOverlay").classList.add("open");
+  }
+  $("v38ConfirmNo").onclick=()=>{$("v38ConfirmOverlay").classList.remove("open");confirmAction=null};
+  $("v38ConfirmYes").onclick=()=>{
+    const fn=confirmAction;confirmAction=null;$("v38ConfirmOverlay").classList.remove("open");
+    if(fn)fn();
+  };
+  $("v38ConfirmOverlay").addEventListener("click",e=>{if(e.target===$("v38ConfirmOverlay"))$("v38ConfirmNo").click()});
+
+  function deleteRide(id){
+    const arr=currentRides(),i=arr.findIndex(r=>String(r.id)===String(id));
+    if(i<0)return;
+    const r=arr[i];
+    ask(
+      "Smazat jízdu?",
+      `Jste si jistí, že chcete jízdu „${r.name||"bez jména"}“ smazat? Jízda bude přesunuta do koše.`,
+      ()=>{
+        const removed=arr.splice(i,1)[0];
+        removed.trashedAt=Date.now();
+        removed.statusBeforeTrash=removed.status||"planned";
+        const t=trash();t.unshift(removed);saveTrash(t);
         try{
-          let rr;
-          if(el.id==="pzRunMap"&&a?.stage==="return") rr=await window.PZMapyV35.ensureReturnRoute(r);
-          else rr=await window.PZMapyV35.ensureRideRoute(r);
-          injectAfter(el,rr,"Trasa");
-          seen.add(el);
-        }catch(e){console.warn(e)}
-      })();
+          const active=JSON.parse(localStorage.getItem(ACTIVE_KEY)||"null");
+          if(active && String(active.rideId)===String(id)){
+            localStorage.removeItem(ACTIVE_KEY);
+            $("activeRun")?.classList.remove("open");
+            $("runBar")?.classList.remove("show");
+          }
+        }catch(e){}
+        saveCurrent();
+        decorateCards();
+      }
+    );
+  }
+
+  /* Inject Delete into every visible ride card */
+  function decorateCards(){
+    document.querySelectorAll("#plannedList .card,#completedList .card,#cancelledList .card").forEach(card=>{
+      if(card.querySelector(".v38-delete-btn"))return;
+      const id=rideIdFromCard(card);if(id==null)return;
+      const actions=card.querySelector(".card-actions");if(!actions)return;
+      const b=document.createElement("button");b.type="button";b.className="v38-delete-btn";b.textContent="Smazat";
+      b.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();deleteRide(id)});
+      actions.appendChild(b);
+    });
+    updateTrashBadge();
+  }
+  const lists=["plannedList","completedList","cancelledList"].map(id=>$(id)).filter(Boolean);
+  lists.forEach(el=>new MutationObserver(decorateCards).observe(el,{childList:true,subtree:true}));
+  setTimeout(decorateCards,20);
+
+  /* Trash screen */
+  function formatDate(iso){
+    try{return new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric",year:"numeric"}).format(new Date(iso+"T00:00:00"))}catch(e){return iso||"—"}
+  }
+  function renderTrash(){
+    const t=trash(),body=$("v38TrashBody");
+    $("emptyTrashBtn").disabled=!t.length;
+    body.innerHTML=t.length?t.map(r=>`
+      <article class="v38-trash-item">
+        <div class="v38-trash-top"><div>
+          <div class="v38-trash-time">${esc(r.time||"—")} • ${esc(formatDate(r.date))}</div>
+          <div class="v38-trash-name">${esc(r.name||"Bez jména")}</div>
+          <div class="v38-trash-address">${esc(r.address||"Adresa neuvedena")}</div>
+        </div><div class="vehicle-code">${esc(r.vehicle||"—")}</div></div>
+        <div class="v38-trash-actions"><button class="v38-restore" type="button" data-restore="${esc(r.id)}">OBNOVIT JÍZDU</button></div>
+      </article>`).join(""):'<div class="v38-trash-empty">Koš je prázdný.</div>';
+    body.querySelectorAll("[data-restore]").forEach(b=>b.onclick=()=>{
+      const id=b.dataset.restore,t=trash(),i=t.findIndex(r=>String(r.id)===String(id));if(i<0)return;
+      const r=t.splice(i,1)[0];delete r.trashedAt;
+      r.status=r.statusBeforeTrash||r.status||"planned";delete r.statusBeforeTrash;
+      currentRides().push(r);saveTrash(t);saveCurrent();renderTrash();decorateCards();
     });
   }
-  setInterval(scan,500);
+  $("trashToolBtn")?.addEventListener("click",()=>{renderTrash();$("v38TrashOverlay").classList.add("open")});
+  $("v38TrashClose").onclick=()=>$("v38TrashOverlay").classList.remove("open");
+  $("v38TrashOverlay").addEventListener("click",e=>{if(e.target===$("v38TrashOverlay"))$("v38TrashClose").click()});
+
+  /* Permanently delete document blobs when emptying trash. */
+  async function deleteDocumentBlobs(items){
+    const ids=items.flatMap(r=>(r.documents||[]).map(d=>d.id||d.fileId)).filter(Boolean);
+    if(!ids.length)return;
+    await new Promise(resolve=>{
+      const req=indexedDB.open("EvidenceRozvozuFiles",1);
+      req.onerror=()=>resolve();
+      req.onsuccess=()=>{
+        const db=req.result,tx=db.transaction("files","readwrite"),store=tx.objectStore("files");
+        ids.forEach(id=>{try{store.delete(id)}catch(e){}});
+        tx.oncomplete=()=>resolve();tx.onerror=()=>resolve();
+      };
+    });
+  }
+  $("emptyTrashBtn").onclick=()=>{
+    const t=trash();if(!t.length)return;
+    ask("Vysypat koš?","Jste si jistí, že chcete vysypat koš? Všechny jízdy v koši budou trvale odstraněny z aplikace.",async()=>{
+      await deleteDocumentBlobs(t);
+      saveTrash([]);renderTrash();
+    });
+  };
+
+  /* Improve the caption so the driver immediately understands the red line. */
+  function improveMapCaptions(){
+    document.querySelectorAll(".pz-static-map-caption").forEach(c=>{
+      if(c.dataset.v38)return;c.dataset.v38="1";
+      c.innerHTML='<span>🟢 P = Pila Železnice</span><span class="pz-route-line-note"><i class="pz-route-line-swatch"></i> trasa autem</span><span>🔴 C = zadaná adresa</span>';
+    });
+  }
+  new MutationObserver(improveMapCaptions).observe(document.body,{childList:true,subtree:true});
+  improveMapCaptions();
+  updateTrashBadge();
 })();
 </script>
+
+
+<script id="v39-master-planning-js">
+(function(){
+  const $=id=>document.getElementById(id);
+  const fTime=$("fTime"), fVehicle=$("fVehicle"), fAddress=$("fAddress");
+  if(!fTime||!fVehicle)return;
+
+  /* Hide the native phone time picker, but keep fTime as the canonical value
+     so all existing save/card/timeline code continues to work. */
+  const oldTimeField=fTime.closest(".field");
+  if(oldTimeField) oldTimeField.style.display="none";
+
+  /* Old planning fields stay in DOM for backward compatibility but are never shown. */
+  const oldStart=$("fStartTime")?.closest(".field");
+  const oldDuration=$("durationPickerBtn")?.closest(".field");
+  if(oldStart)oldStart.style.display="none";
+  if(oldDuration)oldDuration.style.display="none";
+
+  const DEFAULTS={
+    AK:{load:20,unload:15},
+    TRM:{load:30,unload:30},
+    TRMS:{load:30,unload:30}, /* temporary until exact TRMS time is approved */
+    TRV:{load:40,unload:60},
+    TRVS:{load:40,unload:60}  /* temporary until exact TRVS time is approved */
+  };
+
+  let state={out:0,back:0,load:20,unload:15,reserve:10,routeReady:false};
+  let currentRoutePayload=null;
+
+  function pad(n){return String(n).padStart(2,"0")}
+  function toMinutes(t){if(!t||!/^\d\d:\d\d$/.test(t))return null;const [h,m]=t.split(":").map(Number);return h*60+m}
+  function hhmm(n){n=(n%1440+1440)%1440;return pad(Math.floor(n/60))+":"+pad(n%60)}
+  function human(n){
+    n=Math.max(0,Math.round(Number(n)||0));
+    const h=Math.floor(n/60),m=n%60;
+    return h?(m?`${h} h ${m} min`:`${h} h`):`${m} min`;
+  }
+  function getDefaults(){
+    return DEFAULTS[fVehicle.value]||DEFAULTS.AK;
+  }
+  function applyVehicleDefaults(force=false){
+    const d=getDefaults();
+    if(force || !state.userLoad)state.load=d.load;
+    if(force || !state.userUnload)state.unload=d.unload;
+    renderPlan();
+  }
+
+  /* ---------- custom time control ---------- */
+  const timeWrap=document.createElement("div");
+  timeWrap.className="field full v39-time-field";
+  timeWrap.innerHTML=`
+    <label>Čas doručení</label>
+    <div class="v39-time-picker">
+      <div class="v39-time-label">Rychlé zadání času</div>
+      <div class="v39-time-row">
+        <div class="v39-time-unit"><button type="button" data-time-step="-60" class="v39-time-btn">−</button><strong id="v39Hour" class="v39-time-value">10</strong><button type="button" data-time-step="60" class="v39-time-btn">+</button></div>
+        <span class="v39-time-colon">:</span>
+        <div class="v39-time-unit"><button type="button" data-time-step="-5" class="v39-time-btn">−</button><strong id="v39Minute" class="v39-time-value">00</strong><button type="button" data-time-step="5" class="v39-time-btn">+</button></div>
+      </div>
+      <div class="v39-time-quick">
+        ${["08:00","09:00","10:00","11:00","12:00"].map(t=>`<button type="button" data-quick-time="${t}">${t}</button>`).join("")}
+      </div>
+    </div>`;
+  oldTimeField?.insertAdjacentElement("afterend",timeWrap);
+
+  function setTime(t,emit=true){
+    if(!t)t="10:00";
+    fTime.value=t;
+    const [h,m]=t.split(":");
+    $("v39Hour").textContent=h;$("v39Minute").textContent=m;
+    document.querySelectorAll("[data-quick-time]").forEach(b=>b.classList.toggle("active",b.dataset.quickTime===t));
+    if(emit)fTime.dispatchEvent(new Event("change",{bubbles:true}));
+    renderPlan();
+  }
+  timeWrap.addEventListener("click",e=>{
+    const step=e.target.closest("[data-time-step]");
+    const quick=e.target.closest("[data-quick-time]");
+    if(step){
+      let n=toMinutes(fTime.value);if(n==null)n=600;
+      setTime(hhmm(n+Number(step.dataset.timeStep)));
+    }else if(quick)setTime(quick.dataset.quickTime);
+  });
+
+  /* ---------- planner UI inside New/Edit ride ---------- */
+  const plan=document.createElement("div");
+  plan.id="v39Planning";plan.className="field full";
+  plan.innerHTML=`
+    <div class="v39-plan">
+      <div class="v39-plan-head"><small>Automatický výpočet</small><strong>Plánování rozvozu</strong></div>
+
+      <div class="v39-plan-section">
+        <div class="v39-section-title">Cesta • podle Mapy.com</div>
+        <div class="v39-auto-row"><span>Pila → zákazník</span><strong id="v39Out">—</strong></div>
+        <div class="v39-auto-row"><span>Zákazník → Pila</span><strong id="v39Back">—</strong></div>
+        <div class="v39-auto-row total"><span>Celkem na cestě</span><strong id="v39DriveTotal">—</strong></div>
+      </div>
+
+      <div class="v39-plan-section">
+        <div class="v39-section-title">Nakládka a vykládka</div>
+        <div class="v39-adjust-row">
+          <div class="v39-adjust-copy"><strong>Navrhovaná délka nakládky</strong><small id="v39LoadHint">Podle typu dopravy</small></div>
+          <div class="v39-stepper"><button type="button" data-plan-step="load:-5">−</button><strong id="v39Load">20 min</strong><button type="button" data-plan-step="load:5">+</button></div>
+        </div>
+        <div class="v39-adjust-row">
+          <div class="v39-adjust-copy"><strong>Navrhovaná délka vykládky</strong><small id="v39UnloadHint">Podle typu dopravy</small></div>
+          <div class="v39-stepper"><button type="button" data-plan-step="unload:-5">−</button><strong id="v39Unload">15 min</strong><button type="button" data-plan-step="unload:5">+</button></div>
+        </div>
+        <div class="v39-adjust-copy" style="margin-top:7px"><strong>Rezerva před doručením</strong><small>Bezpečnostní čas navíc před příjezdem k zákazníkovi</small></div>
+        <div class="v39-reserve-options">
+          ${[0,10,15,30].map(n=>`<button type="button" data-reserve="${n}">+${n} min</button>`).join("")}
+        </div>
+      </div>
+
+      <div class="v39-plan-section v39-results">
+        <div class="v39-section-title">Výsledný plán</div>
+        <div class="v39-result-row"><span>Plánovaný začátek</span><strong id="v39Start">—</strong></div>
+        <div class="v39-result-row delivery"><span>Čas doručení</span><strong id="v39Delivery">—</strong></div>
+        <div class="v39-result-row"><span>Předpokládaný návrat</span><strong id="v39Return">—</strong></div>
+        <div class="v39-result-total"><span>Celková délka</span><strong id="v39Total">—</strong></div>
+      </div>
+    </div>`;
+  /* Put planning after address/map area once that area exists; initially after vehicle. */
+  const vehicleField=fVehicle.closest(".field");
+  vehicleField?.insertAdjacentElement("afterend",plan);
+
+  plan.addEventListener("click",e=>{
+    const b=e.target.closest("[data-plan-step]");
+    const r=e.target.closest("[data-reserve]");
+    if(b){
+      const [key,delta]=b.dataset.planStep.split(":");
+      state[key]=Math.max(0,Math.min(240,state[key]+Number(delta)));
+      if(key==="load")state.userLoad=true;else state.userUnload=true;
+      renderPlan();
+    }else if(r){
+      state.reserve=Number(r.dataset.reserve);renderPlan();
+    }
+  });
+
+  function renderPlan(){
+    $("v39Out").textContent=state.routeReady?human(state.out):"Vyber adresu";
+    $("v39Back").textContent=state.routeReady?human(state.back):"Vyber adresu";
+    $("v39DriveTotal").textContent=state.routeReady?human(state.out+state.back):"—";
+    $("v39Load").textContent=human(state.load);
+    $("v39Unload").textContent=human(state.unload);
+    $("v39LoadHint").textContent=`Výchozí odhad pro ${fVehicle.value}`;
+    $("v39UnloadHint").textContent=`Výchozí odhad pro ${fVehicle.value}`;
+    document.querySelectorAll("[data-reserve]").forEach(b=>b.classList.toggle("active",Number(b.dataset.reserve)===state.reserve));
+
+    const delivery=toMinutes(fTime.value);
+    $("v39Delivery").textContent=fTime.value||"—";
+    if(delivery==null || !state.routeReady){
+      $("v39Start").textContent="—";$("v39Return").textContent="—";$("v39Total").textContent="—";
+      return;
+    }
+    const start=delivery-state.out-state.load-state.reserve;
+    const ret=delivery+state.unload+state.back;
+    const total=state.load+state.out+state.reserve+state.unload+state.back;
+    $("v39Start").textContent=hhmm(start);
+    $("v39Return").textContent=hhmm(ret);
+    $("v39Total").textContent=human(total);
+
+    /* Canonical legacy fields feed the existing timeline without duplicate visible inputs. */
+    if($("fStartTime"))$("fStartTime").value=hhmm(start);
+    if($("fDuration"))$("fDuration").value=pad(Math.floor(total/60))+":"+pad(total%60);
+  }
+
+  /* Capture the route payload that v34 already computes, then calculate reverse route too. */
+  async function reverseMinutes(payload){
+    try{
+      const origin=payload.origin||JSON.parse(localStorage.getItem("evidenceRozvozu_mapyOrigin_v34")||"null");
+      const dest={lon:+payload.selected.lon,lat:+payload.selected.lat};
+      if(!origin||!dest.lon||!dest.lat)return payload.routeData.routeMinutes;
+      const u=new URL("https://api.mapy.com/v1/routing/route");
+      u.searchParams.set("lang","cs");
+      u.searchParams.set("start",`${dest.lon},${dest.lat}`);
+      u.searchParams.set("end",`${origin.lon},${origin.lat}`);
+      u.searchParams.set("routeType","car_fast_traffic");
+      u.searchParams.set("format","geojson");
+      u.searchParams.set("apikey",MAPY_API_KEY);
+      const res=await fetch(u);if(!res.ok)throw new Error(res.status);
+      const j=await res.json();
+      return Math.round(Number(j.duration||0)/60)||payload.routeData.routeMinutes;
+    }catch(e){return payload.routeData.routeMinutes}
+  }
+
+  function hookMapy(){
+    const api=window.PZMapyV35;
+    if(!api?.onFormRoute || api.onFormRoute.__v39)return false;
+    const old=api.onFormRoute;
+    const wrapped=async function(payload){
+      await old(payload);
+      currentRoutePayload=payload;
+      state.out=Number(payload.routeData.routeMinutes||Math.round(payload.routeData.routeDurationSeconds/60)||0);
+      state.back=await reverseMinutes(payload);
+      state.routeReady=!!state.out;
+      renderPlan();
+    };
+    wrapped.__v39=true;api.onFormRoute=wrapped;return true;
+  }
+  if(!hookMapy()){
+    const timer=setInterval(()=>{if(hookMapy())clearInterval(timer)},100);
+    setTimeout(()=>clearInterval(timer),10000);
+  }
+
+  /* Vehicle change: use the approved base defaults. */
+  fVehicle.addEventListener("change",()=>{state.userLoad=false;state.userUnload=false;applyVehicleDefaults(true)});
+
+  /* If address text changes, the old route is no longer a valid basis for planning. */
+  fAddress?.addEventListener("input",()=>{
+    state.routeReady=false;state.out=0;state.back=0;renderPlan();
+  });
+
+  /* New ride: clean state, date logic remains from v38, no duplicate time fields. */
+  $("addBtn")?.addEventListener("click",()=>{
+    setTimeout(()=>{
+      state={out:0,back:0,load:getDefaults().load,unload:getDefaults().unload,reserve:10,routeReady:false,userLoad:false,userUnload:false};
+      currentRoutePayload=null;
+      setTime("10:00",false);
+      plan.classList.add("show");renderPlan();
+    },35);
+  },true);
+
+  /* Edit ride: restore the saved planning snapshot. */
+  const oldEdit=window.openEdit;
+  if(typeof oldEdit==="function"){
+    window.openEdit=function(id){
+      oldEdit(id);
+      const r=rides.find(x=>String(x.id)===String(id));if(!r)return;
+      setTimeout(()=>{
+        const d=DEFAULTS[r.vehicle]||DEFAULTS.AK;
+        state.load=Number(r.plannedLoadMinutes??d.load);
+        state.unload=Number(r.plannedUnloadMinutes??d.unload);
+        state.reserve=Number(r.deliveryReserveMinutes??10);
+        state.out=Number(r.routeOutMinutes??r.routeMinutes??Math.round((r.routeDurationSeconds||0)/60));
+        state.back=Number(r.routeBackMinutes??r.returnRouteMinutes??state.out);
+        state.routeReady=!!state.out;
+        state.userLoad=true;state.userUnload=true;
+        setTime(r.time||"10:00",false);
+        plan.classList.add("show");renderPlan();
+      },100);
+    };
+  }
+
+  /* Save the full planning snapshot onto the ride after legacy save handlers finish. */
+  $("saveRide")?.addEventListener("click",()=>{
+    const editing=typeof editingId!=="undefined"?editingId:null;
+    const snapshot={
+      plannedLoadMinutes:state.load,
+      plannedUnloadMinutes:state.unload,
+      deliveryReserveMinutes:state.reserve,
+      routeOutMinutes:state.out,
+      routeBackMinutes:state.back
+    };
+    const delivery=toMinutes(fTime.value);
+    if(delivery!=null&&state.routeReady){
+      snapshot.startTime=hhmm(delivery-state.out-state.load-state.reserve);
+      snapshot.expectedReturnTime=hhmm(delivery+state.unload+state.back);
+      snapshot.estimatedMinutes=state.load+state.out+state.reserve+state.unload+state.back;
+    }
+    setTimeout(()=>{
+      const r=editing?rides.find(x=>String(x.id)===String(editing)):rides.reduce((a,b)=>!a||+b.id>+a.id?b:a,null);
+      if(!r)return;Object.assign(r,snapshot);save();render();
+    },90);
+  },true);
+
+  /* INFO: planned rides show the saved plan; completed rides show actual measured data.
+     Map remains; every navigation button in INFO is removed. */
+  const oldInfo=window.showInfo;
+  if(typeof oldInfo==="function"){
+    window.showInfo=function(id){
+      oldInfo(id);
+      const r=rides.find(x=>String(x.id)===String(id));if(!r)return;
+      setTimeout(()=>{
+        const c=$("detailContent");if(!c)return;
+
+        /* Remove legacy duplicate "Plánovaný začátek" and "Odhad délky" rows only. */
+        c.querySelectorAll(".detail-line").forEach(el=>{
+          const txt=el.textContent.trim();
+          if(txt.startsWith("Plánovaný začátek:")||txt.startsWith("Odhad délky:"))el.remove();
+        });
+        c.querySelectorAll(".pz-nav-actions").forEach(el=>el.remove());
+
+        if(c.querySelector(".v39-info-plan"))return;
+
+        /* Splněná jízda: místo historického plánu zobraz skutečně naměřený průběh. */
+        if(r.status==="completed"){
+          const actual=(key)=>Number(r.actualDurations?.[key]||r.durations?.[key]||r.runDurations?.[key]||0);
+          const dur=(ms)=>{
+            if(!ms)return "—";
+            const mins=Math.round(ms/60000),h=Math.floor(mins/60),m=mins%60;
+            return h?`${h} h${m?` ${m} min`:""}`:`${m} min`;
+          };
+          const clk=(ts)=>{
+            if(!ts)return "—";const d=new Date(ts);
+            return Number.isNaN(d.getTime())?"—":d.toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"});
+          };
+          const stages=[["Nakládka","loading"],["Cesta tam","outbound"],["Vykládka","unloading"],["Platba","payment"],["Cesta zpět","return"]];
+          const total=stages.reduce((sum,[,key])=>sum+actual(key),0);
+          const start=r.actualStartedAt||r.runStartedAt;
+          const end=r.actualEndedAt||r.runEndedAt;
+          const km=Number(r.km||0);
+          const box=document.createElement("div");box.className="v39-info-plan v47-actual-run";
+          box.innerHTML=`
+            <div class="v39-info-plan-head">Skutečný průběh rozvozu</div>
+            <div class="v39-info-section">
+              <div class="v39-info-section-title">Naměřené časy</div>
+              ${stages.map(([label,key])=>`<div class="v39-info-row"><span>${label}</span><strong>${dur(actual(key))}</strong></div>`).join("")}
+            </div>
+            <div class="v39-info-section">
+              <div class="v39-info-section-title">Souhrn</div>
+              <div class="v39-info-row main"><span>Začátek</span><strong>${clk(start)}</strong></div>
+              <div class="v39-info-row main"><span>Konec</span><strong>${clk(end)}</strong></div>
+              <div class="v39-info-row main"><span>Celková doba</span><strong>${dur(total)}</strong></div>
+              <div class="v39-info-row main"><span>Celkem kilometrů</span><strong>${km>0?km.toLocaleString("cs-CZ")+" km":"—"}</strong></div>
+            </div>`;
+          const route=c.querySelector(".pz-info-route");
+          if(route)route.insertAdjacentElement("beforebegin",box);else c.appendChild(box);
+          return;
+        }
+
+        const out=Number(r.routeOutMinutes??r.routeMinutes??Math.round((r.routeDurationSeconds||0)/60));
+        const back=Number(r.routeBackMinutes??r.returnRouteMinutes??out);
+        const d=DEFAULTS[r.vehicle]||DEFAULTS.AK;
+        const load=Number(r.plannedLoadMinutes??d.load),unload=Number(r.plannedUnloadMinutes??d.unload);
+        const reserve=Number(r.deliveryReserveMinutes??0);
+        const delivery=toMinutes(r.time);
+        const start=r.startTime||(delivery!=null&&out?hhmm(delivery-out-load-reserve):"—");
+        const ret=r.expectedReturnTime||(delivery!=null&&back?hhmm(delivery+unload+back):"—");
+        const total=Number(r.estimatedMinutes||(load+out+reserve+unload+back));
+
+        const box=document.createElement("div");box.className="v39-info-plan";
+        box.innerHTML=`
+          <div class="v39-info-plan-head">Plán rozvozu</div>
+          <div class="v39-info-section">
+            <div class="v39-info-row main"><span>Plánovaný začátek</span><strong>${start}</strong></div>
+            <div class="v39-info-row main"><span>Čas doručení</span><strong>${r.time||"—"}</strong></div>
+            <div class="v39-info-row main"><span>Předpokládaný návrat</span><strong>${ret}</strong></div>
+            <div class="v39-info-row main"><span>Celková délka</span><strong>${human(total)}</strong></div>
+          </div>
+          <div class="v39-info-section">
+            <div class="v39-info-section-title">Cesta</div>
+            <div class="v39-info-row"><span>Pila → zákazník</span><strong>${out?human(out):"—"}</strong></div>
+            <div class="v39-info-row"><span>Zákazník → Pila</span><strong>${back?human(back):"—"}</strong></div>
+            <div class="v39-info-row"><span>Celkem na cestě</span><strong>${out||back?human(out+back):"—"}</strong></div>
+          </div>
+          <div class="v39-info-section">
+            <div class="v39-info-section-title">Nakládka a vykládka</div>
+            <div class="v39-info-row"><span>Navrhovaná nakládka</span><strong>${human(load)}</strong></div>
+            <div class="v39-info-row"><span>Navrhovaná vykládka</span><strong>${human(unload)}</strong></div>
+            <div class="v39-info-row"><span>Rezerva před doručením</span><strong>${human(reserve)}</strong></div>
+          </div>`;
+        /* Insert before route/map if already present, otherwise append. */
+        const route=c.querySelector(".pz-info-route");
+        if(route)route.insertAdjacentElement("beforebegin",box);else c.appendChild(box);
+      },180);
+    };
+  }
+
+  /* Keep INFO clean even when the older async map renderer adds buttons later. */
+  const mo=new MutationObserver(()=>{
+    document.querySelectorAll("#detailContent .pz-nav-actions").forEach(el=>el.remove());
+  });
+  mo.observe($("detailContent"),{childList:true,subtree:true});
+
+  /* Initial state */
+  applyVehicleDefaults(true);setTime(fTime.value||"10:00",false);
+})();
+</script>
+
+
+<style id="v40-final-agreed-css">
+/* ---------- ride cards: top edit/delete, restore bottom action geometry ---------- */
+.card .card-inner{position:relative!important}
+.card .edit-btn{
+  top:9px!important;right:43px!important;width:27px!important;height:27px!important;
+  border-radius:8px!important;background:#eef5ec!important;color:#104c29!important
+}
+.card .v38-delete-btn{
+  position:absolute!important;top:9px!important;right:9px!important;width:27px!important;height:27px!important;
+  padding:0!important;margin:0!important;border:1px solid #efc5c2!important;border-radius:8px!important;
+  background:#fff4f3!important;color:#b3261e!important;font-size:0!important;display:grid!important;place-items:center!important;z-index:7
+}
+.card .v38-delete-btn:after{
+  content:"";width:14px;height:14px;display:block;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5'/%3E%3C/svg%3E") center/contain no-repeat
+}
+.card .card-actions{position:relative!important;display:grid!important;grid-template-columns:1fr 1fr 1fr!important;align-items:center!important}
+.card .card-actions>.v38-delete-btn{display:grid!important}
+.card.planned .card-actions>button:nth-child(1){justify-self:start!important}
+.card.planned .card-actions>button:nth-child(2){justify-self:center!important}
+.card.planned .card-actions>button:nth-child(3){justify-self:end!important}
+
+/* form close X */
+.v40-sheet-close{position:absolute;right:13px;top:12px;width:31px;height:31px;border:1px solid #efc5c2;border-radius:9px;background:#fff4f3;color:#b3261e;font-size:20px;font-weight:900;line-height:1;display:grid;place-items:center;cursor:pointer;z-index:20}
+#formModal .sheet{position:relative;padding-top:18px}
+#formModal #closeForm{display:none!important}
+#fOrderNo,#fOrderNo.closest-placeholder{display:none!important}
+.field:has(>#fOrderNo){display:none!important}
+
+/* draft screen */
+.v40-overlay{position:fixed;inset:0;z-index:24000;background:rgba(18,37,24,.48);display:none;align-items:center;justify-content:center;padding:12px}
+.v40-overlay.open{display:flex}
+.v40-shell{width:min(980px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.24)}
+.v40-head{position:sticky;top:0;z-index:3;background:#104c29;color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px}
+.v40-head-copy{flex:1}.v40-head h2{margin:0;font-size:17px}.v40-head p{margin:2px 0 0;font-size:8px;opacity:.8}
+.v40-close{width:32px;height:32px;border:1px solid rgba(255,255,255,.35);border-radius:9px;background:rgba(255,255,255,.1);color:#fff;font-size:20px}
+.v40-body{padding:14px}
+.v40-empty{padding:28px 10px;text-align:center;color:#7b887f;font-size:10px}
+.v40-draft-row{display:grid;grid-template-columns:90px 1fr 1.4fr auto;align-items:center;gap:8px;border-bottom:1px solid #e3ebe0;padding:10px 8px;cursor:pointer}
+.v40-draft-row:hover{background:#f5f9f3}
+.v40-row-main{font-weight:950;color:#263c2d;font-size:9px}.v40-row-sub{color:#718078;font-size:8px}
+#draftToolBtn{position:relative}
+#draftToolCount{position:absolute;right:-5px;top:-5px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:#fff;color:#104c29;border:2px solid #168500;font-size:8px;font-weight:1000;display:none;align-items:center;justify-content:center}
+#draftToolCount.show{display:flex}
+
+/* =========================================================
+   ETAPA 3 — ARCHIV (V44 kompaktní filtry + jednoduché INFO)
+   ========================================================= */
+#v40Archive{padding:0;background:#fff;align-items:stretch;justify-content:stretch}
+#v40Archive .v43-archive-shell{width:100%;height:100%;max-height:none;overflow:hidden;border-radius:0;box-shadow:none;display:flex;flex-direction:column;background:#f7faf6}
+#v40Archive .v43-archive-head{position:relative;flex:0 0 auto;padding:16px 20px;min-height:66px}
+#v40Archive .v43-archive-head h2{font-size:19px}
+#v40Archive .v43-archive-head p{font-size:9px}
+#v40Archive .v43-archive-body{padding:0;min-height:0;flex:1;display:flex;flex-direction:column;overflow:hidden}
+#v40ArchiveListView{display:flex;flex-direction:column;min-height:0;height:100%}
+.v43-filter-panel{flex:0 0 auto;background:#fff;border-bottom:1px solid #dbe6d8;padding:12px 18px 10px}
+.v43-filter-grid{display:grid;grid-template-columns:minmax(220px,1.7fr) 130px 130px 145px 145px 165px 175px;gap:8px;align-items:end}
+.v43-field{display:grid;gap:4px;min-width:0}
+.v43-field label{font-size:8px;line-height:1;color:#627168;font-weight:950;letter-spacing:.04em;text-transform:uppercase}
+.v43-field input,.v43-field select{width:100%;min-width:0;height:38px;border:1px solid #cbdac7;border-radius:10px;padding:0 10px;background:#fff;font:inherit;font-size:10px;color:#263c2d;outline:none}
+.v43-field input:focus,.v43-field select:focus{border-color:#168500;box-shadow:0 0 0 2px rgba(22,133,0,.08)}
+.v43-search label{color:#104c29}
+.v43-filter-actions{display:flex;justify-content:flex-end;align-items:center;margin-top:8px;min-height:31px}
+.v43-clear{border:1px solid #c8d9c4;border-radius:9px;background:#fff;color:#104c29;font-weight:950;padding:7px 10px;font-size:9px;cursor:pointer}
+.v43-clear:disabled{opacity:.4;cursor:default}
+.v43-filter-feedback{flex:0 0 auto;min-height:0;max-height:0;opacity:0;overflow:hidden;background:#edf7ea;color:#104c29;border-bottom:0 solid #cfe4ca;padding:0 18px;font-size:9px;font-weight:900;transition:max-height .18s ease,opacity .18s ease,padding .18s ease,border-width .18s ease}
+.v43-filter-feedback.show{max-height:38px;opacity:1;padding:8px 18px;border-bottom-width:1px}
+.v43-table-wrap{min-height:0;flex:1;overflow:auto;background:#fff}
+.v43-table-head,.v43-archive-row{display:grid;grid-template-columns:105px 70px minmax(150px,1.05fr) minmax(230px,1.8fr) 110px 90px 105px;gap:10px;align-items:center}
+.v43-table-head{position:sticky;top:0;z-index:2;padding:9px 18px;background:#f0f6ee;border-bottom:1px solid #d7e3d3;color:#52635a;font-size:8px;font-weight:1000;letter-spacing:.035em}
+#v40ArchiveBody{transition:opacity .25s ease,transform .25s ease}
+#v40ArchiveBody.v43-filtering{opacity:.28;transform:translateY(2px)}
+.v43-archive-row{padding:11px 18px;border-bottom:1px solid #e4ece2;cursor:pointer;transition:background .14s ease}
+.v43-archive-row:hover{background:#f3f8f1}
+.v43-cell{min-width:0;font-size:9px;color:#263c2d}
+.v43-date,.v43-time,.v43-price{font-weight:900;white-space:nowrap}
+.v43-time{color:#104c29;font-size:10px}
+.v43-customer{font-weight:1000;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v43-address{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#53635a}
+.v43-price{text-align:right}
+.v43-vehicle{justify-self:start;display:inline-flex;align-items:center;justify-content:center;min-width:43px;padding:5px 8px;border-radius:999px;background:#104c29;color:#fff;font-size:8px;font-weight:1000}
+.v43-status{justify-self:start;display:inline-flex;align-items:center;justify-content:center;min-width:76px;padding:5px 8px;border-radius:999px;background:#edf5ea;color:#104c29;font-size:8px;font-weight:1000}
+.v43-status.completed{background:#e4f3df;color:#104c29}.v43-status.cancelled{background:#fff0ef;color:#a52b25}.v43-status.planned{background:#edf5ea;color:#104c29}
+.v43-load-more{padding:14px 18px 20px;text-align:center;background:#fff}
+.v43-load-count{font-size:9px;color:#68776e;margin-bottom:7px;font-weight:800}
+.v43-load-btn{border:1px solid #bcd2b7;border-radius:10px;background:#edf5ea;color:#104c29;font-weight:1000;padding:9px 16px;font-size:9px;cursor:pointer}
+.v43-empty{padding:54px 18px;text-align:center;color:#66756c}
+.v43-empty strong{display:block;color:#31463a;font-size:11px;margin-bottom:5px}.v43-empty span{font-size:9px}
+.v43-empty button{margin-top:12px;border:1px solid #c8d9c4;border-radius:9px;background:#fff;color:#104c29;font-weight:950;padding:8px 11px;font-size:9px}
+
+/* Archivní INFO používá stávající INFO, pouze fullscreen/read-only obal. */
+#detailModal.v43-archive-info{z-index:26000!important;padding:0!important;background:#f5f8f4!important;align-items:stretch!important}
+#detailModal.v43-archive-info .sheet{width:100%!important;max-width:none!important;height:100%!important;max-height:none!important;border-radius:0!important;margin:0!important;overflow:auto!important;padding:18px 20px 24px!important}
+#detailModal.v43-archive-info .sheet>h2{padding-right:150px}
+#detailModal.v43-archive-info .sheet-actions{display:none!important}
+.v43-archive-back{position:absolute;right:20px;top:15px;z-index:20;border:0;border-radius:10px;background:#104c29;color:#fff;padding:9px 12px;font-size:9px;font-weight:1000;cursor:pointer}
+.v43-run-block{border:1px solid #d4e2d0;border-radius:13px;overflow:hidden;margin:11px 0;background:#fff}
+.v43-run-title{background:#edf5ea;color:#104c29;padding:9px 11px;font-size:9px;font-weight:1000;letter-spacing:.03em}
+.v43-run-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 11px;border-top:1px solid #edf1eb;font-size:9px}
+.v43-run-row span{color:#637168}.v43-run-row strong{color:#263c2d;text-align:right}
+.v43-run-total{background:#f7faf6}.v43-cancel-reason{color:#9c2d27!important}
+
+@media(max-width:1180px){
+ .v43-filter-grid{grid-template-columns:2fr 1fr 1fr 1fr;}
+ .v43-search{grid-column:span 2}
+}
+@media(max-width:760px){
+ .v40-draft-row{grid-template-columns:78px 1fr auto}.v40-draft-row .addr{grid-column:2/-1}
+ #v40Archive .v43-archive-head{padding:13px 14px;min-height:61px}
+ #v40Archive .v43-archive-head h2{font-size:17px}
+ .v43-filter-panel{padding:10px}
+ .v43-filter-grid{grid-template-columns:1fr 1fr;gap:7px}
+ .v43-search{grid-column:1/-1}
+ .v43-field input,.v43-field select{height:37px;font-size:9px}
+ .v43-filter-actions{margin-top:7px}
+ .v43-table-head{display:none}
+ .v43-table-wrap{background:#f7faf6;padding:8px}
+ .v43-archive-row{display:grid;grid-template-columns:1fr auto auto;grid-template-areas:"date time status" "customer customer vehicle" "address address address" "price price price";gap:5px 8px;margin-bottom:8px;padding:11px;border:1px solid #dce7d9;border-radius:12px;background:#fff}
+ .v43-date{grid-area:date}.v43-time{grid-area:time}.v43-customer{grid-area:customer;font-size:11px}.v43-address{grid-area:address;white-space:normal;font-size:8px}.v43-price{grid-area:price;text-align:right;font-size:10px}.v43-vehicle{grid-area:vehicle;justify-self:end}.v43-status{grid-area:status;justify-self:end}
+ .v43-load-more{padding:10px 8px 18px;background:transparent}
+ #detailModal.v43-archive-info .sheet{padding:14px 10px 22px!important}
+ #detailModal.v43-archive-info .sheet>h2{padding-right:118px;font-size:17px}
+ .v43-archive-back{right:10px;top:10px;padding:8px 9px;font-size:8px}
+}
+/* confirmations */
+.v40-confirm{width:min(430px,100%);background:#fff;border-radius:17px;overflow:hidden}
+.v40-confirm-main{padding:20px 18px;text-align:center}.v40-confirm-main h3{margin:0 0 7px;color:#104c29}.v40-confirm-main p{margin:0;color:#68766d;font-size:10px}
+.v40-confirm-actions{display:grid;grid-template-columns:1fr 1fr 1.25fr;border-top:1px solid #e4ebe1}
+.v40-confirm-actions button{border:0;border-right:1px solid #e4ebe1;padding:12px 6px;font-size:8px;font-weight:1000;background:#fff}
+.v40-confirm-actions .no{color:#b3261e}.v40-confirm-actions .yes{color:#104c29}.v40-confirm-actions .draft{background:#104c29;color:#fff}
+.v40-edit-actions{grid-template-columns:1fr 1.3fr}.v40-edit-actions .discard{color:#b3261e}
+
+/* toast */
+#v40Toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);z-index:30000;background:#104c29;color:#fff;border-radius:12px;padding:10px 15px;display:flex;align-items:center;gap:8px;font-size:10px;font-weight:1000;opacity:0;pointer-events:none;transition:.16s ease}
+#v40Toast.show{opacity:1;transform:translate(-50%,0)}
+#v40Toast .check{width:19px;height:19px;border-radius:50%;border:2px solid #fff;display:grid;place-items:center}
+
+/* collision warning */
+#v40Collision{display:none;margin-top:9px;border:1px solid #e8c978;background:#fff8df;color:#765a00;border-radius:9px;padding:8px 9px;font-size:8px;font-weight:850}
+#v40Collision.show{display:block}
+
+/* archive mobile */
+@media(max-width:760px){
+ .v40-tools{grid-template-columns:1fr 1fr}.v40-tools .v40-search{grid-column:1/-1}
+ .v40-archive-row{grid-template-columns:72px 50px 1fr 55px}.v40-archive-row .addr,.v40-archive-row .statuscol{grid-column:3/-1}
+ .v40-draft-row{grid-template-columns:78px 1fr auto}.v40-draft-row .addr{grid-column:2/-1}
+}
+</style>
+
+<div class="v40-overlay" id="v40LeaveNew">
+ <div class="v40-confirm">
+  <div class="v40-confirm-main"><h3>Zavřít rozepsanou jízdu?</h3><p>V jízdě jsou neuložené údaje. Co s nimi chcete udělat?</p></div>
+  <div class="v40-confirm-actions"><button class="no" id="v40LeaveNo">NE</button><button class="yes" id="v40LeaveYes">ANO</button><button class="draft" id="v40LeaveDraft">ULOŽIT DO KONCEPTŮ</button></div>
+ </div>
+</div>
+<div class="v40-overlay" id="v40LeaveEdit">
+ <div class="v40-confirm">
+  <div class="v40-confirm-main"><h3>Máte neuložené změny.</h3><p>Chcete změny zahodit, nebo pokračovat v úpravách?</p></div>
+  <div class="v40-confirm-actions v40-edit-actions"><button class="discard" id="v40EditDiscard">ZAHODIT ZMĚNY</button><button class="yes" id="v40EditContinue">POKRAČOVAT V ÚPRAVÁCH</button></div>
+ </div>
+</div>
+
+<div class="v40-overlay" id="v40Drafts">
+ <section class="v40-shell"><header class="v40-head"><div class="v40-head-copy"><h2>Koncepty</h2><p>Rozepsané jízdy připravené k dokončení.</p></div><button class="v40-close" id="v40DraftClose">×</button></header><div class="v40-body" id="v40DraftBody"></div></section>
+</div>
+
+<style id="v45-archive-cleanup-css">
+/* V45 — pouze Archiv: kompaktní filtry, odstranění kolize .completed a logické archivní INFO */
+.v44-filter-top{display:grid;grid-template-columns:minmax(260px,1fr) auto;gap:10px;align-items:end}
+.v44-filter-toggle{height:38px;min-width:112px;border:1px solid #bfd1ba;border-radius:10px;background:#fff;color:#104c29;font:inherit;font-size:9px;font-weight:1000;padding:0 12px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer}
+.v44-filter-toggle:hover{background:#f5f9f3}.v44-filter-toggle.open{background:#edf5ea;border-color:#9fc296}
+.v44-filter-count{display:none;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#104c29;color:#fff;align-items:center;justify-content:center;font-size:8px}.v44-filter-count.show{display:inline-flex}
+.v44-filter-chevron{font-size:13px;line-height:1;transition:transform .2s ease}.v44-filter-toggle.open .v44-filter-chevron{transform:rotate(180deg)}
+.v44-filter-drawer{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .22s ease,opacity .18s ease}.v44-filter-drawer.open{grid-template-rows:1fr;opacity:1}
+.v44-filter-drawer-inner{overflow:hidden}.v44-filter-drawer .v43-filter-grid{grid-template-columns:repeat(6,minmax(120px,1fr));margin-top:10px}
+
+/* Archivní tabulka: skutečná příčina staré čáry byla globální .completed:after.
+   Archiv proto už nepoužívá třídu .completed/.planned/.cancelled na status badge. */
+.v43-archive-row{border-bottom:0!important;box-shadow:inset 0 -1px 0 #f1f4f0}
+.v43-archive-row:last-child{box-shadow:none}
+.v43-status.is-completed{background:#e4f3df;color:#104c29}
+.v43-status.is-cancelled{background:#fff0ef;color:#a52b25}
+.v43-status.is-planned{background:#edf5ea;color:#104c29}
+.v43-status::after{content:none!important;display:none!important}
+
+/* Archivní INFO: jednoduchý historický záznam, bez mapy, bez plánu a bez dekorativních ikon. */
+#detailModal.v43-archive-info .sheet{background:#f7faf6!important;padding:0!important}
+#detailModal.v43-archive-info .sheet>h2{margin:0!important;padding:17px 190px 17px 20px!important;background:#104c29;color:#fff;font-size:17px!important}
+#detailModal.v43-archive-info #detailContent{padding:18px 20px 30px;max-width:940px;width:100%;margin:0 auto}
+#detailModal.v43-archive-info .v43-archive-back{top:12px;right:16px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.38);color:#fff}
+
+.v45-record{background:#fff;border:1px solid #dce6d9;border-radius:12px;overflow:hidden}
+.v45-record-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:15px 16px;border-bottom:1px solid #e7eee5;background:#fbfdfb}
+.v45-record-head-main{min-width:0}
+.v45-record-head-title{font-size:13px;font-weight:1000;color:#263c2d;margin-bottom:4px}
+.v45-record-head-meta{font-size:9px;color:#67756c;font-weight:800}
+.v45-record-state{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:82px;padding:6px 10px;border-radius:999px;font-size:8px;font-weight:1000}
+.v45-record-state.is-planned{background:#edf5ea;color:#104c29}
+.v45-record-state.is-completed{background:#e4f3df;color:#104c29}
+.v45-record-state.is-cancelled{background:#fff0ef;color:#a52b25}
+
+.v45-section{padding:0 16px}
+.v45-section+.v45-section{border-top:1px solid #e7eee5}
+.v45-section-title{padding:12px 0 7px;color:#104c29;font-size:8px;font-weight:1000;letter-spacing:.055em;text-transform:uppercase}
+.v45-data-row{display:grid;grid-template-columns:minmax(135px,190px) minmax(0,1fr);gap:18px;padding:8px 0;border-top:1px solid #f0f3ef;font-size:9px;align-items:start}
+.v45-section-title+.v45-data-row{border-top:0}
+.v45-data-label{color:#68766d;font-weight:800}
+.v45-data-value{color:#263c2d;font-weight:900;overflow-wrap:anywhere}
+.v45-data-value a{color:#104c29}
+.v45-data-value.right{text-align:right}
+.v45-note{font-weight:700;line-height:1.5;white-space:pre-wrap}
+.v45-docs{display:grid;gap:6px;padding-bottom:11px}
+.v45-doc{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 9px;border:1px solid #e5ebe3;border-radius:8px;background:#fafcf9;font-size:9px}
+.v45-doc span{min-width:0;overflow-wrap:anywhere}
+.v45-doc button{flex:0 0 auto;border:0;border-radius:7px;background:#104c29;color:#fff;padding:6px 9px;font-size:8px;font-weight:900;cursor:pointer}
+.v45-real-summary{margin-top:4px;background:#f8faf7;border-top:1px solid #e4ebe1}
+.v45-real-summary .v45-data-row{padding-left:10px;padding-right:10px}
+.v45-real-summary .v45-data-row:first-child{border-top:0}
+.v45-cancel-value{color:#9c2d27}
+
+@media(max-width:900px){.v44-filter-drawer .v43-filter-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){
+ .v44-filter-top{grid-template-columns:1fr auto}
+ .v44-filter-drawer .v43-filter-grid{grid-template-columns:1fr 1fr}
+ .v43-filter-panel{padding:10px}
+ .v43-archive-row{box-shadow:none!important}
+ #detailModal.v43-archive-info .sheet>h2{padding:15px 142px 15px 12px!important}
+ .v43-archive-back{right:8px!important;top:9px!important}
+ #detailModal.v43-archive-info #detailContent{padding:10px 8px 22px}
+ .v45-record-head{padding:13px 12px}
+ .v45-section{padding:0 12px}
+ .v45-data-row{grid-template-columns:1fr;gap:3px;padding:8px 0}
+ .v45-data-value.right{text-align:left}
+}
+</style>
+<div class="v40-overlay" id="v40Archive">
+ <section class="v40-shell v43-archive-shell">
+  <header class="v40-head v43-archive-head"><div class="v40-head-copy"><h2>Archiv jízd</h2><p>Plánované, splněné a zrušené jízdy. Přehled je pouze pro čtení.</p></div><button class="v40-close" id="v40ArchiveClose" aria-label="Zavřít archiv">×</button></header>
+  <div class="v40-body v43-archive-body">
+   <div id="v40ArchiveListView">
+    <div class="v43-filter-panel">
+     <div class="v44-filter-top">
+      <div class="v43-field v43-search"><label for="v40Search">Hledat</label><input id="v40Search" placeholder="Jméno, telefon, adresa nebo číslo objednávky…"></div>
+      <button type="button" class="v44-filter-toggle" id="v44FilterToggle" aria-expanded="false"><span>Filtry</span><span class="v44-filter-count" id="v44FilterCount"></span><span class="v44-filter-chevron">⌄</span></button>
+     </div>
+     <div class="v44-filter-drawer" id="v44FilterDrawer">
+      <div class="v44-filter-drawer-inner">
+       <div class="v43-filter-grid">
+        <div class="v43-field"><label for="v40From">Od data</label><input type="date" id="v40From"></div>
+        <div class="v43-field"><label for="v40To">Do data</label><input type="date" id="v40To"></div>
+        <div class="v43-field"><label for="v40Status">Stav</label><select id="v40Status"><option value="">Všechny stavy</option><option value="planned">Plánované</option><option value="completed">Splněné</option><option value="cancelled">Zrušené</option></select></div>
+        <div class="v43-field"><label for="v40Vehicle">Souprava</label><select id="v40Vehicle"><option value="">Všechny soupravy</option><option>AK</option><option>TRM</option><option>TRMS</option><option>TRV</option><option>TRVS</option></select></div>
+        <div class="v43-field"><label for="v43Payment">Platba</label><select id="v43Payment"><option value="">Všechny platby</option><option>Hotově</option><option>Kartou</option><option>Fakturou</option><option>Zaplaceno předem</option></select></div>
+        <div class="v43-field"><label for="v43Sort">Řazení</label><select id="v43Sort"><option value="newest">Nejnovější ↓</option><option value="oldest">Nejstarší ↑</option><option value="time">Čas doručení</option><option value="name">Zákazník A–Z</option><option value="priceDesc">Cena nejvyšší</option><option value="priceAsc">Cena nejnižší</option></select></div>
+       </div>
+       <div class="v43-filter-actions"><button class="v43-clear" id="v40Clear">Vymazat filtry</button></div>
+      </div>
+     </div>
+    </div>
+    <div class="v43-filter-feedback" id="v43FilterFeedback"></div>
+    <div class="v43-table-wrap" id="v43ArchiveScroll">
+     <div class="v43-table-head"><div>DATUM</div><div>ČAS</div><div>ZÁKAZNÍK</div><div>ADRESA</div><div style="text-align:right">CENA S DPH</div><div>SOUPRAVA</div><div>STAV</div></div>
+     <div id="v40ArchiveBody"></div>
+     <div class="v43-load-more" id="v43LoadMore"></div>
+    </div>
+   </div>
+  </div>
+ </section>
+</div>
+<div id="v40Toast"><span class="check">✓</span><span>Rozvoz byl dokončen</span></div>
+
+<script id="v40-final-agreed-js">
+(function(){
+ const $=id=>document.getElementById(id);
+ const DRAFT_KEY="evidenceRozvozu_drafts_v40";
+ const ACTIVE_KEY="evidenceRozvozu_activeRun_v24";
+ const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const getRides=()=>{try{return window.rides||window.eval("rides")||[]}catch(e){return []}};
+ const persist=()=>{try{window.eval("save()");window.eval("render()")}catch(e){}};
+ const human=n=>{n=Math.max(0,Math.round(+n||0));let h=Math.floor(n/60),m=n%60;return h?(m?`${h} h ${m} min`:`${h} h`):`${m} min`};
+ const fmtDate=d=>{try{return new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"numeric",year:"numeric"}).format(new Date(d+"T00:00:00"))}catch(e){return d||"—"}};
+ const statusName=s=>s==="completed"?"Splněno":s==="cancelled"?"Zrušeno":"Plánováno";
+
+ /* ---------- form exact order + close X ---------- */
+ const form=$("formModal"),grid=form?.querySelector(".form-grid"),sheet=form?.querySelector(".sheet");
+ if(sheet&&!$("v40FormClose")){
+   const x=document.createElement("button");x.type="button";x.id="v40FormClose";x.className="v40-sheet-close";x.textContent="×";x.title="Zavřít";sheet.appendChild(x);
+ }
+ function fieldOf(id){return $(id)?.closest(".field")}
+ function reorderForm(){
+   if(!grid)return;
+   const order=["fName","fPhone","fDocuments","fNet","fGross","fPayment","fDate","fTime","fVehicle","fAddress"];
+   const wanted=[];
+   order.forEach(id=>{const f=fieldOf(id);if(f&&grid.contains(f)&&!wanted.includes(f))wanted.push(f)});
+   const map=$("mapyFormMap")?.closest(".field")||$("mapyFormMap")?.parentElement;
+   if(map&&grid.contains(map)&&!wanted.includes(map))wanted.push(map);
+   if($("v39Planning")&&grid.contains($("v39Planning")))wanted.push($("v39Planning"));
+   if(fieldOf("fNote")&&grid.contains(fieldOf("fNote")))wanted.push(fieldOf("fNote"));
+   if(fieldOf("fCancelReason")&&grid.contains(fieldOf("fCancelReason")))wanted.push(fieldOf("fCancelReason"));
+   /* Move only when the current order is actually different. */
+   const current=[...grid.children].filter(x=>wanted.includes(x));
+   const differs=wanted.some((x,i)=>current[i]!==x);
+   if(differs)wanted.forEach(x=>grid.appendChild(x));
+   if(fieldOf("fOrderNo"))fieldOf("fOrderNo").remove();
+ }
+ /* v40.1 FIX: do not observe/reorder the form continuously.
+     The previous observer called reorderForm(), which itself moves grid children.
+     Every move fired the observer again -> an endless MutationObserver loop that
+     overloaded CodePen and prevented clicks such as the + button. */
+ setTimeout(reorderForm,100);
+
+ /* ---------- dirty state ---------- */
+ let mode="none", dirty=false, activeDraftId=null, editBaseline="";
+ const userFields=["fName","fPhone","fNet","fPayment","fDate","fTime","fVehicle","fAddress","fNote","fDocuments"];
+ function formSnapshot(){
+   return JSON.stringify({
+    name:$("fName")?.value||"",phone:$("fPhone")?.value||"",net:$("fNet")?.value||"",payment:$("fPayment")?.value||"",
+    date:$("fDate")?.value||"",time:$("fTime")?.value||"",vehicle:$("fVehicle")?.value||"",address:$("fAddress")?.value||"",note:$("fNote")?.value||"",
+    load:$("v39Load")?.textContent||"",unload:$("v39Unload")?.textContent||"",reserve:[...document.querySelectorAll("[data-reserve].active")].map(x=>x.dataset.reserve)[0]||""
+   });
+ }
+ userFields.forEach(id=>$(id)?.addEventListener(id==="fDocuments"?"change":"input",()=>{if(mode!=="none")dirty=true},true));
+ ["fPayment","fDate","fTime","fVehicle"].forEach(id=>$(id)?.addEventListener("change",()=>{if(mode!=="none")dirty=true},true));
+ $("v39Planning")?.addEventListener("click",e=>{if(e.target.closest("[data-plan-step],[data-reserve]"))dirty=true},true);
+ document.querySelector(".v39-time-picker")?.addEventListener("click",()=>{if(mode!=="none")dirty=true},true);
+
+ $("addBtn")?.addEventListener("click",()=>setTimeout(()=>{mode="new";dirty=false;activeDraftId=null;editBaseline=formSnapshot();reorderForm()},80),true);
+ document.addEventListener("click",e=>{
+   const edit=e.target.closest(".edit-btn");if(!edit)return;
+   setTimeout(()=>{mode="edit";dirty=false;activeDraftId=null;editBaseline=formSnapshot();reorderForm()},130);
+ },true);
+
+ function closeNow(){form.classList.remove("show");mode="none";dirty=false;activeDraftId=null}
+ function requestClose(){
+   if(!form.classList.contains("show"))return;
+   if(mode==="edit"){
+     const changed=dirty||formSnapshot()!==editBaseline;
+     if(changed)$("v40LeaveEdit").classList.add("open");else closeNow();
+   }else{
+     if(dirty)$("v40LeaveNew").classList.add("open");else closeNow();
+   }
+ }
+ $("v40FormClose").onclick=requestClose;
+ $("v40LeaveNo").onclick=()=>$("v40LeaveNew").classList.remove("open");
+ $("v40LeaveYes").onclick=()=>{$("v40LeaveNew").classList.remove("open");closeNow()};
+ $("v40EditContinue").onclick=()=>$("v40LeaveEdit").classList.remove("open");
+ $("v40EditDiscard").onclick=()=>{$("v40LeaveEdit").classList.remove("open");closeNow()};
+
+ /* ---------- IndexedDB helpers for concept documents ---------- */
+ const dbp=new Promise((ok,no)=>{const q=indexedDB.open("EvidenceRozvozuFiles",1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains("files"))q.result.createObjectStore("files",{keyPath:"id"})};q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)});
+ async function putFile(id,file){const db=await dbp;return new Promise((ok,no)=>{const tx=db.transaction("files","readwrite");tx.objectStore("files").put({id,blob:file,name:file.name,type:file.type,size:file.size});tx.oncomplete=ok;tx.onerror=()=>no(tx.error)})}
+ async function deleteFile(id){const db=await dbp;return new Promise(ok=>{const tx=db.transaction("files","readwrite");tx.objectStore("files").delete(id);tx.oncomplete=ok;tx.onerror=ok})}
+ let stagedDraftDocs=[];
+ $("fDocuments")?.addEventListener("change",async e=>{
+   if(mode!=="new"&&mode!=="draft")return;
+   for(const f of [...e.target.files]){
+     const id="draftdoc_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+     try{await putFile(id,f);stagedDraftDocs.push({id,name:f.name,type:f.type,size:f.size})}catch(err){}
+   }
+ },true);
+
+ const drafts=()=>{try{return JSON.parse(localStorage.getItem(DRAFT_KEY)||"[]")}catch(e){return []}};
+ const saveDrafts=a=>{localStorage.setItem(DRAFT_KEY,JSON.stringify(a));updateDraftBadge()};
+ function collectDraft(){
+   return {
+    id:activeDraftId||("draft_"+Date.now()+"_"+Math.random().toString(36).slice(2)),updatedAt:Date.now(),
+    name:$("fName").value.trim(),phone:$("fPhone").value.trim(),net:$("fNet").value,payment:$("fPayment").value,
+    date:$("fDate").value,time:$("fTime").value,vehicle:$("fVehicle").value,address:$("fAddress").value.trim(),note:$("fNote").value.trim(),
+    plannedLoadMinutes:parseInt($("v39Load")?.textContent)||null,plannedUnloadMinutes:parseInt($("v39Unload")?.textContent)||null,
+    deliveryReserveMinutes:Number(document.querySelector("[data-reserve].active")?.dataset.reserve||10),
+    startTime:$("fStartTime")?.value||"",estimatedMinutes:(()=>{let p=($("fDuration")?.value||"00:00").split(":");return (+p[0]||0)*60+(+p[1]||0)})(),
+    documents:[...stagedDraftDocs]
+   };
+ }
+ function saveAsDraft(){
+   const d=collectDraft(),a=drafts(),i=a.findIndex(x=>x.id===d.id);
+   if(i>=0)a[i]=d;else a.unshift(d);saveDrafts(a);activeDraftId=d.id;
+   $("v40LeaveNew").classList.remove("open");closeNow();
+ }
+ $("v40LeaveDraft").onclick=saveAsDraft;
+
+ /* ---------- draft tool ---------- */
+ function installDraftTool(){
+   const panel=document.querySelector(".tool-panel"),trash=$("trashToolBtn");if(!panel||$("draftToolBtn"))return;
+   const b=document.createElement("button");b.type="button";b.className="tool-btn";b.id="draftToolBtn";b.title="Koncepty";
+   b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h11l3 3v13H5z"/><path d="M8 9h8M8 13h8M8 17h5"/><path d="M16 4v4h4"/></svg><span id="draftToolCount">0</span>';
+   panel.insertBefore(b,trash||panel.querySelector(".tool-spacer"));b.onclick=()=>{renderDrafts();$("v40Drafts").classList.add("open")};updateDraftBadge();
+ }
+ function updateDraftBadge(){const c=$("draftToolCount");if(!c)return;const n=drafts().length;c.textContent=n>99?"99+":n;c.classList.toggle("show",n>0)}
+ const dit=setInterval(()=>{installDraftTool();if($("draftToolBtn"))clearInterval(dit)},100);
+
+ function renderDrafts(){
+   const a=drafts(),body=$("v40DraftBody");
+   body.innerHTML=a.length?a.map(d=>`<div class="v40-draft-row" data-draft="${esc(d.id)}"><div><div class="v40-row-main">${fmtDate(d.date)}</div><div class="v40-row-sub">${esc(d.time||"—")}</div></div><div><div class="v40-row-main">${esc(d.name||"Bez jména")}</div><div class="v40-row-sub">${esc(d.phone||"")}</div></div><div class="addr"><div class="v40-row-main">${esc(d.address||"Adresa neuvedena")}</div><div class="v40-row-sub">${esc(d.vehicle||"AK")} • ${(d.documents||[]).length} dokumentů</div></div><span class="v40-status">ROZEPSÁNO</span></div>`).join(""):'<div class="v40-empty">Žádné uložené koncepty.</div>';
+ }
+ $("v40DraftClose").onclick=()=>$("v40Drafts").classList.remove("open");
+ $("v40DraftBody").onclick=e=>{
+   const row=e.target.closest("[data-draft]");if(!row)return;const d=drafts().find(x=>x.id===row.dataset.draft);if(!d)return;
+   $("v40Drafts").classList.remove("open");$("addBtn").click();
+   setTimeout(()=>{
+     mode="draft";activeDraftId=d.id;stagedDraftDocs=[...(d.documents||[])];
+     $("fName").value=d.name||"";$("fPhone").value=d.phone||"";$("fNet").value=d.net||"";$("fNet").dispatchEvent(new Event("input",{bubbles:true}));
+     $("fPayment").value=d.payment||"Hotově";$("fDate").value=d.date||$("fDate").value;$("fVehicle").value=d.vehicle||"AK";$("fVehicle").dispatchEvent(new Event("change",{bubbles:true}));
+     $("fAddress").value=d.address||"";$("fNote").value=d.note||"";
+     if(d.time){$("fTime").value=d.time;$("fTime").dispatchEvent(new Event("change",{bubbles:true}))}
+     setTimeout(()=>{
+       if(d.plannedLoadMinutes!=null){const el=$("v39Load");if(el)el.textContent=human(d.plannedLoadMinutes)}
+       if(d.plannedUnloadMinutes!=null){const el=$("v39Unload");if(el)el.textContent=human(d.plannedUnloadMinutes)}
+       document.querySelectorAll("[data-reserve]").forEach(b=>b.classList.toggle("active",Number(b.dataset.reserve)===Number(d.deliveryReserveMinutes||10)));
+       $("documentDraftList").innerHTML=(d.documents||[]).map(x=>`<div class="document-item"><span class="doc-name">📄 ${esc(x.name)}</span></div>`).join("");
+       dirty=false;editBaseline=formSnapshot();
+     },100);
+   },120);
+ };
+
+ /* On final save of an opened concept: attach concept docs to the created ride and remove concept. */
+ $("saveRide")?.addEventListener("click",()=>{
+   if(mode!=="draft")return;
+   const draftId=activeDraftId,docs=[...stagedDraftDocs];
+   setTimeout(()=>{
+     const arr=getRides(),r=arr.reduce((a,b)=>!a||+b.id>+a.id?b:a,null);if(!r)return;
+     r.documents=[...(r.documents||[]),...docs.filter(d=>!(r.documents||[]).some(x=>x.id===d.id))];
+     const a=drafts().filter(x=>x.id!==draftId);saveDrafts(a);persist();mode="none";activeDraftId=null;stagedDraftDocs=[];
+   },180);
+ },true);
+
+ /* ---------- ETAPA 3: ARCHIV ---------- */
+ const overview=[...document.querySelectorAll(".tool-panel .tool-btn")].find(b=>b.title==="Přehled"||b.title==="Archiv jízd");
+ let archiveVisible=50,archiveFilterTimer=null,archiveLastFiltered=false;
+ const archiveControls=["v40Search","v40From","v40To","v40Status","v40Vehicle","v43Payment","v43Sort"];
+ function archiveGross(r){return Math.round((Number(r.net)||0)*1.21)}
+ function archiveHasFilter(){return !!($("v40Search").value.trim()||$("v40From").value||$("v40To").value||$("v40Status").value||$("v40Vehicle").value||$("v43Payment").value)}
+ function archiveAdvancedCount(){return [$("v40From").value,$("v40To").value,$("v40Status").value,$("v40Vehicle").value,$("v43Payment").value,$("v43Sort").value!=="newest"?$("v43Sort").value:""] .filter(Boolean).length}
+ function updateArchiveFilterButton(){const n=archiveAdvancedCount(),b=$("v44FilterCount");b.textContent=n;b.classList.toggle("show",n>0)}
+ function toggleArchiveFilters(force){const d=$("v44FilterDrawer"),b=$("v44FilterToggle"),open=typeof force==="boolean"?force:!d.classList.contains("open");d.classList.toggle("open",open);b.classList.toggle("open",open);b.setAttribute("aria-expanded",String(open))}
+ function archiveFiltered(){
+   let a=[...getRides()],q=$("v40Search").value.trim().toLowerCase(),from=$("v40From").value,to=$("v40To").value,st=$("v40Status").value,v=$("v40Vehicle").value,pay=$("v43Payment").value,sort=$("v43Sort").value;
+   if(q)a=a.filter(r=>[r.name,r.address,r.phone,r.orderNo].some(x=>String(x||"").toLowerCase().includes(q)));
+   if(from)a=a.filter(r=>String(r.date||"")>=from);if(to)a=a.filter(r=>String(r.date||"")<=to);if(st)a=a.filter(r=>r.status===st);if(v)a=a.filter(r=>r.vehicle===v);if(pay)a=a.filter(r=>r.payment===pay);
+   const stamp=r=>`${r.date||""} ${r.time||""}`;
+   a.sort((x,y)=>{
+     if(sort==="oldest")return stamp(x).localeCompare(stamp(y));
+     if(sort==="time")return String(x.time||"").localeCompare(String(y.time||""))||String(y.date||"").localeCompare(String(x.date||""));
+     if(sort==="name")return String(x.name||"").localeCompare(String(y.name||""),"cs",{sensitivity:"base"});
+     if(sort==="priceDesc")return archiveGross(y)-archiveGross(x);
+     if(sort==="priceAsc")return archiveGross(x)-archiveGross(y);
+     return stamp(y).localeCompare(stamp(x));
+   });
+   return a;
+ }
+ function renderArchive(showFeedback=false){
+   const all=archiveFiltered(),shown=all.slice(0,archiveVisible),body=$("v40ArchiveBody"),feedback=$("v43FilterFeedback"),filtered=archiveHasFilter();
+   body.innerHTML=shown.length?shown.map(r=>`<div class="v43-archive-row" data-ride="${esc(r.id)}" role="button" tabindex="0">
+    <div class="v43-cell v43-date">${fmtDate(r.date)}</div><div class="v43-cell v43-time">${esc(r.time||"—")}</div>
+    <div class="v43-cell v43-customer">${esc(r.name||"Bez jména")}</div><div class="v43-cell v43-address">${esc(r.address||"—")}</div>
+    <div class="v43-cell v43-price">${typeof money==="function"?money(archiveGross(r)):archiveGross(r)+" Kč"}</div><div class="v43-cell"><span class="v43-vehicle">${esc(r.vehicle||"—")}</span></div>
+    <div class="v43-cell"><span class="v43-status is-${esc(r.status||"planned")}">${statusName(r.status)}</span></div>
+   </div>`).join(""):`<div class="v43-empty"><strong>Pro zvolené filtry nebyly nalezeny žádné jízdy.</strong><span>Zkuste změnit hledání nebo nastavení filtrů.</span>${filtered?'<br><button id="v43EmptyClear">Vymazat filtry</button>':""}</div>`;
+   $("v43LoadMore").innerHTML=all.length?`<div class="v43-load-count">Zobrazeno ${Math.min(shown.length,all.length)} z ${all.length} jízd</div>${shown.length<all.length?'<button class="v43-load-btn" id="v43LoadBtn">Načíst dalších 50</button>':""}`:"";
+   $("v43LoadBtn")?.addEventListener("click",()=>{archiveVisible+=50;renderArchive(false)});
+   $("v43EmptyClear")?.addEventListener("click",clearArchiveFilters);
+   $("v40Clear").disabled=!filtered;
+   if(showFeedback&&filtered){feedback.textContent=`✓ Filtr použit · Nalezeno ${all.length} ${all.length===1?"jízda":all.length>=2&&all.length<=4?"jízdy":"jízd"}`;feedback.classList.remove("show");requestAnimationFrame(()=>feedback.classList.add("show"))}
+   else if(!filtered){feedback.classList.remove("show");feedback.textContent=""}
+   archiveLastFiltered=filtered;updateArchiveFilterButton();
+ }
+ function archiveRefreshWithAnimation(){
+   archiveVisible=50;const body=$("v40ArchiveBody");body.classList.add("v43-filtering");clearTimeout(archiveFilterTimer);archiveFilterTimer=setTimeout(()=>{renderArchive(true);requestAnimationFrame(()=>body.classList.remove("v43-filtering"))},250);
+ }
+ function clearArchiveFilters(){
+   $("v40Search").value="";$("v40From").value="";$("v40To").value="";$("v40Status").value="";$("v40Vehicle").value="";$("v43Payment").value="";$("v43Sort").value="newest";updateArchiveFilterButton();archiveRefreshWithAnimation();
+ }
+ function openArchive(){archiveVisible=50;renderArchive(false);$("v43ArchiveScroll").scrollTop=0;$("v40Archive").classList.add("open")}
+ if(overview){overview.title="Archiv jízd";overview.onclick=openArchive}
+ archiveControls.forEach(id=>$(id).addEventListener(id==="v40Search"?"input":"change",()=>{updateArchiveFilterButton();archiveRefreshWithAnimation()}));
+ $("v44FilterToggle").onclick=()=>toggleArchiveFilters();
+ $("v40Clear").onclick=clearArchiveFilters;
+ $("v40ArchiveClose").onclick=()=>$("v40Archive").classList.remove("open");
+ $("v40ArchiveBody").addEventListener("click",e=>{const row=e.target.closest("[data-ride]");if(row)openArchiveInfo(row.dataset.ride)});
+ $("v40ArchiveBody").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const row=e.target.closest("[data-ride]");if(row){e.preventDefault();openArchiveInfo(row.dataset.ride)}});
+ function actualMs(r,stage){return Number(r.actualDurations?.[stage]||r.durations?.[stage]||r.runDurations?.[stage]||0)}
+ function durationOnly(ms){
+   if(!ms)return "—";let total=Math.round(ms/60000),h=Math.floor(total/60),m=total%60;return h?`${h} h${m?` ${m} min`:""}`:`${m} min`;
+ }
+ function clock(ts){if(!ts)return "—";const d=new Date(ts);return Number.isNaN(d.getTime())?"—":d.toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"})}
+ function archiveDocs(r){
+   const docs=r.documents||[];
+   return docs.length?`<div class="v45-docs">${docs.map(d=>`<div class="v45-doc"><span>${esc(d.name||"Dokument")}</span><button type="button" onclick="openRideDocument('${esc(d.id||d.fileId||"")}')">Otevřít</button></div>`).join("")}</div>`:`<div class="v45-data-row"><span class="v45-data-label">Dokumenty</span><span class="v45-data-value">Žádné dokumenty</span></div>`;
+ }
+ function archiveDataRow(label,value,cls=""){
+   return `<div class="v45-data-row"><span class="v45-data-label">${label}</span><span class="v45-data-value${cls?` ${cls}`:""}">${value}</span></div>`;
+ }
+ function archiveRealBlock(r){
+   if(r.status!=="completed")return "";
+   const stages=[["Nakládka","loading"],["Cesta tam","outbound"],["Vykládka","unloading"],["Platba","payment"],["Cesta zpět","return"]];
+   const total=stages.reduce((n,x)=>n+actualMs(r,x[1]),0),start=r.actualStartedAt||r.runStartedAt,end=r.actualEndedAt||r.runEndedAt;
+   return `<section class="v45-section"><div class="v45-section-title">PRŮBĚH ROZVOZU</div>${stages.map(([label,key])=>archiveDataRow(label,durationOnly(actualMs(r,key)),"right")).join("")}<div class="v45-real-summary">${archiveDataRow("Začátek",clock(start),"right")}${archiveDataRow("Konec",clock(end),"right")}${archiveDataRow("Celková doba",durationOnly(total),"right")}${archiveDataRow("Celkem kilometrů",Number(r.km)>0?`${Number(r.km).toLocaleString("cs-CZ")} km`:"—","right")}</div></section>`;
+ }
+ function archiveCancelBlock(r){
+   if(r.status!=="cancelled")return "";
+   const reason=r.cancelReason||r.cancellationReason||r.cancelNote||"Důvod zrušení nebyl uveden.";
+   return `<section class="v45-section"><div class="v45-section-title">DŮVOD ZRUŠENÍ</div>${archiveDataRow("Důvod",esc(reason),"v45-cancel-value")}</section>`;
+ }
+ function renderArchiveInfo(r){
+   const state=statusName(r.status),stateClass=`is-${esc(r.status||"planned")}`;
+   const phone=r.phone?`<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>`:"Neuvedeno";
+   const net=typeof money==="function"?money(Number(r.net)||0):(Number(r.net)||0)+" Kč";
+   const gross=typeof money==="function"?money(archiveGross(r)):archiveGross(r)+" Kč";
+   const note=r.note?`<span class="v45-note">${esc(r.note)}</span>`:"Bez poznámky";
+   const head=`<div class="v45-record-head"><div class="v45-record-head-main"><div class="v45-record-head-title">${esc(r.name||"Bez jména")}</div><div class="v45-record-head-meta">${fmtDate(r.date)}${r.time?` · ${esc(r.time)}`:""}</div></div><span class="v45-record-state ${stateClass}">${state}</span></div>`;
+   const customer=`<section class="v45-section"><div class="v45-section-title">ZÁKAZNÍK</div>${archiveDataRow("Jméno",esc(r.name||"—"))}${archiveDataRow("Adresa",esc(r.address||"—"))}${archiveDataRow("Telefon",phone)}</section>`;
+   const order=`<section class="v45-section"><div class="v45-section-title">ZAKÁZKA</div>${archiveDataRow("Cena bez DPH",net,"right")}${archiveDataRow("Cena s DPH",gross,"right")}${archiveDataRow("Platba",esc(r.payment||"—"),"right")}${archiveDataRow("Souprava",esc(r.vehicle||"—"),"right")}</section>`;
+   const noteBlock=`<section class="v45-section"><div class="v45-section-title">POZNÁMKA</div>${archiveDataRow("Poznámka",note)}</section>`;
+   const docs=`<section class="v45-section"><div class="v45-section-title">DOKUMENTY</div>${archiveDocs(r)}</section>`;
+   return `<div class="v45-record">${head}${customer}${order}${noteBlock}${docs}${archiveRealBlock(r)}${archiveCancelBlock(r)}</div>`;
+ }
+ function openArchiveInfo(id){
+   const r=getRides().find(x=>String(x.id)===String(id));if(!r)return;
+   const modal=$("detailModal"),content=$("detailContent");
+   $("v40Archive").classList.remove("open");modal.classList.add("v43-archive-info","show");
+   modal.querySelector(".sheet>h2").textContent="Archivní záznam";content.innerHTML=renderArchiveInfo(r);
+   modal.querySelector(".v43-archive-back")?.remove();const back=document.createElement("button");back.type="button";back.className="v43-archive-back";back.textContent="← Zpět do archivu";modal.querySelector(".sheet")?.appendChild(back);
+   back.onclick=()=>{modal.classList.remove("show","v43-archive-info");back.remove();modal.querySelector(".sheet>h2").textContent="Informace o dopravě";$("v40Archive").classList.add("open")};
+ }
+ /* ---------- dynamic timer label ---------- */
+ const timerLabels={loading:"ČAS NAKLÁDKY",outbound:"ČAS CESTY TAM",unloading:"ČAS VYKLÁDKY",payment:"ČAS PLATBY",return:"ČAS CESTY ZPĚT"};
+ setInterval(()=>{
+   try{const a=JSON.parse(localStorage.getItem(ACTIVE_KEY)||"null");const el=document.querySelector(".run-timer-label");if(a&&el)el.textContent=timerLabels[a.stage]||"ČAS";}catch(e){}
+ },180);
+
+ /* ---------- completion toast; suppress only the ugly completion alert ---------- */
+ const nativeAlert=window.alert.bind(window);
+ window.alert=function(msg){
+   if(String(msg).trim()==="Rozvoz byl dokončen."){
+     const t=$("v40Toast");t.classList.add("show");setTimeout(()=>t.classList.remove("show"),800);return;
+   }
+   return nativeAlert(msg);
+ };
+
+ /* ---------- capture real stage durations into completed ride for archive ---------- */
+ let lastActive=null;
+ setInterval(()=>{
+   try{
+     const a=JSON.parse(localStorage.getItem(ACTIVE_KEY)||"null");
+     if(a)lastActive=JSON.parse(JSON.stringify(a));
+     else if(lastActive){
+       const r=getRides().find(x=>String(x.id)===String(lastActive.rideId));
+       if(r&&r.status==="completed"){
+         r.actualDurations={...(lastActive.durations||{})};
+         if(lastActive.stage==="return"&&lastActive.accumulatedMs)r.actualDurations.return=lastActive.accumulatedMs;
+         if(lastActive.startedAt)r.actualStartedAt=lastActive.startedAt;
+         r.actualEndedAt=Date.now();
+         persist();
+       }
+       lastActive=null;
+     }
+   }catch(e){}
+ },300);
+
+ /* ---------- collision warning inside planner ---------- */
+ const plan=$("v39Planning");
+ if(plan&&!$("v40Collision")){const w=document.createElement("div");w.id="v40Collision";plan.querySelector(".v39-plan")?.appendChild(w)}
+ function min(t){if(!t)return null;let p=t.split(":").map(Number);return p[0]*60+p[1]}
+ function collisionCheck(){
+   if(!form.classList.contains("show"))return;
+   const date=$("fDate").value,start=$("fStartTime").value,parts=($("fDuration").value||"00:00").split(":").map(Number),dur=parts[0]*60+parts[1],s=min(start),w=$("v40Collision");
+   if(!date||s==null||!dur){w.classList.remove("show");return}
+   const end=s+dur,editId=typeof editingId!=="undefined"?editingId:null;
+   const hit=getRides().find(r=>r.date===date&&r.status==="planned"&&String(r.id)!==String(editId)&&(()=>{let rs=min(r.startTime||r.time),re=rs+(+r.estimatedMinutes||60);return s<re&&end>rs})());
+   if(hit){w.innerHTML=`⚠ Tato jízda se překrývá s rozvozem <strong>${esc(hit.name||"bez jména")}</strong> ${esc(hit.startTime||hit.time||"")}–${esc((()=>{let z=min(hit.startTime||hit.time)+(+hit.estimatedMinutes||60);return String(Math.floor(z/60)%24).padStart(2,"0")+":"+String(z%60).padStart(2,"0")})())}. Uložení je stále možné.`;w.classList.add("show")}
+   else w.classList.remove("show");
+ }
+ setInterval(collisionCheck,750);
+
+ /* ---------- INFO: remove order number, force static map above Plan rozvozu ---------- */
+ const obs=new MutationObserver(()=>{
+   if(!$("detailModal")?.classList.contains("show"))return;
+   document.querySelectorAll("#detailContent .detail-line").forEach(x=>{if(x.textContent.trim().startsWith("Číslo objednávky:"))x.remove()});
+   const planBox=document.querySelector("#detailContent .v39-info-plan");
+
+   document.querySelectorAll("#detailContent .pz-nav-actions").forEach(x=>x.remove());
+ });
+ obs.observe($("detailContent"),{childList:true,subtree:true});
+
+
+
+ /* External archive readiness marker: data model stays independent of UI/storage.
+    A later cloud adapter can sync rides/documents without redesigning Archive. */
+ window.EvidenceRozvozuArchiveAdapter={
+   schemaVersion:1,
+   exportSnapshot:()=>({schemaVersion:1,exportedAt:new Date().toISOString(),rides:JSON.parse(JSON.stringify(getRides()))}),
+   note:"Připraveno pro budoucí externí synchronizaci; aktuální verze zůstává lokální."
+ };
+})();
+</script>
+
+
+<style id="v41-stage1-css">
+/* =========================================================
+   V41 — ETAPA 1
+   Karty + formulář + validace + koncepty + koš
+   ========================================================= */
+
+/* --- KARTY: horní pravé akce jsou strukturálně oddělené od spodních --- */
+.card .card-inner{position:relative!important}
+.card .edit-btn{
+  top:9px!important;right:47px!important;
+  width:28px!important;height:28px!important;
+  border-radius:8px!important;
+}
+.card .v38-delete-btn{
+  position:absolute!important;
+  top:9px!important;right:9px!important;
+  width:28px!important;height:28px!important;
+  min-width:28px!important;min-height:28px!important;
+  padding:0!important;margin:0!important;
+  border:1.5px solid #e7aaa6!important;
+  border-radius:8px!important;
+  background:#fff1f0!important;
+  color:#c52f28!important;
+  display:grid!important;place-items:center!important;
+  z-index:9!important;
+}
+.card .v38-delete-btn:after{
+  content:"";display:block;width:15px;height:15px;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+/* Planned: INFO vlevo, dlouhý START, checkbox vpravo */
+.card.planned .card-actions{
+  display:grid!important;
+  grid-template-columns:58px minmax(120px,1fr) 38px!important;
+  gap:8px!important;
+  align-items:center!important;
+}
+.card.planned .card-actions>button:nth-child(1){width:58px!important;justify-self:start!important}
+.card.planned .card-actions>button:nth-child(2){width:100%!important;justify-self:stretch!important}
+.card.planned .card-actions>.finish-check{
+  width:34px!important;height:34px!important;min-width:34px!important;
+  justify-self:end!important;padding:0!important;
+}
+/* Splněné a Zrušené si ponechávají své stavové spodní akce. */
+.card.completed .card-actions,.card.cancelled .card-actions{width:auto!important}
+
+/* --- FORM: stejné písmo úplně všude --- */
+#formModal input,#formModal select,#formModal textarea,#formModal button{
+  font-family:inherit!important;
+}
+#formModal textarea{font-size:inherit!important}
+
+/* Datum automaticky převzaté z nalistovaného dne — varianta D */
+#fDate.v41-auto-date{
+  background:#f0f8ed!important;
+  border-color:#a9cba2!important;
+  padding-right:38px!important;
+}
+.v41-date-wrap{position:relative}
+.v41-date-check{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  width:19px;height:19px;border-radius:50%;
+  background:#168500;color:#fff;font-size:11px;font-weight:1000;
+  display:none;place-items:center;pointer-events:none;
+}
+.v41-date-wrap.auto .v41-date-check{display:grid}
+
+/* Validace bez systémového alertu */
+#formModal .v41-required-error{
+  border-color:#d43b35!important;
+  background:#fff3f2!important;
+  box-shadow:0 0 0 3px rgba(212,59,53,.09)!important;
+}
+
+/* Dvě jasně odlišené ukládací akce */
+#v41SaveDraft{
+  flex:0 0 auto!important;
+  min-width:142px!important;
+  background:#f4f8f2!important;
+  color:#104c29!important;
+  border:1.5px solid #a9c5a2!important;
+}
+#formModal .sheet-actions.v41-new-actions #saveRide{flex:1.35!important}
+
+/* Koš a Koncepty — přibližně 80 % obrazovky */
+.v38-trash-shell{
+  width:80vw!important;max-width:none!important;
+  height:80vh!important;max-height:80vh!important;
+}
+#v40Drafts .v40-shell{
+  width:80vw!important;max-width:none!important;
+  height:80vh!important;max-height:80vh!important;
+  display:flex!important;flex-direction:column!important;
+}
+#v40Drafts .v40-body{overflow:auto!important;flex:1!important}
+
+/* Potvrzení vysypání/smazání musí být skutečně NAD košem. */
+.v38-confirm-overlay{z-index:26000!important}
+.v38-trash-overlay{z-index:23000!important}
+
+@media(max-width:650px){
+  .v38-trash-shell,#v40Drafts .v40-shell{
+    width:92vw!important;height:82vh!important;max-height:82vh!important;
+  }
+  #formModal .sheet-actions.v41-new-actions{
+    display:grid!important;grid-template-columns:1.15fr 1fr!important;
+  }
+  #v41SaveDraft{min-width:0!important}
+}
+</style>
+
+<script id="v41-stage1-js">
+(function(){
+  "use strict";
+  const $=id=>document.getElementById(id);
+  const form=$("formModal"), grid=form?.querySelector(".form-grid");
+  if(!form||!grid)return;
+
+  /* ---------------------------------------------------------
+     1) KARTY
+     Koš fyzicky přesuneme z .card-actions do .card-inner.
+     Tím už nemůže zabírat místo checkboxu / spodních akcí.
+     --------------------------------------------------------- */
+  function normalizeCardActions(){
+    document.querySelectorAll(".card").forEach(card=>{
+      const inner=card.querySelector(".card-inner");
+      const del=card.querySelector(".v38-delete-btn");
+      if(inner&&del&&del.parentElement!==inner) inner.appendChild(del);
+    });
+  }
+  ["plannedList","completedList","cancelledList"].forEach(id=>{
+    const el=$(id);
+    if(el)new MutationObserver(normalizeCardActions).observe(el,{childList:true,subtree:true});
+  });
+  normalizeCardActions();
+
+  /* ---------------------------------------------------------
+     2) PŘESNÉ POŘADÍ FORMULÁŘE
+     Datum -> čas -> jméno -> telefon -> dokumenty ->
+     ceny -> platba -> doprava -> adresa -> mapa ->
+     plánování -> poznámka.
+     Staré skryté technické položky necháváme funkční.
+     --------------------------------------------------------- */
+  function fieldOf(id){return $(id)?.closest(".field")}
+  function reorderStage1(){
+    const wanted=[];
+    const add=id=>{
+      const f=fieldOf(id);
+      if(f&&grid.contains(f)&&!wanted.includes(f))wanted.push(f);
+    };
+    ["fDate","fTime","fName","fPhone","fDocuments","fNet","fGross","fPayment","fVehicle","fAddress"].forEach(add);
+
+    const mapEl=$("mapyFormMap");
+    let mapBlock=mapEl?.closest(".field");
+    if(!mapBlock && mapEl){
+      let p=mapEl.parentElement;
+      while(p&&p.parentElement!==grid)p=p.parentElement;
+      if(p?.parentElement===grid)mapBlock=p;
+    }
+    if(mapBlock&&grid.contains(mapBlock)&&!wanted.includes(mapBlock))wanted.push(mapBlock);
+
+    const planner=$("v39Planning");
+    if(planner&&grid.contains(planner)&&!wanted.includes(planner))wanted.push(planner);
+
+    add("fNote");
+    add("fCancelReason");
+
+    const current=[...grid.children].filter(x=>wanted.includes(x));
+    if(wanted.some((x,i)=>current[i]!==x)) wanted.forEach(x=>grid.appendChild(x));
+
+    const order=fieldOf("fOrderNo");
+    if(order)order.remove();
+  }
+  reorderStage1();
+
+  /* ---------------------------------------------------------
+     3) AUTOMATICKÉ DATUM — varianta D
+     --------------------------------------------------------- */
+  const date=$("fDate");
+  let settingAutomaticDate=false;
+
+  function ensureDateDecoration(){
+    if(!date)return;
+    const field=fieldOf("fDate");
+    if(!field)return;
+    let wrap=field.querySelector(".v41-date-wrap");
+    if(!wrap){
+      wrap=document.createElement("div");
+      wrap.className="v41-date-wrap";
+      date.parentNode.insertBefore(wrap,date);
+      wrap.appendChild(date);
+      const check=document.createElement("span");
+      check.className="v41-date-check";
+      check.textContent="✓";
+      check.setAttribute("aria-hidden","true");
+      wrap.appendChild(check);
+    }
+  }
+  function setAutoDateVisual(on){
+    ensureDateDecoration();
+    date?.classList.toggle("v41-auto-date",!!on);
+    date?.closest(".v41-date-wrap")?.classList.toggle("auto",!!on);
+  }
+  ensureDateDecoration();
+
+  date?.addEventListener("input",()=>{if(!settingAutomaticDate)setAutoDateVisual(false)},true);
+  date?.addEventListener("change",()=>{if(!settingAutomaticDate)setAutoDateVisual(false)},true);
+
+  $("addBtn")?.addEventListener("click",()=>{
+    setTimeout(()=>{
+      reorderStage1();
+      settingAutomaticDate=true;
+      setAutoDateVisual(true);
+      settingAutomaticDate=false;
+      updateSaveActions(false);
+      clearValidation();
+    },60);
+  },true);
+
+  document.addEventListener("click",e=>{
+    if(!e.target.closest(".edit-btn"))return;
+    setTimeout(()=>{
+      reorderStage1();
+      setAutoDateVisual(false);
+      updateSaveActions(true);
+      clearValidation();
+    },80);
+  },true);
+
+  /* Otevření konceptu není automatické datum. */
+  $("v40DraftBody")?.addEventListener("click",e=>{
+    if(!e.target.closest("[data-draft]"))return;
+    setTimeout(()=>setAutoDateVisual(false),280);
+  },true);
+
+  /* ---------------------------------------------------------
+     4) ULOŽIT DO KONCEPTŮ — používá STEJNOU existující
+        funkci jako volba při zavření křížkem.
+     --------------------------------------------------------- */
+  const actions=form.querySelector(".sheet-actions");
+  const saveBtn=$("saveRide");
+  let saveDraftBtn=$("v41SaveDraft");
+  if(actions&&saveBtn&&!saveDraftBtn){
+    saveDraftBtn=document.createElement("button");
+    saveDraftBtn.type="button";
+    saveDraftBtn.id="v41SaveDraft";
+    saveDraftBtn.textContent="Uložit do konceptů";
+    saveBtn.insertAdjacentElement("afterend",saveDraftBtn);
+  }
+
+  function updateSaveActions(isEdit){
+    if(!actions||!saveDraftBtn)return;
+    actions.classList.toggle("v41-new-actions",!isEdit);
+    saveDraftBtn.style.display=isEdit?"none":"block";
+  }
+  updateSaveActions(false);
+
+  saveDraftBtn?.addEventListener("click",()=>{
+    clearValidation();
+    /* v40LeaveDraft už volá jedinou společnou saveAsDraft(). */
+    $("v40LeaveDraft")?.click();
+  });
+
+  /* ---------------------------------------------------------
+     5) VALIDACE
+     Povinné: jméno + telefon + adresa.
+     Bez alertu, pouze červené zvýraznění.
+     --------------------------------------------------------- */
+  const required=[$("fName"),$("fPhone"),$("fAddress")].filter(Boolean);
+  function clearValidation(){
+    required.forEach(el=>el.classList.remove("v41-required-error"));
+  }
+  function validateRequired(){
+    let ok=true;
+    required.forEach(el=>{
+      const missing=!String(el.value||"").trim();
+      el.classList.toggle("v41-required-error",missing);
+      if(missing)ok=false;
+    });
+    return ok;
+  }
+  required.forEach(el=>{
+    el.addEventListener("input",()=>{
+      if(String(el.value||"").trim())el.classList.remove("v41-required-error");
+    });
+  });
+
+  /*
+    Nahradíme přímo starý onclick validační/save handler.
+    Při nevalidním formuláři stopImmediatePropagation zabrání i
+    pozdějším mapovým/dokumentovým save listenerům, aby omylem
+    zapisovaly data do jiné jízdy.
+  */
+  if(saveBtn){
+    saveBtn.onclick=function(ev){
+      if(!validateRequired()){
+        ev?.preventDefault();
+        ev?.stopImmediatePropagation();
+        return false;
+      }
+
+      const data={
+        date:$("fDate")?.value||"",
+        time:$("fTime")?.value||"",
+        name:$("fName")?.value.trim()||"",
+        address:$("fAddress")?.value.trim()||"",
+        net:Number($("fNet")?.value||0),
+        payment:$("fPayment")?.value||"Hotově",
+        vehicle:$("fVehicle")?.value||"AK",
+        note:$("fNote")?.value.trim()||""
+      };
+
+      /* Datum a čas jsou systémově/přednastaveně řízené.
+         Pokud by datum technicky chybělo, formulář nezavřeme. */
+      if(!data.date){
+        ev?.preventDefault();
+        ev?.stopImmediatePropagation();
+        return false;
+      }
+
+      if(editingId){
+        const i=rides.findIndex(r=>r.id===editingId);
+        if(i>=0)rides[i]={...rides[i],...data,phone:$("fPhone")?.value.trim()||""};
+      }else{
+        const sameDay=rides.filter(r=>r.date===data.date);
+        rides.push({
+          id:Date.now(),...data,
+          phone:$("fPhone")?.value.trim()||"",
+          status:"planned",manualOrder:sameDay.length,km:0
+        });
+      }
+
+      save();
+      selectedDate=new Date(data.date+"T00:00:00");
+      form.classList.remove("show");
+      render();
+      clearValidation();
+      return true;
+    };
+  }
+
+  /* Když se formulář otevře jinou starší cestou, srovnej layout. */
+  const formObserver=new MutationObserver(()=>{
+    if(form.classList.contains("show")){
+      /* Jen jednorázově po otevření; žádné přesouvání při každé DOM změně. */
+      requestAnimationFrame(reorderStage1);
+    }
+  });
+  formObserver.observe(form,{attributes:true,attributeFilter:["class"]});
+
+  /* Bezpečnost: observer výše může dostat více class změn, ale reorderStage1
+     je idempotentní a nepoužíváme childList observer => nevznikne smyčka v40. */
+})();
+</script>
+
+
+
+<style id="v41-2-stage1-stable-css">
+/* =========================================================
+   V41.2 — ETAPA 1 STABILNÍ OPRAVA
+   ========================================================= */
+
+/* Ovládání karty je skutečně ukotveno ke spodní hraně.
+   Větší spodní padding garantuje, že text nikdy neleze pod tlačítka. */
+.card .card-inner{
+  position:relative!important;
+  padding-bottom:78px!important;
+  box-sizing:border-box!important;
+}
+.card .card-actions{
+  position:absolute!important;
+  left:10px!important;
+  right:10px!important;
+  bottom:8px!important;
+  top:auto!important;
+  margin:0!important;
+  z-index:6!important;
+}
+
+/* PLÁNOVANÉ: INFO | široký START | checkbox */
+.card.planned .card-actions{
+  display:grid!important;
+  grid-template-columns:58px minmax(0,1fr) 38px!important;
+  gap:8px!important;
+  align-items:end!important;
+}
+.card.planned .card-actions>button{
+  margin:0!important;
+  align-self:end!important;
+}
+.card.planned .card-actions>button:nth-child(1){width:58px!important}
+.card.planned .card-actions>button:nth-child(2){width:100%!important}
+.card.planned .card-actions>.finish-check{
+  width:34px!important;
+  min-width:34px!important;
+  height:34px!important;
+  justify-self:end!important;
+}
+
+/* SPLNĚNÉ: pouze INFO + SPLNĚNO */
+.card.completed .card-actions{
+  display:grid!important;
+  grid-template-columns:58px minmax(96px,auto) minmax(0,1fr)!important;
+  gap:8px!important;
+  align-items:end!important;
+}
+.card.completed .card-actions>.return-btn{
+  height:34px!important;
+  min-width:96px!important;
+  padding:0 12px!important;
+  border-radius:9px!important;
+  background:#fff!important;
+  color:#104c29!important;
+  border:1.5px solid #104c29!important;
+  font-size:10px!important;
+  font-weight:950!important;
+  opacity:1!important;
+  filter:none!important;
+  text-decoration:none!important;
+}
+.card.completed .v412-completed-label{
+  height:34px;
+  border-radius:9px;
+  background:#edf7ea;
+  border:1.5px solid #98c48f;
+  color:#104c29;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:10px;
+  font-weight:950;
+  box-sizing:border-box;
+}
+.card.completed .v412-completed-label:before{
+  content:"✓";
+  width:20px;height:20px;
+  border-radius:6px;
+  background:#104c29;
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-size:13px;
+  font-weight:1000;
+}
+
+/* ZRUŠENÉ: stavové akce zůstávají, ale jsou dole. */
+.card.cancelled .card-actions{
+  display:grid!important;
+  grid-template-columns:58px minmax(0,1fr)!important;
+  gap:8px!important;
+  align-items:end!important;
+}
+
+/* Telefon */
+#fPhone{font-variant-numeric:tabular-nums}
+</style>
+
+<script id="v41-2-stage1-stable-js">
+(function(){
+  "use strict";
+  const $=id=>document.getElementById(id);
+
+  /* ---------------------------------------------------------
+     KARTY — bez nekonečného MutationObserver cyklu
+     --------------------------------------------------------- */
+  let cardPassScheduled=false;
+
+  function normalizeOneCard(card){
+    if(!card)return;
+    const inner=card.querySelector(".card-inner");
+    const actions=card.querySelector(".card-actions");
+    if(!inner||!actions)return;
+
+    /* Koš patří nahoře vedle tužky, ne do spodního panelu. */
+    const del=card.querySelector(".v38-delete-btn");
+    if(del && del.parentElement!==inner) inner.appendChild(del);
+
+    if(card.classList.contains("completed")){
+      const children=[...actions.children];
+
+      /* Splněné: zachováme INFO + VRÁTIT ZPĚT + stabilní štítek SPLNĚNO. */
+      children.forEach(el=>{
+        if(el.classList.contains("v412-completed-label"))return;
+        const txt=(el.textContent||"").trim().toLowerCase();
+        if(el.tagName==="BUTTON" && txt==="info")return;
+        if(el.tagName==="BUTTON" && (txt==="vrátit" || txt==="vrátit zpět")){
+          el.classList.add("return-btn");
+          el.textContent="Vrátit zpět";
+          const m=(el.getAttribute("onclick")||"").match(/returnToPlanned\(([^)]+)\)/);
+          if(m)el.setAttribute("onclick",`returnCompletedToPlanned(${m[1]})`);
+          return;
+        }
+        el.remove();
+      });
+
+      if(!actions.querySelector(".return-btn")){
+        /* Fallback pro případ, že starší renderer tlačítko nevytvoří. */
+        const info=actions.querySelector("button");
+        const cardHtml=card.outerHTML;
+        const m=cardHtml.match(/showInfo\(([^)]+)\)/);
+        if(m){
+          const back=document.createElement("button");
+          back.type="button";
+          back.className="return-btn";
+          back.textContent="Vrátit zpět";
+          back.setAttribute("onclick",`returnCompletedToPlanned(${m[1]})`);
+          if(info)info.insertAdjacentElement("afterend",back); else actions.appendChild(back);
+        }
+      }
+
+      if(!actions.querySelector(".v412-completed-label")){
+        const done=document.createElement("div");
+        done.className="v412-completed-label";
+        done.textContent="SPLNĚNO";
+        actions.appendChild(done);
+      }
+    }
+  }
+
+  function normalizeCards(){
+    cardPassScheduled=false;
+    document.querySelectorAll("#plannedList .card,#completedList .card,#cancelledList .card")
+      .forEach(normalizeOneCard);
+  }
+
+  function scheduleCardPass(){
+    if(cardPassScheduled)return;
+    cardPassScheduled=true;
+    requestAnimationFrame(normalizeCards);
+  }
+
+  /* Sledujeme jen změny seznamů a zpracování slučujeme do jednoho frame.
+     Funkce je idempotentní: po stabilizaci už DOM nemění. */
+  ["plannedList","completedList","cancelledList"].forEach(id=>{
+    const el=$(id);
+    if(el)new MutationObserver(scheduleCardPass).observe(el,{childList:true,subtree:true});
+  });
+  scheduleCardPass();
+
+  /* ---------------------------------------------------------
+     TELEFON — pouze čísla a jedno + na začátku
+     --------------------------------------------------------- */
+  const phone=$("fPhone");
+
+  function formatPhoneValue(raw){
+    raw=String(raw??"");
+    const plus=raw.trim().startsWith("+");
+    const digits=raw.replace(/\D/g,"");
+    const groups=digits.match(/.{1,3}/g)||[];
+    return (plus?"+":"")+groups.join(" ");
+  }
+
+  function normalizePhone(){
+    if(!phone)return;
+    const next=formatPhoneValue(phone.value);
+    if(phone.value!==next)phone.value=next;
+  }
+
+  if(phone){
+    phone.setAttribute("inputmode","tel");
+    phone.setAttribute("autocomplete","tel");
+    phone.addEventListener("input",normalizePhone);
+    phone.addEventListener("paste",()=>setTimeout(normalizePhone,0));
+  }
+
+  const form=$("formModal");
+  if(form&&phone){
+    new MutationObserver(()=>{
+      if(form.classList.contains("show"))setTimeout(normalizePhone,80);
+    }).observe(form,{attributes:true,attributeFilter:["class"]});
+
+    $("v40DraftBody")?.addEventListener("click",()=>setTimeout(normalizePhone,260),true);
+    document.addEventListener("click",e=>{
+      if(e.target.closest(".edit-btn"))setTimeout(normalizePhone,140);
+    },true);
+  }
+
+  /* ---------------------------------------------------------
+     VALIDACE — po označení chyb automaticky na první chybějící pole
+     --------------------------------------------------------- */
+  const saveBtn=$("saveRide");
+  if(saveBtn){
+    saveBtn.addEventListener("click",()=>{
+      const missing=[$("fName"),$("fPhone"),$("fAddress")]
+        .filter(el=>el && !String(el.value||"").trim());
+
+      if(!missing.length)return;
+
+      setTimeout(()=>{
+        const first=missing[0];
+        try{
+          first.scrollIntoView({behavior:"smooth",block:"center"});
+        }catch(e){
+          first.scrollIntoView();
+        }
+        setTimeout(()=>{
+          try{first.focus({preventScroll:true})}
+          catch(e){first.focus()}
+        },300);
+      },30);
+    },true);
+  }
+})();
+</script>
+
+
+<style id="v41-3-date-first-css">
+/* V41.3 — finální drobnost ETAPY 1:
+   Datum jízdy je samostatně úplně první položka formuláře. */
+#formModal .v413-date-row{
+  grid-column:1 / -1!important;
+  width:100%!important;
+  order:-1000!important;
+}
+</style>
+
+<script id="v41-3-date-first-js">
+(function(){
+  "use strict";
+  const form=document.getElementById("formModal");
+  const grid=form?.querySelector(".form-grid");
+  const date=document.getElementById("fDate");
+  if(!grid||!date)return;
+
+  function placeDateFirst(){
+    const field=date.closest(".field");
+    if(!field)return;
+
+    field.classList.add("v413-date-row");
+
+    /* Datum musí být skutečně první DOM prvek, ne jen opticky přes CSS.
+       Díky tomu pod ním následuje stávající sekce Čas doručení. */
+    if(grid.firstElementChild!==field){
+      grid.insertBefore(field,grid.firstElementChild);
+    }
+  }
+
+  placeDateFirst();
+
+  /* Pouze při otevření formuláře; žádný childList observer ani polling. */
+  new MutationObserver(()=>{
+    if(form.classList.contains("show")){
+      requestAnimationFrame(placeDateFirst);
+    }
+  }).observe(form,{attributes:true,attributeFilter:["class"]});
+})();
+</script>
+
+
+<script id="v42-restart-diagnostic">
+(function(){
+  "use strict";
+  const a=document.getElementById("fAddress");
+  const v=document.getElementById("fVehicle");
+  /* Diagnostic only; deliberately no DOM mutation. */
+  window.EvidenceRozvozuStage2Diagnostic={
+    addressExists:!!a,
+    addressFieldExists:!!a?.closest(".field"),
+    vehicleExists:!!v
+  };
+})();
+</script>
+
+
+<style id="v42-9-canonical-map-css">
+/* V42.9 — jediná mapa ve formuláři = v35 Leaflet.
+   Žádná statická mapa, žádné přepínání rendererů. */
+#formModal #mapyFormMap{
+  width:100%;
+  height:270px;
+  min-height:270px;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid #cdddc9;
+  background:#d8ddd5;
+  touch-action:none;
+}
+#formModal .mapy-start-suggest{display:none!important}
+</style>
+
+
+<style id="v42-12-info-run-map-css">
+/* ETAPA 2B — stejný ověřený interaktivní renderer také v INFO a aktivním rozvozu. */
+#detailModal #pzInfoMap,
+#runRouteMapPanel #pzRunMap{
+  display:block!important;
+  width:100%!important;
+  height:270px!important;
+  min-height:270px!important;
+  border-radius:14px!important;
+  overflow:hidden!important;
+  border:1px solid #cdddc9!important;
+  background:#d8ddd5!important;
+  touch-action:none!important;
+}
+#detailModal .pz-google-only,
+#runRouteMapPanel .pz-google-only{
+  grid-template-columns:1fr!important;
+}
+</style>
+
+
+<style id="v42-15-card-vehicle-images">
+/* ETAPA 2.5A — pouze obrázky souprav na kartách. */
+.card .vehicle-image{background:transparent!important}
+.card .vehicle-image img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+</style>
+
+<script id="v42-16-info-vehicle-strip">
+(function(){
+  "use strict";
+  const VEHICLE_NAMES={
+    AK:"Auto + vlek",
+    TRM:"Traktor + malý vlek",
+    TRMS:"Traktor + malý vlek + skládání",
+    TRV:"Traktor + velký vlek",
+    TRVS:"Traktor + velký vlek + skládání"
+  };
+
+  const previousShowInfo=window.showInfo;
+  if(typeof previousShowInfo!=="function")return;
+
+  window.showInfo=function(id){
+    previousShowInfo(id);
+    const r=rides.find(x=>String(x.id)===String(id));
+    if(!r)return;
+
+    /* INFO se skládá asynchronně. Jednorázově po jeho vykreslení vložíme
+       kompaktní soupravu bez zásahu do mapy nebo Plánu rozvozu. */
+    setTimeout(()=>{
+      const c=document.getElementById("detailContent");
+      if(!c)return;
+      c.querySelectorAll(".v4216-info-vehicle").forEach(el=>el.remove());
+
+      const mapSection=c.querySelector(".pz-info-route");
+      if(!mapSection)return;
+
+      const code=String(r.vehicle||"").toUpperCase();
+      const src=(window.VEHICLE_IMAGES&&window.VEHICLE_IMAGES[code]) ||
+        (typeof VEHICLE_IMAGES!=="undefined"&&VEHICLE_IMAGES[code]) || "";
+      if(!src)return;
+
+      const box=document.createElement("div");
+      box.className="v4216-info-vehicle";
+      box.innerHTML=`
+        <div class="v4216-info-vehicle-visual">
+          <img src="${esc(src)}" alt="${esc(code)}">
+        </div>
+        <div class="v4216-info-vehicle-label">
+          <strong>${esc(code)}</strong>
+          <span>${esc(VEHICLE_NAMES[code]||code)}</span>
+        </div>`;
+      mapSection.insertAdjacentElement("beforebegin",box);
+    },260);
+  };
+})();
+</script>
+
+<style id="v42-16-info-vehicle-strip-css">
+/* ETAPA 2.5B — kompaktní souprava pouze v INFO, těsně nad mapou. */
+#detailModal .v4216-info-vehicle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:10px 0;
+  padding:8px 10px;
+  border:1px solid rgba(21,81,47,.12);
+  border-radius:13px;
+  background:rgba(38,155,50,.055);
+}
+#detailModal .v4216-info-vehicle-visual{
+  flex:1 1 auto;
+  min-width:0;
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  overflow:hidden;
+}
+#detailModal .v4216-info-vehicle-visual img{
+  display:block;
+  width:auto;
+  max-width:150px;
+  height:54px;
+  max-height:54px;
+  object-fit:contain;
+  object-position:left center;
+}
+#detailModal .v4216-info-vehicle-label{
+  flex:0 0 112px;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:3px;
+  text-align:center;
+}
+#detailModal .v4216-info-vehicle-label strong{
+  display:grid;
+  place-items:center;
+  min-height:34px;
+  padding:0 9px;
+  border-radius:9px;
+  background:#168500;
+  color:#fff;
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:.3px;
+}
+#detailModal .v4216-info-vehicle-label span{
+  color:#15512f;
+  font-size:9px;
+  line-height:1.15;
+  font-weight:800;
+}
+@media(max-width:520px){
+  #detailModal .v4216-info-vehicle-visual img{max-width:125px;height:48px}
+  #detailModal .v4216-info-vehicle-visual{height:52px}
+  #detailModal .v4216-info-vehicle-label{flex-basis:96px}
+}
+</style>
+
+
+<script id="v42-17a-info-priority-cards">
+(function(){
+  "use strict";
+  const previousShowInfo=window.showInfo;
+  if(typeof previousShowInfo!=="function")return;
+
+  function stateText(r){
+    return r.status==="planned"?"Plánované":r.status==="completed"?"Splněné":"Zrušené";
+  }
+  function formatDateCZ(value){
+    try{return new Intl.DateTimeFormat("cs-CZ").format(new Date(value+"T00:00:00"))}
+    catch(e){return value||"—"}
+  }
+  function phoneIcon(){
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.46 15.46 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2Z"/></svg>`;
+  }
+
+  window.showInfo=function(id){
+    previousShowInfo(id);
+    const r=rides.find(x=>String(x.id)===String(id));
+    if(!r)return;
+
+    /* Krok 17A mění pouze horní údaje. Spodní INFO (poznámka, dokumenty,
+       souprava, mapa a plán) zůstává vykreslováno stávajícími funkcemi. */
+    requestAnimationFrame(()=>{
+      const c=document.getElementById("detailContent");
+      if(!c)return;
+
+      c.querySelectorAll(".v4217a-info-top").forEach(el=>el.remove());
+
+      const top=document.createElement("section");
+      top.className="v4217a-info-top";
+      top.innerHTML=`
+        <div class="v4217a-priority">
+          <div class="v4217a-priority-card">
+            <span>DATUM</span>
+            <strong>${esc(formatDateCZ(r.date))}</strong>
+          </div>
+          <div class="v4217a-priority-card v4217a-time">
+            <span>ČAS DORUČENÍ</span>
+            <strong>${esc(r.time||"—")}</strong>
+          </div>
+        </div>
+        <div class="v4217a-summary">
+          <div class="v4217a-panel">
+            <div class="v4217a-panel-title v4217b-customer-title">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.42 0-8 2.24-8 5v1.5h16V19c0-2.76-3.58-5-8-5Z"/>
+  </svg>
+  <span>Zákazník</span>
+</div>
+            <div class="v4217a-row"><span>Jméno</span><strong>${esc(r.name||"—")}</strong></div>
+            <div class="v4217a-row"><span>Telefon</span><strong class="v4217a-phone">${r.phone?`<a href="tel:${esc(r.phone)}">${phoneIcon()}<span>${esc(r.phone)}</span></a>`:"Neuvedeno"}</strong></div>
+            <div class="v4217a-row"><span>Adresa</span><strong>${esc(r.address||"—")}</strong></div>
+          </div>
+          <div class="v4217a-panel">
+            <div class="v4217a-panel-title">Platba</div>
+            <div class="v4217a-row"><span>Cena bez DPH</span><strong>${money(r.net)}</strong></div>
+            <div class="v4217a-row"><span>Cena s DPH</span><strong>${money(gross(r.net))}</strong></div>
+            <div class="v4217a-row"><span>Typ platby</span><strong>${esc(r.payment||"—")}</strong></div>
+            <div class="v4217a-row"><span>Stav</span><strong>${esc(stateText(r))}</strong></div>
+          </div>
+        </div>`;
+
+      c.insertAdjacentElement("afterbegin",top);
+
+      /* Skryjeme jen staré řádky, které jsme právě přesunuli do nového horního
+         přehledu. Ostatní INFO v tomto kroku zůstává nedotčeno. */
+      c.querySelectorAll(".detail-line").forEach(el=>{
+        const txt=el.textContent.trim();
+        if(
+          txt.startsWith("Datum:") ||
+          txt.startsWith("Čas doručení:") ||
+          txt.startsWith("Jméno a příjmení:") ||
+          txt.startsWith("Adresa:") ||
+          txt.startsWith("Cena bez DPH:") ||
+          txt.startsWith("Cena s DPH:") ||
+          txt.startsWith("Typ platby:") ||
+          txt.startsWith("Stav:") ||
+          txt.startsWith("Telefon:")
+        ) el.classList.add("v4217a-moved-line");
+      });
+    });
+  };
+})();
+</script>
+
+<style id="v42-17a-info-priority-cards-css">
+/* v42.17A — pouze horní část INFO */
+#detailModal .v4217a-info-top{margin:0 0 10px}
+#detailModal .v4217a-priority{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:9px;
+}
+#detailModal .v4217a-priority-card{
+  min-height:67px;
+  padding:10px 12px;
+  border-radius:13px;
+  border:1px solid rgba(21,81,47,.14);
+  background:rgba(38,155,50,.055);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+#detailModal .v4217a-priority-card span{
+  color:#5d7465;
+  font-size:9px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:.45px;
+}
+#detailModal .v4217a-priority-card strong{
+  margin-top:7px;
+  color:#15512f;
+  font-size:20px;
+  line-height:1;
+  font-weight:900;
+}
+#detailModal .v4217a-time{
+  background:rgba(38,155,50,.105);
+  border-color:rgba(22,133,0,.25);
+}
+#detailModal .v4217a-time strong{font-size:25px;color:#168500}
+#detailModal .v4217a-summary{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+#detailModal .v4217a-panel{
+  padding:10px 12px;
+  border-radius:13px;
+  border:1px solid rgba(21,81,47,.10);
+  background:#f7faf7;
+}
+#detailModal .v4217a-panel-title{
+  color:#15512f;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:5px;
+}
+#detailModal .v4217a-row{
+  display:grid;
+  grid-template-columns:88px minmax(0,1fr);
+  gap:8px;
+  align-items:start;
+  padding:6px 0;
+  border-top:1px solid rgba(21,81,47,.075);
+  color:#607066;
+  font-size:10px;
+  line-height:1.3;
+}
+#detailModal .v4217a-row:first-of-type{border-top:0}
+#detailModal .v4217a-row strong{
+  color:#26352c;
+  font-size:10px;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+#detailModal .v4217a-phone a{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:#168500;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+#detailModal .v4217a-phone svg{
+  width:16px;
+  height:16px;
+  flex:0 0 16px;
+  fill:#168500;
+}
+#detailModal .v4217a-moved-line{display:none!important}
+
+@media(max-width:560px){
+  #detailModal .v4217a-summary{grid-template-columns:1fr}
+  #detailModal .v4217a-priority-card{min-height:61px;padding:9px 10px}
+  #detailModal .v4217a-priority-card strong{font-size:17px}
+  #detailModal .v4217a-time strong{font-size:22px}
+}
+</style>
+
+
+<script id="v42-17b-info-note-docs">
+(function(){
+  "use strict";
+  const previousShowInfo=window.showInfo;
+  if(typeof previousShowInfo!=="function")return;
+
+  window.showInfo=function(id){
+    previousShowInfo(id);
+    const r=rides.find(x=>String(x.id)===String(id));
+    if(!r)return;
+
+    /* INFO se skládá asynchronně; krok 17B pouze seskupí Poznámku a Dokumenty.
+       Funkce openRideDocument a ukládání souborů se nemění. */
+    setTimeout(()=>{
+      const c=document.getElementById("detailContent");
+      if(!c)return;
+      c.querySelectorAll(".v4217b-note-docs").forEach(el=>el.remove());
+
+      let noteLine=null, docsLabel=null, docsBox=null;
+      c.querySelectorAll(".detail-line").forEach(el=>{
+        const txt=el.textContent.trim();
+        if(txt.startsWith("Poznámka:")) noteLine=el;
+        if(txt.startsWith("Dokumenty:")) docsLabel=el;
+      });
+      docsBox=c.querySelector(".info-documents");
+
+      const section=document.createElement("section");
+      section.className="v4217b-note-docs";
+      const docs=(r.documents||[]);
+      section.innerHTML=`
+        <div class="v4217b-card">
+          <div class="v4217b-card-title">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17.25V20h2.75L17.81 8.94l-2.75-2.75L4 17.25Zm15.71-10.4a1 1 0 0 0 0-1.42l-1.14-1.14a1 1 0 0 0-1.42 0l-.89.89 2.75 2.75.7-.7Z"/></svg>
+            <span>Poznámka</span>
+          </div>
+          <div class="v4217b-note">${r.note?esc(r.note):'<span class="v4217b-empty">Bez poznámky</span>'}</div>
+        </div>
+        <div class="v4217b-card">
+          <div class="v4217b-card-title">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l4 4v16H6V2Zm7 1.5V7h3.5L13 3.5ZM8.5 11h7v1.5h-7V11Zm0 3.5h7V16h-7v-1.5Zm0 3.5h5V19.5h-5V18Z"/></svg>
+            <span>Dokumenty</span>
+          </div>
+          <div class="v4217b-doc-list">
+            ${docs.length?docs.map(a=>`
+              <div class="v4217b-doc">
+                <span class="v4217b-doc-name">${esc(a.name)}</span>
+                <button type="button" onclick="openRideDocument('${a.id}')">Otevřít</button>
+              </div>`).join(""):'<span class="v4217b-empty">Žádné dokumenty</span>'}
+          </div>
+        </div>`;
+
+      const vehicle=c.querySelector(".v4216-info-vehicle");
+      const map=c.querySelector(".pz-info-route");
+      const anchor=vehicle||map;
+      if(anchor) anchor.insertAdjacentElement("beforebegin",section);
+      else c.appendChild(section);
+
+      if(noteLine)noteLine.style.display="none";
+      if(docsLabel)docsLabel.style.display="none";
+      if(docsBox)docsBox.style.display="none";
+    },320);
+  };
+})();
+</script>
+
+<style id="v42-17b-info-note-docs-css">
+/* v42.17B — pouze ikona Zákazníka + Poznámka/Dokumenty */
+#detailModal .v4217b-customer-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+#detailModal .v4217b-customer-title svg{
+  width:17px;
+  height:17px;
+  flex:0 0 17px;
+  fill:#168500;
+}
+#detailModal .v4217b-note-docs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin:10px 0;
+}
+#detailModal .v4217b-card{
+  min-width:0;
+  padding:10px 12px;
+  border-radius:13px;
+  border:1px solid rgba(21,81,47,.10);
+  background:#f7faf7;
+}
+#detailModal .v4217b-card-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:8px;
+  color:#15512f;
+  font-size:13px;
+  font-weight:900;
+}
+#detailModal .v4217b-card-title svg{
+  width:16px;
+  height:16px;
+  flex:0 0 16px;
+  fill:#168500;
+}
+#detailModal .v4217b-note{
+  color:#26352c;
+  font-size:10px;
+  line-height:1.45;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+#detailModal .v4217b-empty{
+  color:#7a877e;
+  font-size:10px;
+  font-weight:600;
+}
+#detailModal .v4217b-doc-list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+#detailModal .v4217b-doc{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:7px;
+  min-width:0;
+  padding:6px 7px;
+  border-radius:9px;
+  background:#fff;
+  border:1px solid rgba(21,81,47,.09);
+}
+#detailModal .v4217b-doc-name{
+  min-width:0;
+  color:#26352c;
+  font-size:9.5px;
+  font-weight:700;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+#detailModal .v4217b-doc button{
+  flex:0 0 auto;
+  border:0;
+  border-radius:8px;
+  padding:5px 8px;
+  background:#168500;
+  color:#fff;
+  font-size:9px;
+  font-weight:900;
+  cursor:pointer;
+}
+@media(max-width:560px){
+  #detailModal .v4217b-note-docs{grid-template-columns:1fr}
+}
+</style>
+
+
+<script id="v42-17c-info-order-fix">
+(function(){
+  "use strict";
+  const previousShowInfo = window.showInfo;
+  if(typeof previousShowInfo !== "function") return;
+
+  function applyInfoOrder(){
+    const c = document.getElementById("detailContent");
+    if(!c) return;
+
+    /* Starý nedesignový řádek Typ dopravy už nahrazuje grafický proužek soupravy. */
+    c.querySelectorAll(".detail-line").forEach(el=>{
+      if(el.textContent.trim().startsWith("Typ dopravy:")) el.remove();
+    });
+
+    /* Poznámka + Dokumenty musí být přímo NAD celým Plánem rozvozu. */
+    const noteDocs = c.querySelector(".v4217b-note-docs");
+    const plan = c.querySelector(".v39-info-plan");
+    if(noteDocs && plan && noteDocs.nextElementSibling !== plan){
+      plan.insertAdjacentElement("beforebegin", noteDocs);
+    }
+  }
+
+  window.showInfo = function(id){
+    previousShowInfo(id);
+
+    /* Jednorázové kontroly pokrývají stávající asynchronní skládání INFO.
+       Žádný polling ani MutationObserver. */
+    requestAnimationFrame(applyInfoOrder);
+    setTimeout(applyInfoOrder, 360);
+    setTimeout(applyInfoOrder, 700);
+  };
+})();
+</script>
+
+
+<style id="v42-17d-vehicle-strip-variant-a">
+/* v42.17D — pouze DOPRAVNÍ SOUPRAVA, varianta A.
+   Ostatní sekce INFO se nemění. */
+#detailModal .v4216-info-vehicle{
+  position:relative;
+  display:grid!important;
+  grid-template-columns:145px minmax(0,1fr) auto!important;
+  grid-template-areas:"visual description badge";
+  align-items:center!important;
+  gap:14px!important;
+  min-height:74px!important;
+  margin:10px 0!important;
+  padding:23px 12px 8px!important;
+  border:1px solid rgba(21,81,47,.10)!important;
+  border-radius:13px!important;
+  background:#f7faf7!important;
+}
+#detailModal .v4216-info-vehicle::before{
+  content:"DOPRAVNÍ SOUPRAVA";
+  position:absolute;
+  left:12px;
+  top:7px;
+  color:#15512f;
+  font-size:9px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:.42px;
+}
+#detailModal .v4216-info-vehicle-visual{
+  grid-area:visual;
+  width:145px!important;
+  height:48px!important;
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  overflow:hidden!important;
+}
+#detailModal .v4216-info-vehicle-visual img{
+  display:block!important;
+  width:100%!important;
+  max-width:145px!important;
+  height:48px!important;
+  object-fit:contain!important;
+  object-position:left center!important;
+}
+#detailModal .v4216-info-vehicle-label{
+  display:contents!important;
+}
+#detailModal .v4216-info-vehicle-label strong{
+  grid-area:badge;
+  min-width:78px!important;
+  min-height:34px!important;
+  padding:6px 13px!important;
+  border-radius:10px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:#168500!important;
+  color:#fff!important;
+  font-size:18px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  box-shadow:none!important;
+}
+#detailModal .v4216-info-vehicle-label span{
+  grid-area:description;
+  align-self:center!important;
+  color:#26352c!important;
+  font-size:12px!important;
+  line-height:1.25!important;
+  font-weight:800!important;
+  text-align:left!important;
+  white-space:normal!important;
+}
+
+@media(max-width:560px){
+  #detailModal .v4216-info-vehicle{
+    grid-template-columns:112px minmax(0,1fr) auto!important;
+    gap:9px!important;
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+  #detailModal .v4216-info-vehicle-visual{
+    width:112px!important;
+    height:45px!important;
+  }
+  #detailModal .v4216-info-vehicle-visual img{
+    max-width:112px!important;
+    height:45px!important;
+  }
+  #detailModal .v4216-info-vehicle-label span{font-size:10.5px!important}
+  #detailModal .v4216-info-vehicle-label strong{
+    min-width:62px!important;
+    min-height:31px!important;
+    padding:5px 9px!important;
+    font-size:15px!important;
+  }
+}
+</style>
+
+
+<style id="v42-17e-vehicle-strip-description-under-badge">
+/* v42.17E — pouze rozložení Dopravní soupravy.
+   Zachován nadpis + jemný zelený rámeček.
+   Popis se vrací POD badge AK/TRM/TRMS/TRV/TRVS. */
+#detailModal .v4216-info-vehicle{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  min-height:74px!important;
+  padding:23px 12px 8px!important;
+  background:#f7faf7!important;
+  border:1px solid rgba(21,81,47,.10)!important;
+}
+#detailModal .v4216-info-vehicle-visual{
+  flex:1 1 auto!important;
+  width:auto!important;
+  max-width:none!important;
+  height:48px!important;
+}
+#detailModal .v4216-info-vehicle-visual img{
+  width:auto!important;
+  max-width:145px!important;
+  height:48px!important;
+  object-fit:contain!important;
+  object-position:left center!important;
+}
+#detailModal .v4216-info-vehicle-label{
+  display:flex!important;
+  flex:0 0 auto!important;
+  min-width:112px!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:4px!important;
+}
+#detailModal .v4216-info-vehicle-label strong{
+  min-width:78px!important;
+  min-height:34px!important;
+  padding:6px 13px!important;
+  border-radius:10px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:#168500!important;
+  color:#fff!important;
+  font-size:18px!important;
+  line-height:1!important;
+  font-weight:900!important;
+}
+#detailModal .v4216-info-vehicle-label span{
+  color:#15512f!important;
+  font-size:10.5px!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+@media(max-width:560px){
+  #detailModal .v4216-info-vehicle{gap:8px!important;padding-left:10px!important;padding-right:10px!important}
+  #detailModal .v4216-info-vehicle-visual{height:45px!important}
+  #detailModal .v4216-info-vehicle-visual img{max-width:112px!important;height:45px!important}
+  #detailModal .v4216-info-vehicle-label{min-width:92px!important}
+  #detailModal .v4216-info-vehicle-label strong{min-width:62px!important;min-height:31px!important;padding:5px 9px!important;font-size:15px!important}
+  #detailModal .v4216-info-vehicle-label span{font-size:9.5px!important}
+}
+</style>
+
+
+
+<style id="v46-return-completed-css">
+/* =========================================================
+   V46 — SPLNĚNÉ: VRÁTIT ZPĚT
+   Pouze hlavní karta splněné jízdy + vlastní potvrzení.
+   ========================================================= */
+#v46ReturnOverlay{
+  position:fixed;inset:0;z-index:26000;
+  display:none;align-items:center;justify-content:center;
+  padding:18px;background:rgba(9,35,22,.38);
+  backdrop-filter:blur(2px);
+}
+#v46ReturnOverlay.show{display:flex}
+.v46-return-dialog{
+  width:min(420px,100%);background:#fff;border-radius:18px;
+  border:1px solid #d9e7d5;box-shadow:0 18px 55px rgba(8,42,24,.24);
+  padding:20px;
+}
+.v46-return-dialog h3{margin:0 0 7px;color:#104c29;font-size:18px;font-weight:950}
+.v46-return-dialog p{margin:0;color:#52645a;font-size:13px;line-height:1.45}
+.v46-return-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.v46-return-actions button{height:38px;border-radius:10px;padding:0 15px;font:inherit;font-size:12px;font-weight:900;cursor:pointer}
+#v46ReturnNo{background:#fff;color:#405048;border:1px solid #cbd8ce}
+#v46ReturnYes{background:#104c29;color:#fff;border:1px solid #104c29}
+</style>
+<script id="v46-return-completed-js">
+(function(){
+  "use strict";
+  const STORAGE_KEY="evidenceRozvozu_v4";
+  let pendingReturnId=null;
+  let pendingRestartId=null;
+
+  function liveRides(){
+    try{return window.eval("rides")||[]}catch(e){
+      try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}catch(_){return []}
+    }
+  }
+  function persistLive(){
+    try{if(typeof window.eval("save") === "function")window.eval("save")();else localStorage.setItem(STORAGE_KEY,JSON.stringify(liveRides()))}
+    catch(e){localStorage.setItem(STORAGE_KEY,JSON.stringify(liveRides()))}
+  }
+  function rerender(){try{if(typeof window.eval("render")==="function")window.eval("render")()}catch(e){}}
+
+  const overlay=document.createElement("div");
+  overlay.id="v46ReturnOverlay";
+  overlay.innerHTML=`<div class="v46-return-dialog" role="dialog" aria-modal="true" aria-labelledby="v46ReturnTitle">
+    <h3 id="v46ReturnTitle">Vrátit jízdu zpět?</h3>
+    <p>Jízda se přesune ze Splněných zpět mezi Plánované. Naměřené údaje zatím zůstanou bezpečně uložené.</p>
+    <div class="v46-return-actions"><button type="button" id="v46ReturnNo">Ne</button><button type="button" id="v46ReturnYes">Ano, vrátit</button></div>
+  </div>`;
+  document.body.appendChild(overlay);
+
+  function closeConfirm(){pendingReturnId=null;overlay.classList.remove("show")}
+  document.getElementById("v46ReturnNo").onclick=closeConfirm;
+  overlay.addEventListener("click",e=>{if(e.target===overlay)closeConfirm()});
+
+  window.returnCompletedToPlanned=function(id){
+    const r=liveRides().find(x=>String(x.id)===String(id));
+    if(!r||r.status!=="completed")return;
+    pendingReturnId=id;
+    overlay.classList.add("show");
+  };
+
+  document.getElementById("v46ReturnYes").onclick=()=>{
+    if(pendingReturnId==null)return closeConfirm();
+    const r=liveRides().find(x=>String(x.id)===String(pendingReturnId));
+    if(r&&r.status==="completed"){
+      r.status="planned";
+      /* Pojistka: historická měření nemažeme při samotném vrácení. */
+      r._returnedFromCompleted=true;
+      persistLive();
+      rerender();
+    }
+    closeConfirm();
+  };
+
+  /* Zapamatujeme si pouze START konkrétní vrácené jízdy. Nic nemažeme při
+     pouhém otevření potvrzení START. */
+  document.addEventListener("click",e=>{
+    const btn=e.target.closest("#plannedList .card .card-actions button");
+    if(!btn || (btn.textContent||"").trim().toUpperCase()!=="START")return;
+    const m=(btn.getAttribute("onclick")||"").match(/startRide\(([^)]+)\)/);
+    pendingRestartId=m?m[1]:null;
+  },true);
+
+  /* Teprve potvrzení ANO ve START dialogu znamená nový skutečný rozvoz.
+     V tom okamžiku vyčistíme stará historická měření této vrácené jízdy. */
+  const startYes=document.getElementById("startYes");
+  if(startYes)startYes.addEventListener("click",()=>{
+    if(pendingRestartId==null)return;
+    const r=liveRides().find(x=>String(x.id)===String(pendingRestartId));
+    if(r&&r._returnedFromCompleted){
+      delete r.actualDurations;
+      delete r.actualStartedAt;
+      delete r.actualEndedAt;
+      delete r.runDurations;
+      delete r.durations;
+      delete r._returnedFromCompleted;
+      persistLive();
+    }
+    pendingRestartId=null;
+  },true);
+})();
+</script>
+
+
+
+<div id="v48Stats" aria-hidden="true">
+ <div class="v48-wrap">
+  <div class="v48-head"><button class="v48-back" id="v48StatsBack" type="button">←</button><div class="v48-title">Statistiky</div></div>
+  <section class="v48-period-card">
+   <div class="v48-period-nav"><button id="v48Prev" type="button">‹</button><div class="v48-period-label" id="v48PeriodLabel"></div><button id="v48Next" type="button">›</button></div>
+   <div class="v48-tabs"><button class="v48-tab" data-mode="week">TÝDEN</button><button class="v48-tab active" data-mode="month">MĚSÍC</button><button class="v48-tab" data-mode="year">ROK</button></div>
+   <div class="v48-current-wrap"><button class="v48-current" id="v48Current" type="button" hidden>↩ AKTUÁLNÍ OBDOBÍ</button></div>
+  </section>
+  <div class="v48-kpis"><div class="v48-kpi"><small>NAJETO</small><strong id="v48Km">0 km</strong><span id="v48KmSub">tento měsíc</span></div><div class="v48-kpi"><small>JÍZDY</small><strong id="v48Trips">0</strong><span>splněných</span></div><div class="v48-kpi"><small>ČAS NA CESTĚ</small><strong id="v48Travel">0 min</strong><span>tam + zpět</span></div></div>
+  <section class="v48-panel"><div class="v48-panel-title">NAJETÉ KILOMETRY</div><div class="v48-sub" id="v48ChartSub"></div><div class="v49-chart-layout"><div class="v49-yaxis"><div class="v49-yaxis-inner" id="v49YAxis"></div></div><div class="v49-chart-scroll"><div class="v48-chart" id="v48Chart"></div></div></div><div class="v48-chart-detail" id="v48ChartDetail">Klepni na sloupec pro detail.</div></section>
+  <section class="v48-panel"><div class="v48-panel-title">PRŮMĚRNÁ DOBA NAKLÁDKY</div><div class="v48-sub">TRM zahrnuje TRM + TRMS · TRV zahrnuje TRV + TRVS</div><div class="v48-three" id="v48Loading"></div></section>
+  <section class="v48-panel"><div class="v48-panel-title">PRŮMĚRNÁ DOBA VYKLÁDKY</div><div class="v48-sub">Skládání se rozlišuje podle varianty soupravy.</div><div id="v48Unloading"></div></section>
+  <section class="v48-panel v48-precision"><div class="v48-panel-title">PŘESNOST PLÁNOVÁNÍ</div><div class="v48-sub">Statistika horní části odpovídá právě zvolenému období.</div><div id="v48Precision"></div><div class="v48-reserve-title">DOPORUČENÁ REZERVA</div><div class="v48-reserves" id="v48Reserves"></div><div class="v48-note">Rezerva se počítá z maximálně posledních 20 relevantních splněných jízd. Při méně než 5 jízdách se zatím nedoporučuje.</div></section>
+  <section class="v48-panel" id="v48TopPanel"><div class="v48-panel-title">TOP DEN MĚSÍCE</div><div id="v48Top"></div></section>
+ </div>
+</div>
+
+<!-- v47: oprava Cena s DPH v aktivní Platbě; obrázky souprav v START; Splněné INFO = skutečný průběh místo Plánu rozvozu. -->
+
+<script id="v48StatsJs">
+(()=>{
+ const $=id=>document.getElementById(id),root=$('v48Stats'),btn=$('statsToolBtn'); if(!root||!btn)return;
+ let mode='month',anchor=new Date(); anchor.setHours(12,0,0,0);
+ const rides=()=>{try{return window.rides||window.eval('rides')||[]}catch(e){return []}};
+ const actual=(r,k)=>Number(r.actualDurations?.[k]||r.durations?.[k]||r.runDurations?.[k]||0);
+ const totalActual=r=>['loading','outbound','unloading','payment','return'].reduce((s,k)=>s+actual(r,k),0);
+ const travelActual=r=>actual(r,'outbound')+actual(r,'return');
+ const completed=()=>rides().filter(r=>r.status==='completed'&&r.date);
+ const dateOf=r=>{const d=new Date(String(r.date)+'T12:00:00');return Number.isNaN(+d)?null:d};
+ const dayStart=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate(),0,0,0,0);
+ const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+ const monday=d=>{const x=dayStart(d),w=(x.getDay()+6)%7;return addDays(x,-w)};
+ function bounds(){
+  if(mode==='week'){const s=monday(anchor);return [s,addDays(s,7)]}
+  if(mode==='year'){const s=new Date(anchor.getFullYear(),0,1);return [s,new Date(anchor.getFullYear()+1,0,1)]}
+  const s=new Date(anchor.getFullYear(),anchor.getMonth(),1);return [s,new Date(anchor.getFullYear(),anchor.getMonth()+1,1)];
+ }
+ const inPeriod=r=>{const d=dateOf(r);if(!d)return false;const [s,e]=bounds();return d>=s&&d<e};
+ const periodRides=()=>completed().filter(inPeriod);
+ const fmtDate=d=>new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'long',year:'numeric'}).format(d);
+ const fmtShort=d=>new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'numeric'}).format(d);
+ const fmtMin=mins=>{mins=Math.max(0,Math.round(mins||0));const h=Math.floor(mins/60),m=mins%60;return h?(m?`${h} h ${m} min`:`${h} h`):`${m} min`};
+ const fmtMs=ms=>ms?fmtMin(ms/60000):'—';
+ const avg=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:0;
+ const category=v=>String(v||'').startsWith('TRV')?'TRV':String(v||'').startsWith('TRM')?'TRM':'AK';
+ const kmOf=r=>Number(r.km||0); /* Zachovává stejný údaj km, který aplikace už používá v INFO/Archivu. */
+ function periodLabel(){const [s,e]=bounds();if(mode==='week')return `${fmtShort(s)} – ${fmtDate(addDays(e,-1))}`;if(mode==='year')return String(anchor.getFullYear());return new Intl.DateTimeFormat('cs-CZ',{month:'long',year:'numeric'}).format(anchor).replace(/^./,c=>c.toUpperCase())}
+ function isCurrent(){const n=new Date(),save=anchor; if(mode==='year')return save.getFullYear()===n.getFullYear();if(mode==='month')return save.getFullYear()===n.getFullYear()&&save.getMonth()===n.getMonth();return +monday(save)===+monday(n)}
+ function buckets(){
+  const [s,e]=bounds(),out=[];
+  if(mode==='year'){for(let m=0;m<12;m++){const a=new Date(anchor.getFullYear(),m,1),b=new Date(anchor.getFullYear(),m+1,1);out.push({start:a,end:b,label:new Intl.DateTimeFormat('cs-CZ',{month:'short'}).format(a),detail:new Intl.DateTimeFormat('cs-CZ',{month:'long',year:'numeric'}).format(a)})}return out}
+  for(let d=new Date(s);d<e;d=addDays(d,1)){const a=new Date(d),b=addDays(a,1);out.push({start:a,end:b,label:mode==='week'?new Intl.DateTimeFormat('cs-CZ',{weekday:'short'}).format(a):String(a.getDate()),detail:fmtDate(a)})}return out;
+ }
+ function niceScale(value){
+  const v=Math.max(1,Number(value)||0),rough=v/4,pow=Math.pow(10,Math.floor(Math.log10(rough))),n=rough/pow;
+  const nice=n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10,step=nice*pow,max=Math.ceil(v/step)*step;
+  return {max,step,ticks:[0,1,2,3,4].map(i=>Math.min(max,i*max/4))};
+ }
+ function renderChart(rs){
+  const bs=buckets().map(b=>{const rr=rs.filter(r=>{const d=dateOf(r);return d>=b.start&&d<b.end});return {...b,km:rr.reduce((s,r)=>s+kmOf(r),0),count:rr.length}}),rawMax=Math.max(0,...bs.map(b=>b.km)),scale=niceScale(rawMax),max=scale.max;
+  const ticks=[0,max/4,max/2,max*3/4,max];
+  $('v49YAxis').innerHTML='<span class="v49-y-unit">km</span>'+ticks.map((t,i)=>`<span class="v49-y-tick" style="bottom:${i*25}%">${Math.round(t*10)/10}</span>`).join('');
+  const grid=`<div class="v49-grid">${ticks.map((t,i)=>`<div class="v49-grid-line" style="bottom:${i*25}%"></div>`).join('')}</div>`;
+  $('v48Chart').innerHTML=grid+bs.map((b,i)=>`<div class="v48-bar-col" data-i="${i}" title="${b.detail}"><div class="v48-bar-value">${b.km?Math.round(b.km*10)/10:''}</div><div class="v48-bar-track"><div class="v48-bar" style="height:${Math.max(b.km?3:1,(b.km/max)*100)}%"></div></div><div class="v48-bar-label">${b.label}</div></div>`).join('');
+  $('v48ChartDetail').textContent='Klepni na sloupec pro detail.';$('v48Chart').querySelectorAll('.v48-bar-col').forEach(el=>el.onclick=()=>{const b=bs[+el.dataset.i];$('v48Chart').querySelectorAll('.active').forEach(x=>x.classList.remove('active'));el.classList.add('active');$('v48ChartDetail').textContent=`${b.detail} · ${b.km.toLocaleString('cs-CZ',{maximumFractionDigits:1})} km · ${b.count} ${b.count===1?'splněná jízda':b.count>=2&&b.count<=4?'splněné jízdy':'splněných jízd'}`});
+ }
+ function avgCard(cat,values){return `<div class="v48-avg"><b>${cat}</b><strong>${values.length?fmtMs(avg(values)):'—'}</strong><small>${values.length?`${values.length} ${values.length===1?'jízda':values.length<5?'jízdy':'jízd'}`:'bez dat'}</small></div>`}
+ function renderLoading(rs){$('v48Loading').innerHTML=['AK','TRM','TRV'].map(c=>avgCard(c,rs.filter(r=>category(r.vehicle)===c&&actual(r,'loading')>0).map(r=>actual(r,'loading')))).join('')}
+ function cell(rs){const vals=rs.filter(r=>actual(r,'unloading')>0).map(r=>actual(r,'unloading'));return `<strong>${vals.length?fmtMs(avg(vals)):'—'}</strong><small>${vals.length?`${vals.length} ${vals.length===1?'jízda':vals.length<5?'jízdy':'jízd'}`:'bez dat'}</small>`}
+ function renderUnloading(rs){const ak=rs.filter(r=>r.vehicle==='AK'),trm=rs.filter(r=>r.vehicle==='TRM'),trms=rs.filter(r=>r.vehicle==='TRMS'),trv=rs.filter(r=>r.vehicle==='TRV'),trvs=rs.filter(r=>r.vehicle==='TRVS');$('v48Unloading').innerHTML=`<table class="v48-table"><thead><tr><th>Souprava</th><th>Bez skládání</th><th>Se skládáním</th></tr></thead><tbody><tr><td>AK</td><td>${cell(ak)}</td><td class="v48-na"><strong>—</strong><small>není možné</small></td></tr><tr><td>TRM</td><td>${cell(trm)}</td><td>${cell(trms)}</td></tr><tr><td>TRV</td><td>${cell(trv)}</td><td>${cell(trvs)}</td></tr></tbody></table>`}
+ function validPlanRows(rs){return rs.map(r=>({r,plan:Number(r.estimatedMinutes||0),real:totalActual(r)/60000})).filter(x=>x.plan>0&&x.real>0)}
+ function renderPrecision(rs){const p=validPlanRows(rs),pa=avg(p.map(x=>x.plan)),ra=avg(p.map(x=>x.real)),dev=avg(p.map(x=>x.real-x.plan));$('v48Precision').innerHTML=p.length?`<div class="v48-data-row"><span>Průměrný plán</span><strong>${fmtMin(pa)}</strong></div><div class="v48-data-row"><span>Průměrná skutečnost</span><strong>${fmtMin(ra)}</strong></div><div class="v48-data-row"><span>Průměrná odchylka</span><strong>${dev>=0?'+':''}${fmtMin(Math.abs(dev))}${dev<0?' dříve':''}</strong></div><div class="v48-note">Vypočteno z ${p.length} dokončených jízd s dostupným plánem a skutečným průběhem.</div>`:'<div class="v48-empty">V tomto období zatím nejsou dokončené jízdy s plánem i skutečným průběhem.</div>'}
+ function cleanDeviations(vals){if(vals.length<5)return vals;const a=[...vals].sort((x,y)=>x-y),q=p=>{const i=(a.length-1)*p,l=Math.floor(i),h=Math.ceil(i);return a[l]+(a[h]-a[l])*(i-l)},q1=q(.25),q3=q(.75),iqr=q3-q1,lo=q1-1.5*iqr,hi=q3+1.5*iqr;return vals.filter(v=>v>=lo&&v<=hi)}
+ function reserveFor(cat){let arr=completed().filter(r=>category(r.vehicle)===cat).map(r=>({r,d:dateOf(r),plan:Number(r.estimatedMinutes||0),real:totalActual(r)/60000})).filter(x=>x.plan>0&&x.real>0).sort((a,b)=>b.d-a.d).slice(0,20);let dev=cleanDeviations(arr.map(x=>Math.max(0,x.real-x.plan)));if(dev.length<5)return {n:dev.length,val:null};dev.sort((a,b)=>a-b);const idx=Math.min(dev.length-1,Math.ceil(.85*dev.length)-1),raw=dev[idx],rounded=Math.ceil(raw/5)*5;return {n:dev.length,val:rounded}}
+ function renderReserves(){ $('v48Reserves').innerHTML=['AK','TRM','TRV'].map(c=>{const x=reserveFor(c);return `<div class="v48-reserve"><b>${c}</b><strong>${x.val==null?'—':`+${x.val} min`}</strong><small>${x.val==null?`${x.n}/5 jízd – málo dat`:`z ${x.n} relevantních jízd`}</small></div>`}).join('') }
+ function renderTop(rs){const p=$('v48TopPanel');p.style.display=mode==='month'?'block':'none';if(mode!=='month')return;const days=buckets().map(b=>{const rr=rs.filter(r=>{const d=dateOf(r);return d>=b.start&&d<b.end});return {...b,km:rr.reduce((s,r)=>s+kmOf(r),0),count:rr.length}}).sort((a,b)=>b.km-a.km);const t=days[0];$('v48Top').innerHTML=t&&t.km>0?`<div class="v48-top"><div class="v48-trophy">🏆</div><div><div class="v48-top-date">${t.detail}</div><div class="v48-top-km">${t.km.toLocaleString('cs-CZ',{maximumFractionDigits:1})} km</div><div class="v48-sub" style="margin:1px 0 0">${t.count} ${t.count===1?'splněná jízda':t.count<5?'splněné jízdy':'splněných jízd'}</div></div></div>`:'<div class="v48-empty">V tomto měsíci zatím není žádná splněná jízda s kilometry.</div>'}
+ function render(){const rs=periodRides(),km=rs.reduce((s,r)=>s+kmOf(r),0),travel=rs.reduce((s,r)=>s+travelActual(r),0);$('v48PeriodLabel').textContent=periodLabel();document.querySelectorAll('.v48-tab').forEach(x=>x.classList.toggle('active',x.dataset.mode===mode));$('v48Current').hidden=isCurrent();$('v48Km').textContent=km.toLocaleString('cs-CZ',{maximumFractionDigits:1})+' km';$('v48Trips').textContent=rs.length;$('v48Travel').textContent=travel?fmtMs(travel):'0 min';$('v48KmSub').textContent=mode==='week'?'tento týden':mode==='year'?'tento rok':'tento měsíc';$('v48ChartSub').textContent=mode==='week'?'Kilometry po jednotlivých dnech týdne.':mode==='year'?'Kilometry po jednotlivých měsících roku.':'Kilometry po jednotlivých dnech měsíce.';renderChart(rs);renderLoading(rs);renderUnloading(rs);renderPrecision(rs);renderReserves();renderTop(rs)}
+ function open(){anchor=new Date();anchor.setHours(12,0,0,0);mode='month';render();root.classList.add('open');root.setAttribute('aria-hidden','false');root.scrollTop=0;document.body.style.overflow='hidden'}
+ function close(){root.classList.remove('open');root.setAttribute('aria-hidden','true');document.body.style.overflow=''}
+ btn.addEventListener('click',open);$('v48StatsBack').onclick=close;document.querySelectorAll('.v48-tab').forEach(x=>x.onclick=()=>{mode=x.dataset.mode;anchor=new Date();anchor.setHours(12,0,0,0);render()});$('v48Prev').onclick=()=>{if(mode==='week')anchor=addDays(anchor,-7);else if(mode==='month')anchor=new Date(anchor.getFullYear(),anchor.getMonth()-1,15,12);else anchor=new Date(anchor.getFullYear()-1,0,15,12);render()};$('v48Next').onclick=()=>{if(mode==='week')anchor=addDays(anchor,7);else if(mode==='month')anchor=new Date(anchor.getFullYear(),anchor.getMonth()+1,15,12);else anchor=new Date(anchor.getFullYear()+1,0,15,12);render()};$('v48Current').onclick=()=>{anchor=new Date();anchor.setHours(12,0,0,0);render()};
+})();
+</script>
+
+<!-- v50: Statistiky – jednotka km přesunuta nad svislou stupnici, aby se nepřekrývala s horní hodnotou. -->
 </body>
 </html>
