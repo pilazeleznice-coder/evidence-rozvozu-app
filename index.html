@@ -7322,10 +7322,10 @@ body:has(#timelinePage.v53-timeline.open) .tool-panel .add-btn{width:46px!import
  const rs=visible().map(r=>({r,start:mins(dtime(r)),end:mins(dtime(r))+duration(r)})).sort((a,b)=>a.start-b.start),br=draft.break&&mins(draft.break.end)>mins(draft.break.start)?{start:mins(draft.break.start),end:mins(draft.break.end)}:null;const conflicts=new Set();let conflictText=[];const its=[...rs.map(x=>({...x,kind:'r'})),...(br?[{...br,kind:'b'}]:[])].sort((a,b)=>a.start-b.start);for(let i=0;i<its.length;i++)for(let j=i+1;j<its.length&&its[j].start<its[i].end;j++){const ov=Math.min(its[i].end,its[j].end)-Math.max(its[i].start,its[j].start);if(ov>0){if(its[i].r)conflicts.add(String(its[i].r.id));if(its[j].r)conflicts.add(String(its[j].r.id));conflictText.push(`Překryv ${ov} min`)}}const cn=$('.v53-conflict-note');cn.classList.toggle('show',!!conflictText.length);cn.textContent=conflictText.length?'⚠ '+[...new Set(conflictText)].join(' • '):'';
  if(!rs.length){const e=document.createElement('div');e.className='v53-empty';e.textContent='Pro tento den zatím nejsou naplánované žádné jízdy.';grid.appendChild(e)}rs.forEach(x=>{const r=x.r,id=String(r.id),el=document.createElement('div');el.className='v53-event'+(draft.unlocked.has(id)?' unlocked':'')+(selected.includes(id)?' selected':'')+(conflicts.has(id)?' conflict':'')+(merged(r)?' merged':'');el.dataset.id=id;el.style.top=x.start/1440*100+'%';el.style.height=Math.max(30,duration(r)/1440*grid.clientHeight)+'px';const names=merged(r)?(r.stops||[]).filter(s=>!s.skipped).map(s=>s.name):[r.name||'Bez jména'];el.innerHTML=`<div class="v53-evtop"><span class="v53-time">${hhmm(x.start)}–${hhmm(x.end)}</span><button class="v53-lock" title="${draft.unlocked.has(id)?'Zamknout':'Odemknout pro přesun'}">${lockIcon(draft.unlocked.has(id))}</button></div><div class="v53-name">${names.join(' → ')}</div><div class="v53-meta"><span class="v53-code">${r.vehicle||''}</span>${r.address||''} • ${durationLabel(r)}</div>${merged(r)?`<div class="v53-merged-stops">🔗 SLOUČENÝ ROZVOZ • ${names.length} zastávky</div>`:''}`;grid.appendChild(el);bindEvent(el,r)});
  if(br){const el=document.createElement('div'),u=draft.unlocked.has('__break');el.className='v53-break'+(u?' unlocked':'');el.dataset.id='__break';el.style.top=br.start/1440*100+'%';el.style.height=Math.max(30,(br.end-br.start)/1440*grid.clientHeight)+'px';el.innerHTML=`<div class="v53-breakrow">🍴 POLEDNÍ PAUZA&nbsp; ${draft.break.start}–${draft.break.end}<button class="v53-lock">${lockIcon(u)}</button></div>`;grid.appendChild(el);bindBreak(el)}const now=new Date();if(key(now)===key(td)){const n=now.getHours()*60+now.getMinutes(),l=document.createElement('div');l.className='v53-now';l.style.top=n/1440*100+'%';l.innerHTML=`<span>TEĎ ${hhmm(n)}</span>`;grid.appendChild(l)}renderUntimed();updateSelect()}
- function renderUntimed(){const box=$('.v64-untimed'),list=$('.v64-untimed-list'),rs=untimed();if(!box||!list)return;box.classList.toggle('empty',!rs.length);if(!rs.length){list.innerHTML='<div class="v64-untimed-empty">Všechny jízdy mají přiřazený čas.</div>';return}list.innerHTML='';rs.forEach(r=>{const id=String(r.id),u=draft.unlocked.has(id),el=document.createElement('div');el.className='v64-untimed-card'+(u?' unlocked':'');el.dataset.id=id;el.innerHTML=`<div class="v64-u-main"><div class="v64-u-top"><strong>${r.name||'Bez jména'}</strong><button class="v53-lock" title="${u?'Zamknout':'Odemknout pro přesun'}">${lockIcon(u)}</button></div><div class="v64-u-meta"><span class="v53-code">${r.vehicle||''}</span>${r.address||''}</div><div class="v64-u-duration">${durationLabel(r)}</div></div>`;list.appendChild(el);el.querySelector('.v53-lock').onclick=e=>{e.stopPropagation();toggleLock(id)};el.addEventListener('pointerdown',e=>{if(e.target.closest('.v53-lock')||!draft.unlocked.has(id))return;beginUntimedDrag(e,el,r)});el.onclick=e=>{if(e.target.closest('.v53-lock')||drag)return;if(!draft.unlocked.has(id)){neo.classList.remove('open');window.showInfo?.(r.id)}}})}
+ function renderUntimed(){const box=$('.v64-untimed'),list=$('.v64-untimed-list'),rs=untimed();if(!box||!list)return;box.classList.toggle('empty',!rs.length);if(!rs.length){list.innerHTML='<div class="v64-untimed-empty">Všechny jízdy mají přiřazený čas.</div>';return}list.innerHTML='';rs.forEach(r=>{const id=String(r.id),u=draft.unlocked.has(id),el=document.createElement('div');el.className='v64-untimed-card'+(u?' unlocked':'');el.dataset.id=id;el.innerHTML=`<div class="v64-u-main"><div class="v64-u-top"><strong>${r.name||'Bez jména'}</strong><button class="v53-lock" title="${u?'Zamknout':'Odemknout pro přesun'}">${lockIcon(u)}</button></div><div class="v64-u-meta"><span class="v53-code">${r.vehicle||''}</span>${r.address||''}</div><div class="v64-u-duration">${durationLabel(r)}</div></div>`;list.appendChild(el);el.querySelector('.v53-lock').onclick=e=>{e.stopPropagation();toggleLock(id)};el.addEventListener('pointerdown',e=>{if(e.target.closest('.v53-lock')||!draft.unlocked.has(id))return;beginUntimedDrag(e,el,r)});el.onclick=e=>{if(e.target.closest('.v53-lock')||drag)return;if(!draft.unlocked.has(id)){window.showInfo?.(r.id)}}})}
  function beginUntimedDrag(e,el,r){e.preventDefault();const id=String(r.id),dur=duration(r);drag={id,dur,untimed:true,moved:false};el.setPointerCapture?.(e.pointerId);el.classList.add('dragging');const tag=$('.v53-dragtime');const mv=ev=>{if(!drag)return;drag.moved=true;tag.style.display='block';tag.style.left=Math.min(innerWidth-130,ev.clientX+12)+'px';tag.style.top=Math.max(8,ev.clientY-34)+'px';const rect=grid.getBoundingClientRect();if(ev.clientY>=rect.top&&ev.clientY<=rect.bottom){let m=Math.round(((ev.clientY-rect.top)/rect.height*1440)/5)*5;m=Math.max(0,Math.min(1440-dur,m));drag.newMin=m;tag.textContent='NOVÝ ČAS '+hhmm(m)}else{delete drag.newMin;tag.textContent='PŘETÁHNĚTE NA ČASOVOU OSU'}};const up=()=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);el.classList.remove('dragging');tag.style.display='none';if(drag&&Number.isFinite(drag.newMin)){draft.times[id]=hhmm(drag.newMin);setDirty()}drag=null;render()};el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)}
  function toggleLock(id){draft.unlocked.has(id)?draft.unlocked.delete(id):draft.unlocked.add(id);render()}
- function bindEvent(el,r){const id=String(r.id),lock=el.querySelector('.v53-lock');lock.onclick=e=>{e.stopPropagation();toggleLock(id)};el.addEventListener('pointerdown',e=>{if(e.target.closest('.v53-lock'))return;if(draft.unlocked.has(id)){beginDrag(e,el,id,duration(r));return}longTimer=setTimeout(()=>{longTimer=null;if(!selected.includes(id))selected.push(id);render()},550)});el.addEventListener('pointerup',e=>{if(longTimer){clearTimeout(longTimer);longTimer=null;if(selected.length){const i=selected.indexOf(id);i>=0?selected.splice(i,1):selected.length<4&&selected.push(id);render()}else{neo.classList.remove('open');window.showInfo?.(r.id)}}});el.addEventListener('pointercancel',()=>{if(longTimer){clearTimeout(longTimer);longTimer=null}})}
+ function bindEvent(el,r){const id=String(r.id),lock=el.querySelector('.v53-lock');lock.onclick=e=>{e.stopPropagation();toggleLock(id)};el.addEventListener('pointerdown',e=>{if(e.target.closest('.v53-lock'))return;if(draft.unlocked.has(id)){beginDrag(e,el,id,duration(r));return}longTimer=setTimeout(()=>{longTimer=null;if(!selected.includes(id))selected.push(id);render()},550)});el.addEventListener('pointerup',e=>{if(longTimer){clearTimeout(longTimer);longTimer=null;if(selected.length){const i=selected.indexOf(id);i>=0?selected.splice(i,1):selected.length<4&&selected.push(id);render()}else{window.showInfo?.(r.id)}}});el.addEventListener('pointercancel',()=>{if(longTimer){clearTimeout(longTimer);longTimer=null}})}
  function beginDrag(e,el,id,dur){e.preventDefault();drag={id,dur,startY:e.clientY,startMin:mins(id==='__break'?draft.break.start:dtime(all().find(r=>String(r.id)===id))),moved:false};el.setPointerCapture?.(e.pointerId);const mv=ev=>{if(!drag)return;const delta=(ev.clientY-drag.startY)/grid.clientHeight*1440;let m=Math.round((drag.startMin+delta)/5)*5;m=Math.max(0,Math.min(1440-drag.dur,m));drag.newMin=m;drag.moved=true;el.style.top=m/1440*100+'%';const tag=$('.v53-dragtime');tag.style.display='block';tag.style.left=Math.min(innerWidth-115,ev.clientX+12)+'px';tag.style.top=Math.max(8,ev.clientY-34)+'px';tag.textContent='NOVÝ ČAS '+hhmm(m)};const up=()=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);$('.v53-dragtime').style.display='none';if(drag?.moved){if(id==='__break'){draft.break={start:hhmm(drag.newMin),end:hhmm(drag.newMin+dur)}}else draft.times[id]=hhmm(drag.newMin);setDirty()}drag=null;render()};el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)}
  function bindBreak(el){el.querySelector('.v53-lock').onclick=e=>{e.stopPropagation();toggleLock('__break')};el.onpointerdown=e=>{if(e.target.closest('.v53-lock'))return;if(draft.unlocked.has('__break'))beginDrag(e,el,'__break',mins(draft.break.end)-mins(draft.break.start))}}
  function updateSelect(){const bar=$('.v53-select');bar.classList.toggle('show',selected.length>0);bar.querySelector('strong').textContent=`Vybráno ${selected.length}/4`;bar.querySelector('.merge').textContent=`SLOUČIT ${selected.length} JÍZD`;bar.querySelector('.merge').disabled=selected.length<2}
@@ -7472,6 +7472,206 @@ body:has(#timelinePage.v53-timeline.open) .tool-panel .add-btn{width:46px!import
 <!-- v67: Výběr dokumentů je záměrně nativní. Hlavní upload karta je label
      pro #fDocuments a dynamické INFO uploady už vlastní label s vloženým
      inputem mají. Žádný globální capture listener kliknutí neblokuje. -->
+
+
+<style id="v68-stage1-mobile-ui">
+:root{
+  --app-safe-top:env(safe-area-inset-top,0px);
+  --app-safe-right:env(safe-area-inset-right,0px);
+  --app-safe-bottom:env(safe-area-inset-bottom,0px);
+  --app-safe-left:env(safe-area-inset-left,0px);
+}
+html{background:#f4f7f2}
+body{min-height:100dvh}
+.app{
+  padding-top:calc(14px + var(--app-safe-top))!important;
+  padding-right:calc(12px + var(--app-safe-right))!important;
+  padding-bottom:calc(96px + var(--app-safe-bottom))!important;
+  padding-left:calc(12px + var(--app-safe-left))!important;
+}
+.tool-panel .add-btn{
+  right:max(calc(16px + var(--app-safe-right)),calc((100vw - 620px)/2 + 16px))!important;
+  bottom:calc(18px + var(--app-safe-bottom))!important;
+}
+.run-bar,.v51-select-bar{bottom:calc(14px + var(--app-safe-bottom))!important}
+.modal,.v40-overlay:not(#v40Archive):not(#v40Drafts),.v38-confirm-overlay,.v51-modal,.v52-dialog,.start-confirm-overlay{
+  padding-top:calc(12px + var(--app-safe-top))!important;
+  padding-right:calc(12px + var(--app-safe-right))!important;
+  padding-bottom:calc(12px + var(--app-safe-bottom))!important;
+  padding-left:calc(12px + var(--app-safe-left))!important;
+}
+.modal .sheet,.v51-sheet,.calbox{
+  max-height:calc(100dvh - var(--app-safe-top) - var(--app-safe-bottom) - 24px)!important;
+}
+.calbox{position:relative!important;padding-bottom:calc(16px + var(--app-safe-bottom))!important}
+.v51-sheet{padding-bottom:calc(15px + var(--app-safe-bottom))!important;position:relative}
+.v51-actions{padding-bottom:2px}
+#activeRun .run-head,#v51MergedRun .v51-run-head{
+  padding-top:calc(13px + var(--app-safe-top))!important;
+  padding-right:calc(14px + var(--app-safe-right))!important;
+  padding-left:calc(14px + var(--app-safe-left))!important;
+}
+#activeRun .run-body,#v51MergedRun .v51-run-body{
+  padding-right:calc(12px + var(--app-safe-right))!important;
+  padding-bottom:calc(12px + var(--app-safe-bottom))!important;
+  padding-left:calc(12px + var(--app-safe-left))!important;
+}
+#activeRun .run-controls,#v51MergedRun .v51-run-controls{
+  padding-bottom:calc(10px + var(--app-safe-bottom))!important;
+}
+#timelinePage.v53-timeline .timeline-top{
+  padding-top:calc(12px + var(--app-safe-top))!important;
+  padding-right:calc(14px + var(--app-safe-right))!important;
+  padding-left:calc(14px + var(--app-safe-left))!important;
+}
+#timelinePage.v53-timeline .timeline-shell{padding-bottom:var(--app-safe-bottom)}
+#v48Stats .v48-wrap{
+  padding-top:calc(18px + var(--app-safe-top))!important;
+  padding-right:calc(18px + var(--app-safe-right))!important;
+  padding-bottom:calc(50px + var(--app-safe-bottom))!important;
+  padding-left:calc(18px + var(--app-safe-left))!important;
+}
+#v40Archive .v43-archive-head,.v40-head,.v38-trash-head{
+  padding-top:calc(14px + var(--app-safe-top))!important;
+  padding-right:calc(15px + var(--app-safe-right))!important;
+  padding-left:calc(15px + var(--app-safe-left))!important;
+}
+.v38-trash-footer{padding-bottom:calc(12px + var(--app-safe-bottom))!important}
+
+
+/* Jediný vzhled zavíracího křížku pro velká okna a stránky. */
+.v68-close{
+  width:38px!important;height:38px!important;min-width:38px!important;flex:0 0 38px!important;
+  display:grid!important;place-items:center!important;margin:0!important;padding:0!important;
+  border:1px solid #efb7b3!important;border-radius:11px!important;
+  background:#fff1f0!important;color:#b3261e!important;
+  box-shadow:0 2px 7px rgba(120,25,20,.08)!important;
+  font:900 25px/1 Arial,sans-serif!important;cursor:pointer!important;
+}
+.v68-close:hover,.v68-close:active{background:#ffe5e3!important;border-color:#e99993!important}
+.v68-sheet-close{position:absolute!important;right:13px!important;top:12px!important;z-index:60!important}
+.modal .sheet{position:relative}
+#detailModal .sheet>h2,#calendarModal .sheet .calendar-head{padding-right:52px}
+#detailModal #closeDetail,#calendarModal #closeCalendar{display:none!important}
+#calendarOverlay #calClose{display:none!important}
+#calendarOverlay .calTop{padding-right:52px}
+#timelinePage .v53-headrow{align-items:flex-start}
+#timelinePage .v53-title{order:1;padding-top:3px}
+#timelinePage .v53-back{order:2;margin-left:auto!important}
+#v48Stats .v48-head{align-items:flex-start}
+#v48Stats .v48-title{order:1;padding-top:6px}
+#v48Stats .v48-back{order:2;margin-left:auto!important}
+#formModal .v40-sheet-close{top:12px!important}
+.v51-sheet>.v68-close{top:12px!important}
+.v51-sheet>h2{padding-right:52px}
+
+
+/* File inputy zůstávají skutečnými prvky, otevírá je ale jeden cílený mechanismus. */
+#uploadCard{user-select:none;-webkit-tap-highlight-color:transparent}
+#uploadCard #fDocuments{pointer-events:none!important}
+.v51-info-upload{position:relative}
+.v51-info-upload label{user-select:none;-webkit-tap-highlight-color:transparent}
+.v51-info-upload input[type=file]{
+  display:block!important;position:fixed!important;left:-10000px!important;top:0!important;
+  width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;
+}
+@media(max-width:620px){
+  .app{padding-top:calc(10px + var(--app-safe-top))!important;padding-right:calc(8px + var(--app-safe-right))!important;padding-left:calc(8px + var(--app-safe-left))!important}
+  #v48Stats .v48-wrap{padding-top:calc(12px + var(--app-safe-top))!important;padding-right:calc(10px + var(--app-safe-right))!important;padding-left:calc(10px + var(--app-safe-left))!important}
+}
+</style>
+
+
+<script id="v68-stage1-mobile-ui-js">
+(function(){
+  const byId=id=>document.getElementById(id);
+
+
+  function makeClose(target,onClose,extraClass=''){
+    if(!target||target.querySelector(':scope > .v68-close'))return null;
+    const b=document.createElement('button');
+    b.type='button';b.className='v68-close '+extraClass;b.setAttribute('aria-label','Zavřít');b.title='Zavřít';b.textContent='×';
+    b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();onClose?.()});
+    target.appendChild(b);return b;
+  }
+  function click(id){byId(id)?.click()}
+
+
+  /* Existující ovládací prvky dostanou jednotný vzhled, jejich bezpečná logika zůstává. */
+  const existing=[
+    ['v40FormClose','v68-sheet-close'],['v38TrashClose',''],['v40DraftClose',''],
+    ['v40ArchiveClose',''],['v51RunClose',''],['runMinimize','']
+  ];
+  existing.forEach(([id,extra])=>{const b=byId(id);if(b){b.classList.add('v68-close');if(extra)b.classList.add(extra);b.textContent='×';b.setAttribute('aria-label','Zavřít')}});
+
+
+  const detailSheet=byId('detailModal')?.querySelector('.sheet');
+  makeClose(detailSheet,()=>{
+    const archiveBack=byId('detailModal')?.querySelector('.v43-archive-back');
+    if(byId('detailModal')?.classList.contains('v43-archive-info')&&archiveBack)return archiveBack.click();
+    click('closeDetail');
+  },'v68-sheet-close');
+  makeClose(byId('calendarModal')?.querySelector('.sheet'),()=>click('closeCalendar'),'v68-sheet-close');
+  makeClose(byId('calendarOverlay')?.querySelector('.calbox'),()=>click('calClose'),'v68-sheet-close');
+
+
+  const timelineClose=byId('timelinePage')?.querySelector('.v53-back');
+  if(timelineClose){timelineClose.classList.add('v68-close');timelineClose.textContent='×';timelineClose.title='Zavřít Timeline';timelineClose.setAttribute('aria-label','Zavřít Timeline')}
+  const statsClose=byId('v48StatsBack');
+  if(statsClose){statsClose.classList.add('v68-close');statsClose.textContent='×';statsClose.title='Zavřít Statistiky';statsClose.setAttribute('aria-label','Zavřít Statistiky')}
+
+
+  /* Velké sloučené obrazovky: křížek volá jejich původní Zpět/Zavřít. */
+  [
+    ['v51MergeModal','v51MergeCancel'],['v52EditMergedModal','v52EditCancel'],
+    ['v52TrashMergedModal','v52TrashCancel'],['v52ReorderModal','v52ReorderCancel'],
+    ['v52SuggestionsModal','v52SuggestionsClose'],['v51CalendarPick','v51CalendarPickClose']
+  ].forEach(([modalId,closeId])=>makeClose(byId(modalId)?.querySelector('.v51-sheet'),()=>click(closeId),'v68-sheet-close'));
+
+
+  function openFilePicker(input){
+    if(!input||input.disabled)return;
+    try{
+      if(typeof input.showPicker==='function'){input.showPicker();return}
+    }catch(e){}
+    try{input.click()}catch(e){window.v52Alert?.('Systémový výběr dokumentu se nepodařilo otevřít.')}
+  }
+  function bindPicker(trigger,input){
+    if(!trigger||!input||trigger.dataset.v68Picker==='1')return;
+    trigger.dataset.v68Picker='1';
+    if(trigger.tagName==='LABEL')trigger.removeAttribute('for');
+    trigger.addEventListener('click',function(e){
+      if(e.target===input)return;
+      e.preventDefault();e.stopPropagation();openFilePicker(input);
+    });
+  }
+  bindPicker(byId('uploadCard'),byId('fDocuments'));
+  function bindInfoPickers(){
+    document.querySelectorAll('.v51-info-upload').forEach(box=>bindPicker(box.querySelector('label,button'),box.querySelector('input[type=file]')));
+  }
+  bindInfoPickers();
+  const detail=byId('detailContent');
+  if(detail)new MutationObserver(bindInfoPickers).observe(detail,{childList:true,subtree:true});
+
+
+  /* Pro volání zachováme zobrazený formát, ale tel: vždy obsahuje čisté číslo. */
+  function cleanPhone(value){
+    let s=String(value||'').trim();
+    const plus=s.startsWith('+');s=s.replace(/[^0-9]/g,'');
+    return plus&&s?`+${s}`:s;
+  }
+  function normalizePhoneLinks(root=document){
+    root.querySelectorAll?.('a[href^="tel:"]').forEach(a=>{
+      const raw=a.getAttribute('href').slice(4),clean=cleanPhone(raw);
+      if(clean){a.setAttribute('href','tel:'+clean);a.setAttribute('rel','external');a.dataset.v68Phone='1'}
+    });
+  }
+  normalizePhoneLinks();
+  new MutationObserver(records=>records.forEach(r=>r.addedNodes.forEach(n=>{
+    if(n.nodeType===1){if(n.matches?.('a[href^="tel:"]'))normalizePhoneLinks(n.parentElement||document);else normalizePhoneLinks(n)}
+  }))).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 
 
 </body>
