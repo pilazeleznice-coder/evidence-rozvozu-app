@@ -3,10 +3,24 @@ import { createClient } from 'npm:@supabase/supabase-js@2.49.8';
 
 const required = (key: string) => { const value = Deno.env.get(key); if (!value) throw new Error(`Missing ${key}`); return value; };
 const db = createClient(required('SUPABASE_URL'), required('SUPABASE_SERVICE_ROLE_KEY'), { auth: { persistSession: false } });
-const titles: Record<string, string> = {
- day_before: 'Zítra tě čeká rozvoz', morning: 'Dnes tě čeká rozvoz', hour_before: 'Za hodinu je naplánovaný rozvoz',
- late_5: 'Nezapomněl jsi na rozvoz? · 5 minut', late_10: 'Nezapomněl jsi na rozvoz? · 10 minut', late_15: 'Nezapomněl jsi na rozvoz? · 15 minut'
-};
+function title(job: any) {
+ const minutes = job.preferences?.[job.kind]?.minutes;
+ if (job.kind === 'test') return 'Evidence rozvozů – serverová zkouška';
+ if (job.kind === 'morning') return 'Evidence rozvozů – dnešní jízda';
+ if (job.kind === 'day_before' || job.kind === 'hour_before') return `Evidence rozvozů – jízda za ${minutes} min`;
+ return `Evidence rozvozů – ${minutes} min po termínu`;
+}
+function body(job: any) {
+ if (job.kind === 'test') return 'Oznámení dorazilo ze serveru přes Web Push. Zavři aplikaci a ověř další test při zamčeném telefonu.';
+ const p = job.preferences || {};
+ if (!p.detail) return 'Připomínka naplánované jízdy. Podrobnosti najdeš v Evidenci rozvozů.';
+ const parts = [job.name, `Doručení: ${dateFormat.format(new Date(job.delivery_at))}`, `Vozidlo: ${job.vehicle}`];
+ if (job.order_no) parts.push(`Objednávka: ${job.order_no}`);
+ if (p.address && job.address) parts.push(`Adresa: ${job.address}`);
+ if (p.price) parts.push(`Cena bez DPH: ${moneyFormat.format(Number(job.net))}`);
+ if (p.payment && job.payment) parts.push(`Platba: ${job.payment}`);
+ return parts.join('\n');
+}
 const dateFormat = new Intl.DateTimeFormat('cs-CZ', { timeZone: 'Europe/Prague', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
 const moneyFormat = new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 2 });
 // Reject arbitrary endpoints: subscriptions must not turn the privileged worker into an SSRF proxy.
@@ -41,11 +55,11 @@ Deno.serve(async request => {
     const { data: live, error: checkError } = await db.from('pz_push_jobs').select('id').eq('id', job.job_id).eq('state', 'sending').maybeSingle();
     if (checkError) throw checkError;
     if (!live) return;
-    const url = new URL(appUrl); url.searchParams.set('pushRide', job.ride_id);
+    const url = new URL(appUrl); if (job.kind !== 'test') url.searchParams.set('pushRide', job.ride_id);
     const payload = JSON.stringify({
-     title: titles[job.kind] || 'Připomínka rozvozu',
-     body: `${job.name}\nDoprava: ${job.vehicle} · ${dateFormat.format(new Date(job.delivery_at))}\n${job.address}\nČástka bez DPH: ${moneyFormat.format(Number(job.net))}`,
-     tag: `ride-${job.ride_id}-${job.kind}-${job.due_at}`, rideId: job.ride_id, kind: job.kind,
+     title: title(job),
+     body: body(job),
+     tag: `ride-${job.ride_id}-${job.kind}-${job.due_at}`, rideId: job.kind === 'test' ? '' : job.ride_id, kind: job.kind,
      expiresAt: Date.parse(job.due_at) + 5 * 60000, url: url.href
     });
     const ttl = Math.max(0, Math.min(300, Math.floor((Date.parse(job.due_at) + 300000 - Date.now()) / 1000)));

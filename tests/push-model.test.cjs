@@ -3,7 +3,7 @@ const {records,delta}=require('../push-model');
 const ride={id:11,date:'2026-11-03',time:'10:30',name:'Novák',vehicle:'TRM',address:'Jičín',net:2000,status:'planned'};
 test('full independent ride payload and START suppression',()=>{
  assert.equal(records([ride],[])[0].enabled,true);
- assert.deepEqual(records([ride],[])[0],{id:'11',name:'Novák',vehicle:'TRM',address:'Jičín',net:2000,date:'2026-11-03',time:'10:30',enabled:true});
+ assert.deepEqual(records([ride],[])[0],{payment:'',orderNo:'',id:'11',name:'Novák',vehicle:'TRM',address:'Jičín',net:2000,date:'2026-11-03',time:'10:30',enabled:true});
  assert.equal(records([ride],[11])[0].enabled,false);
 });
 test('cancelled, completed, undetermined or trashed rides never notify',()=>{

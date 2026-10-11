@@ -5,7 +5,7 @@
   const add = (r, id, parent, running) => {
    const net = Number(r.net || 0);
    output.push({ id: String(id), name: String(r.name || ''), address: String(r.address || ''), vehicle: String(parent?.vehicle || r.vehicle || ''),
-    net: Number.isFinite(net) ? net : 0, date: String(parent?.date || r.date || ''), time: String(r.time || ''),
+    payment: String(r.payment || ''), orderNo: String(r.orderNo || ''), net: Number.isFinite(net) ? net : 0, date: String(parent?.date || r.date || ''), time: String(r.time || ''),
     enabled: (parent?.status || r.status) === 'planned' && !running && !r.trashedAt && !r.dateUndetermined && !r.timeUndetermined && !parent?.dateUndetermined && !parent?.timeUndetermined && /^\d{4}-\d{2}-\d{2}$/.test(parent?.date || r.date || '') && /^([01]\d|2[0-3]):[0-5]\d$/.test(r.time || '') });
   };
   for (const r of rides || []) {

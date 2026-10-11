@@ -9,7 +9,7 @@ select vault.create_secret('REPLACE_WITH_PRIVATE_VAPID_KEY', 'pz_push_vapid_priv
 select vault.create_secret('mailto:YOUR_CONTACT_EMAIL', 'pz_push_vapid_subject');
 select vault.create_secret('https://YOUR_APP_URL/', 'pz_push_app_url');
 
-create function public.pz_push_runtime_config() returns jsonb
+create or replace function public.pz_push_runtime_config() returns jsonb
 language sql security definer set search_path='' as $$
  select jsonb_object_agg(name,decrypted_secret) from vault.decrypted_secrets
  where name in ('pz_push_cron_secret','pz_push_vapid_public','pz_push_vapid_private','pz_push_vapid_subject','pz_push_app_url');
@@ -25,8 +25,4 @@ select cron.schedule('pz-push-every-minute', '* * * * *', $job$
   timeout_milliseconds := 60000
  );
 $job$);
--- Keep scheduler metadata bounded; never delete planned rides.
-select cron.schedule('pz-push-cleanup', '20 3 * * *', $job$
- delete from public.pz_push_jobs where due_at < now()-interval '30 days';
- delete from cron.job_run_details where end_time < now()-interval '7 days';
-$job$);
+-- Sent history is retained. No automatic deletion of rides or sent reminders.

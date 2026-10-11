@@ -1,6 +1,10 @@
 (function() {
  'use strict';
+ const style=document.createElement('link');style.rel='stylesheet';style.href='./push-settings.css';document.head.append(style);
  const cfg = window.PZ_PUSH_CONFIG || {}, ready = !!(cfg.supabaseUrl && cfg.publicKey && cfg.vapidPublicKey);
+ const DEFAULTS = {enabled:true,detail:false,address:false,price:false,payment:false,noTime:'skip',day_before:{enabled:true,minutes:1440},morning:{enabled:true,time:'07:00'},hour_before:{enabled:true,minutes:60},late_5:{enabled:true,minutes:5},late_10:{enabled:true,minutes:10},late_15:{enabled:true,minutes:15}};
+ const TYPES = [['day_before','Den předem','Předstih před termínem jízdy',1440],['morning','Ranní připomínka','V den jízdy, pouze před jejím termínem','07:00'],['hour_before','Připomínka před jízdou','Předstih před termínem jízdy',60],['late_5','První upozornění po termínu','Pokud jízda zůstává plánovaná',5],['late_10','Druhé upozornění po termínu','Pokud jízda zůstává plánovaná',10],['late_15','Třetí upozornění po termínu','Pokud jízda zůstává plánovaná',15]];
+ let prefs = structuredClone(DEFAULTS), revision=0, pending=false, prefsBusy=false, loadedOwner;
  const SESSION = 'pzPushSession', DEVICE = 'pzPushDevice', BASE = 'pzPushBaseline';
  let session = read(SESSION), device = localStorage.getItem(DEVICE), busy = false, timer, registration;
  if (!device) { device = crypto.randomUUID(); localStorage.setItem(DEVICE, device); }
@@ -13,7 +17,9 @@
   if (!response.ok) {
    if (response.status === 401 || response.status === 403) { const error = Error('Přihlášení vypršelo nebo není povolené. Přihlas se znovu.'); error.status=response.status; throw error; }
    if (path.includes('/auth/')) throw Error('Přihlášení se nezdařilo. Zkontroluj e-mail a heslo.');
-   throw Error('Služba upozornění není dostupná. Změny čekají na odeslání.');
+   let data; try { data=await response.json(); } catch {}
+   if(data?.code==='40001') { const e=Error('Nastavení se změnilo na jiném zařízení. Obnov aktuální nastavení a zopakuj změnu.'); e.conflict=true; throw e; }
+   throw Error(path.includes('pz_test_push') ? 'Test se nepodařilo zařadit. Mezi testy počkej jednu minutu.' : 'Služba upozornění není dostupná. Změny čekají na odeslání.');
   }
   const text = await response.text(); return text ? JSON.parse(text) : null;
  }
@@ -37,16 +43,17 @@
  function key() { return BASE + ':' + authRoot + ':' + session.userId; }
  async function sync(force = false) {
   if (!ready || !session?.subscribed || busy) return;
+  busy=true;await syncPreferences();
   const baselineKey=key(), syncingUser=session.userId;
   const current = snapshot(), previous = read(baselineKey) || [];
   const d = window.PZPushModel.delta(current, previous);
-  if (!force && !d.changes.length && !d.removed.length) return;
+  if (!force && !d.changes.length && !d.removed.length) {busy=false;return;}
   let successful = false; busy = true; status(navigator.onLine ? 'Odesílám změny připomínek…' : 'Bez internetu · změny čekají na odeslání');
   try {
    const access = await token();
    const count = await http('/rest/v1/rpc/pz_sync_push', { changes: d.changes, removed: d.removed }, 'POST', access);
    if (session?.userId !== syncingUser) return;
-   localStorage.setItem(baselineKey, JSON.stringify(current)); successful = true;
+   localStorage.setItem(baselineKey, JSON.stringify(current)); localStorage.setItem('pzPushLastSync:'+session.userId,new Date().toISOString()); successful = true; paintHealth();
    status(`Připojeno · ${count} jízd s připomínkami · ${new Date().toLocaleTimeString('cs-CZ', {hour:'2-digit',minute:'2-digit'})}`);
   } catch (e) { status(e.message || 'Změny čekají na odeslání.', true); }
   finally { busy = false; if (successful && JSON.stringify(snapshot()) !== JSON.stringify(current)) schedule(); }
@@ -79,10 +86,10 @@
    const reg = await worker(), access = await token();
    let subscription = await reg.pushManager.getSubscription();
    if (!subscription) subscription = await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:publicBytes(cfg.vapidPublicKey) });
-   await http('/rest/v1/pz_push_subscriptions?on_conflict=user_id,device_id', { user_id:session.userId,device_id:device,subscription:subscription.toJSON(),updated_at:new Date().toISOString() }, 'POST', access);
+   await http('/rest/v1/pz_push_subscriptions?on_conflict=user_id,device_id', { user_id:session.userId,device_id:device,subscription:subscription.toJSON(),device_name: deviceLabel(),updated_at:new Date().toISOString() }, 'POST', access);
    session.subscribed = true; localStorage.setItem(SESSION,JSON.stringify(session));
    // Keep the baseline: repeated enable must not overwrite newer changes made on another device.
-   paint(); await sync(true);
+   await loadPreferences(); paint(); await sync(true); await listDevices();
   } catch(e) { status(e.message || 'Oznámení se nepodařilo připojit.',true); }
   finally { button.disabled = false; }
  }
@@ -98,13 +105,66 @@
   finally { button.disabled = false; }
  }
  async function test() {
+  const button=$('pzPushTest');button.disabled=true;
   try {
    if (!session?.subscribed) throw Error('Nejdřív připoj oznámení.');
-   await (await worker()).showNotification('Evidence rozvozů – zkouška', { body:'Test zobrazení oznámení na tomto zařízení. Doručení při zavřené aplikaci ověříme samostatnou testovací jízdou.',tag:'pz-test',data:{url:new URL('./',location.href).href} });
-   status('Test zobrazen. Toto ověřuje zobrazení, nikoli serverové doručení.');
+   const id=await http('/rest/v1/rpc/pz_test_push',{device},'POST',await token());
+   status('Test zařazen na serveru. Do jedné minuty očekávej oznámení; můžeš zavřít aplikaci a zamknout telefon.');
+   const poll=setInterval(async()=>{
+    try { const rows=await http('/rest/v1/pz_push_jobs?id=eq.'+id+'&select=state',undefined,'GET',await token());
+     if(rows?.[0] && ['sent','failed','expired'].includes(rows[0].state)) {clearInterval(poll);status(rows[0].state==='sent' ? 'Push služba přijala oznámení. Doručení na obrazovku potvrď na zařízení.' : 'Serverový test selhal nebo vypršel.',rows[0].state!=='sent');}
+    }catch {clearInterval(poll);}
+   },5000);setTimeout(()=>clearInterval(poll),180000);
   } catch(e) { status(e.message,true); }
+  finally {button.disabled=false;}
+ }
+ function prefKey() {return 'pzPushPreferences:'+authRoot+':'+(session?.userId||'local');}
+ function cachePreferences() {localStorage.setItem(prefKey(),JSON.stringify({settings:prefs,revision,pending}));}
+ function paintPreferences() {
+  for(const k of ['enabled','detail','address','price','payment']) if($('pzPref-'+k)) $('pzPref-'+k).checked=prefs[k];
+  for(const [k] of TYPES) {if(!$('pz-'+k))continue;$('pz-'+k).checked=prefs[k].enabled; const input=$('pz-value-'+k);input.value=k==='morning'?prefs[k].time:(k==='day_before'?prefs[k].minutes/60:prefs[k].minutes);}
+  $('pzPrefStatus').textContent=pending?'Změny čekají na synchronizaci se serverem.':session?'Nastavení společné pro všechna zařízení účtu.':'Nastavení se uloží na server po připojení účtu.';
+ }
+ function deviceLabel() {return /Android/i.test(navigator.userAgent)?'Android · '+(/Samsung/i.test(navigator.userAgent)?'Samsung':'Chrome'):/Windows/i.test(navigator.userAgent)?'Windows · prohlížeč':/iPhone|iPad/i.test(navigator.userAgent)?'iPhone / iPad':'Prohlížeč';}
+ async function loadPreferences() {
+  const owner=session?.userId||'local';
+  const cached=loadedOwner===owner?null:read(prefKey()); if(cached){prefs=cached.settings;revision=cached.revision;pending=cached.pending;}
+  else if(loadedOwner!==owner) {prefs=structuredClone(DEFAULTS);revision=0;pending=false;const local=read('pzPushPreferences:'+authRoot+':local');if(local?.pending){prefs=local.settings;pending=true;revision=0;}}
+  loadedOwner=owner;
+  if(session && !pending) { const rows=await http('/rest/v1/pz_push_preferences?select=settings,revision,updated_at',undefined,'GET',await token());if(!pending && session?.userId===owner){prefs=rows?.[0]?.settings||structuredClone(DEFAULTS);revision=rows?.[0]?.revision||0;cachePreferences();} }
+  paintPreferences();
+ }
+ async function syncPreferences() {
+  if(!session || prefsBusy)return;
+  prefsBusy=true;
+  try {
+   if(pending) {
+    const saving=JSON.stringify(prefs),owner=session.userId;
+    const result=await http('/rest/v1/rpc/pz_set_push_preferences',{settings:JSON.parse(saving),expected_revision:revision},'POST',await token());
+    if(session?.userId!==owner)return;
+    revision=result.revision;pending=JSON.stringify(prefs)!==saving;cachePreferences();paintPreferences();
+   } else await loadPreferences();
+  } catch(e) { $('pzPrefStatus').textContent=e.message; if(e.conflict) $('pzPrefReload').hidden=false; }
+  finally {prefsBusy=false;}
+ }
+ function preferencesChanged() {
+  for(const k of ['enabled','detail','address','price','payment']) prefs[k]=$('pzPref-'+k).checked;
+  for(const [k] of TYPES) {prefs[k].enabled=$('pz-'+k).checked;const input=$('pz-value-'+k);if(!input.checkValidity()){input.reportValidity();return;}if(k==='morning')prefs[k].time=input.value;else prefs[k].minutes=Math.round(Number(input.value)*(k==='day_before'?60:1));}
+  pending=true;cachePreferences();paintPreferences();sync(true);
+ }
+ function paintHealth() {
+  $('pzPermission').textContent='Povolení prohlížeče: '+(!('Notification' in window)?'nepodporováno':({granted:'povoleno',denied:'zablokováno',default:'dosud nepovoleno'}[Notification.permission]));
+  $('pzConnection').textContent='Připojení: '+(navigator.onLine?(session?'účet přihlášen':'účet nepřihlášen'):'offline');
+  $('pzDevice').textContent='Toto zařízení: '+(session?.subscribed?'registrováno':'nepřipojeno');
+  const last=session&&localStorage.getItem('pzPushLastSync:'+session.userId);$('pzLastSync').textContent='Poslední úspěšná synchronizace: '+(last?new Date(last).toLocaleString('cs-CZ'):'dosud neproběhla');
+ }
+ async function listDevices() {
+  const box=$('pzDevices');box.replaceChildren();if(!session)return;
+  try {const rows=await http('/rest/v1/pz_push_subscriptions?select=device_id,device_name,updated_at',undefined,'GET',await token());for(const row of rows){const line=document.createElement('p');line.textContent=(row.device_name||'Zařízení')+(row.device_id===device?' (toto zařízení)':'')+' · naposledy připojeno '+new Date(row.updated_at).toLocaleString('cs-CZ');box.append(line);}}
+  catch {box.textContent='Přehled zařízení není dostupný.';}
  }
  function paint() {
+  paintHealth();
   $('pzPushLogin').hidden = !!session;
   $('pzPushEnable').textContent = session?.subscribed ? 'Znovu připojit oznámení' : 'Připojit oznámení';
   $('pzPushDisable').hidden = !session;
@@ -120,12 +180,26 @@
  function install() {
   const groups = document.querySelector('#v80SettingsHome .v80-groups'); if (!groups) return;
   const section = document.createElement('section'); section.innerHTML = `<h3 class="v80-group-title">Upozornění na jízdy</h3><div class="v80-card pz-push-card">
-  <h3>Systémová oznámení</h3><p>Každá jízda zvlášť: 24 hodin předem, v 7:00 v den jízdy, hodinu předem a 5, 10 a 15 minut po čase doručení. START, splnění nebo zrušení další připomínky zastaví. Všechny časy jsou české.</p>
-  <p>V oznámení: jméno, typ dopravy, adresa a částka bez DPH. Údaje se mohou zobrazit na zamčené obrazovce.</p>
+  <h3>Upozornění na jízdy</h3><p>Časy se počítají v Europe/Prague včetně letního a zimního času. START, dokončení, zrušení nebo smazání zastaví další připomínky.</p>
+  <label class="pz-check"><input type="checkbox" id="pzPref-enabled">Zapnout připomínky na všech zařízeních účtu</label>
+  <div class="pz-health"><span id="pzPermission"></span><span id="pzConnection"></span><span id="pzDevice"></span><span id="pzLastSync"></span></div>
   <div id="pzPushLogin"><label>E-mail účtu Evidence<input id="pzPushEmail" type="email" autocomplete="username"></label><label>Heslo<input id="pzPushPassword" type="password" autocomplete="current-password"></label></div>
   <p id="pzPushStatus" role="status" aria-live="polite"></p><div class="pz-push-buttons"><button id="pzPushEnable" type="button" class="v80-primary">Připojit oznámení</button><button id="pzPushTest" type="button">Zkusit oznámení</button><button id="pzPushDisable" type="button">Odpojit zařízení</button></div>
-  <small>Jednorázově připoj každé zařízení. Potom se připomínky přenášejí automaticky při ukládání jízd. Změny bez internetu čekají na znovuotevření Evidence s připojením. U ranních jízd před 7:00 se ranní připomínka neposílá.</small></div>`;
-  groups.prepend(section); $('pzPushEnable').onclick=enable; $('pzPushDisable').onclick=disable; $('pzPushTest').onclick=test; paint();
+  <p>Nastavení časů a obsahu je společné pro účet. Připojení a odpojení platí pouze pro toto zařízení.</p>
+  <div class="pz-reminders">${TYPES.map(([k,label,desc,value])=>`<div class="pz-reminder"><label class="pz-check"><input id="pz-${k}" type="checkbox">${label}</label><small>${desc}</small><label>${k==='morning'?'Čas v den jízdy':k==='day_before'?'Předstih v hodinách':'Počet minut'}<input id="pz-value-${k}" type="${k==='morning'?'time':'number'}" ${k==='morning'?'':`min="${k==='day_before'?1/60:1}" max="${k==='day_before'?168:1440}" step="${k==='day_before'?'any':1}"`} value="${k==='day_before'?24:value}" required></label><button type="button" data-reset="${k}">Výchozí hodnota</button></div>`).join('')}</div>
+  <h3>Obsah na zamčené obrazovce</h3><label class="pz-check"><input id="pzPref-detail" type="checkbox">Podrobné oznámení se jménem, termínem, vozidlem a objednávkou</label>
+  ${[['address','Zahrnout adresu'],['price','Zahrnout cenu bez DPH'],['payment','Zahrnout způsob platby']].map(([k,label])=>`<label class="pz-check"><input id="pzPref-${k}" type="checkbox">${label}</label>`).join('')}
+  <small>Ve stručném režimu se žádné zákaznické údaje nezobrazují. Zvuk a vibrace řídí také prohlížeč a operační systém.</small>
+  <label>Jízdy bez určeného času<select id="pzNoTime"><option value="skip">Neposílat připomínky, dokud není čas vyplněn</option></select></label>
+  <p id="pzPrefStatus" role="status"></p><div class="pz-push-buttons"><button id="pzPrefReset" type="button">Obnovit všechna výchozí nastavení</button><button id="pzPrefReload" type="button">Načíst aktuální nastavení serveru</button></div>
+  <h3>Připojená zařízení</h3><div id="pzDevices"></div>
+  <small>Plánovač kontroluje úlohy každou minutu. Internet, úspora baterie a režim Nerušit mohou doručení zpozdit. Úpravy offline čekají na otevření aplikace s internetem; do té doby platí poslední serverový plán. Tento doplněk nepřenáší celou evidenci mezi zařízeními.</small></div>`;
+  groups.prepend(section);
+  section.querySelectorAll('input[id^=pzPref-],input[id^=pz-],input[id^=pz-value-]').forEach(input=>input.addEventListener('change',preferencesChanged));
+  section.querySelectorAll('[data-reset]').forEach(button=>button.onclick=()=>{const k=button.dataset.reset;prefs[k]=structuredClone(DEFAULTS[k]);pending=true;cachePreferences();paintPreferences();sync(true);});
+  $('pzPrefReset').onclick=()=>{prefs=structuredClone(DEFAULTS);pending=true;cachePreferences();paintPreferences();sync(true);};
+  $('pzPrefReload').onclick=async()=>{pending=false;try{await loadPreferences();$('pzPrefReload').hidden=true;}catch(e){status(e.message,true);}};
+  loadPreferences().catch(e=>status(e.message,true)); $('pzPushEnable').onclick=enable; $('pzPushDisable').onclick=disable; $('pzPushTest').onclick=test; paint();
   status(!ready ? 'Zatím neaktivní · čeká na připojení odesílací služby' : session?.subscribed ? 'Kontroluji připomínky…' : 'Připoj toto zařízení k oznámením.');
   if (ready && session?.subscribed) reconcile();
   const id = new URL(location.href).searchParams.get('pushRide'); if (id) { setTimeout(()=>openRide(id),500); const u=new URL(location.href); u.searchParams.delete('pushRide'); history.replaceState(null,'',u); }
@@ -134,11 +208,12 @@
   try {
    const sub = await (await worker()).pushManager.getSubscription();
    if (!sub || Notification.permission !== 'granted') { status('Oznámení nejsou na zařízení připojená. Použij Znovu připojit oznámení.',true); return; }
-   await http('/rest/v1/pz_push_subscriptions?on_conflict=user_id,device_id', {user_id:session.userId,device_id:device,subscription:sub.toJSON(),updated_at:new Date().toISOString()}, 'POST', await token());
-   await sync(true);
+   await http('/rest/v1/pz_push_subscriptions?on_conflict=user_id,device_id', {user_id:session.userId,device_id:device,subscription:sub.toJSON(),device_name: deviceLabel(),updated_at:new Date().toISOString()}, 'POST', await token());
+   await sync(true); await listDevices();
   } catch(e) { status(e.message || 'Oznámení se nepodařilo zkontrolovat.',true); }
  }
- window.addEventListener('online',()=>sync(true));
+ window.addEventListener('online',()=>{paintHealth();sync(true);});
+ window.addEventListener('offline',()=>{paintHealth();$('pzPrefStatus').textContent='Offline · změny čekají na synchronizaci.';});
  window.addEventListener('storage',event=>{ if (event.key===SESSION) {session=read(SESSION); paint();} schedule(); });
  document.addEventListener('visibilitychange',()=>{if(!document.hidden) sync(true);});
  navigator.serviceWorker?.addEventListener('message',e=>{if(e.data?.type==='PZ_OPEN_RIDE') openRide(e.data.rideId);});
