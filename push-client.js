@@ -187,10 +187,16 @@
   } catch(e) { $('pzPrefStatus').textContent=e.message; if(e.conflict) $('pzPrefReload').hidden=false; }
   finally {prefsBusy=false;}
  }
- function preferencesChanged() {
-  for(const k of ['enabled','detail','address','price','payment']) prefs[k]=$('pzPref-'+k).checked;
-  for(const [k] of TYPES) {prefs[k].enabled=$('pz-'+k).checked;const input=$('pz-value-'+k);if(!input.checkValidity()){input.reportValidity();return;}if(k==='morning')prefs[k].time=input.value;else prefs[k].minutes=Math.round(Number(input.value)*(k==='day_before'?60:1));}
-  pending=true;cachePreferences();paintPreferences();sync(true);
+ async function preferencesChanged() {
+  const button=$('pzPrefSave');const next=structuredClone(prefs);
+  for(const k of ['enabled','detail','address','price','payment']) next[k]=$('pzPref-'+k).checked;
+  for(const [k] of TYPES) {next[k].enabled=$('pz-'+k).checked;const input=$('pz-value-'+k);if(!input.checkValidity()){input.reportValidity();return;}if(k==='morning')next[k].time=input.value;else next[k].minutes=Math.round(Number(input.value)*(k==='day_before'?60:1));}
+  prefs=next;pending=true;cachePreferences();button.disabled=true;
+  try {
+   if(native) await nativeSync(true); else await syncPreferences();
+   $('pzSaveStatus').textContent=pending?'Změny uloženy v zařízení. Synchronizace se serverem čeká na připojení.':'Změny uloženy.';
+  } catch(e) {$('pzSaveStatus').textContent='Změny jsou uložené v zařízení, ale plán se nepodařilo aktualizovat: '+e.message;}
+  finally {button.disabled=false;}
  }
  function paintHealth() {
   if(native){
@@ -231,7 +237,7 @@
  }
  function install() {
   const groups = document.querySelector('#v80SettingsHome .v80-groups'); if (!groups) return;
-  const section = document.createElement('section'); section.innerHTML = `<h3 class="v80-group-title">Upozornění na jízdy</h3><div class="v80-card pz-push-card">
+  const section = document.createElement('section'); section.innerHTML = `<details class="pz-settings-section"><summary>Oznámení <span>Nastavení připomínek jízd</span></summary><div class="v80-card pz-push-card">
   <h3>Upozornění na jízdy</h3><p>Časy se počítají v Europe/Prague včetně letního a zimního času. START, dokončení, zrušení nebo smazání zastaví další připomínky.</p>
   <label class="pz-check"><input type="checkbox" id="pzPref-enabled">Zapnout připomínky na všech zařízeních účtu</label>
   <div class="pz-health"><span id="pzAppMode"></span><span id="pzPushSupport"></span><span id="pzPermission"></span><span id="pzConnection"></span><span id="pzDevice"></span><span id="pzLastSync"></span></div>
@@ -243,9 +249,9 @@
   ${[['address','Zahrnout adresu'],['price','Zahrnout cenu bez DPH'],['payment','Zahrnout způsob platby']].map(([k,label])=>`<label class="pz-check"><input id="pzPref-${k}" type="checkbox">${label}</label>`).join('')}
   <small>Ve stručném režimu se žádné zákaznické údaje nezobrazují. Zvuk a vibrace řídí také prohlížeč a operační systém.</small>
   <label>Jízdy bez určeného času<select id="pzNoTime"><option value="skip">Neposílat připomínky, dokud není čas vyplněn</option></select></label>
-  <p id="pzPrefStatus" role="status"></p><div class="pz-push-buttons"><button id="pzPrefReset" type="button">Obnovit všechna výchozí nastavení</button><button id="pzPrefReload" type="button">Načíst aktuální nastavení serveru</button></div>
+  <div class="pz-save-bar"><button id="pzPrefSave" type="button" class="v80-primary">Uložit změny</button><p id="pzSaveStatus" role="status" aria-live="polite"></p></div><p id="pzPrefStatus" role="status"></p><div class="pz-push-buttons"><button id="pzPrefReset" type="button">Obnovit všechna výchozí nastavení</button><button id="pzPrefReload" type="button">Načíst aktuální nastavení serveru</button></div>
   <h3>Připojená zařízení</h3><div id="pzDevices"></div>
-  <small>Plánovač kontroluje úlohy každou minutu. Internet, úspora baterie a režim Nerušit mohou doručení zpozdit. Úpravy offline čekají na otevření aplikace s internetem; do té doby platí poslední serverový plán. Tento doplněk nepřenáší celou evidenci mezi zařízeními.</small></div>`;
+  <small>Plánovač kontroluje úlohy každou minutu. Internet, úspora baterie a režim Nerušit mohou doručení zpozdit. Úpravy offline čekají na otevření aplikace s internetem; do té doby platí poslední serverový plán. Tento doplněk nepřenáší celou evidenci mezi zařízeními.</small></div></details>`;
   groups.prepend(section);
   if(native){
    $('pzPref-enabled').parentElement.lastChild.textContent='Zapnout připomínky na tomto telefonu';
@@ -253,10 +259,11 @@
    section.querySelector('.pz-push-card > small:last-child').textContent='Připomínky fungují i po zavření aplikace. Režim Nerušit a úspora baterie mohou ovlivnit doručení; Android může blízké alarmy během spánku odložit. Změny na jiném zařízení se sem automaticky nepřenášejí.';
    $('pzPrefReload').hidden=true;
   }
-  section.querySelectorAll('input[id^=pzPref-],input[id^=pz-],input[id^=pz-value-]').forEach(input=>input.addEventListener('change',preferencesChanged));
-  section.querySelectorAll('[data-reset]').forEach(button=>button.onclick=()=>{const k=button.dataset.reset;prefs[k]=structuredClone(DEFAULTS[k]);pending=true;cachePreferences();paintPreferences();sync(true);});
-  $('pzPrefReset').onclick=()=>{prefs=structuredClone(DEFAULTS);pending=true;cachePreferences();paintPreferences();sync(true);};
+  section.querySelectorAll('input[id^=pzPref-],input[id^=pz-],input[id^=pz-value-]').forEach(input=>input.addEventListener('change',()=>{$('pzSaveStatus').textContent='Neuložené změny · klepni na Uložit změny.';}));
+  section.querySelectorAll('[data-reset]').forEach(button=>button.onclick=()=>{const k=button.dataset.reset;const input=$('pz-value-'+k);$('pz-'+k).checked=DEFAULTS[k].enabled;input.value=k==='morning'?DEFAULTS[k].time:(k==='day_before'?DEFAULTS[k].minutes/60:DEFAULTS[k].minutes);$('pzSaveStatus').textContent='Výchozí hodnota připravena · klepni na Uložit změny.';});
+  $('pzPrefReset').onclick=()=>{const saved=prefs;prefs=structuredClone(DEFAULTS);paintPreferences();prefs=saved;$('pzSaveStatus').textContent='Výchozí hodnoty připraveny · klepni na Uložit změny.';};
   $('pzPrefReload').onclick=async()=>{pending=false;try{await loadPreferences();$('pzPrefReload').hidden=true;}catch(e){status(e.message,true);}};
+  $('pzPrefSave').onclick=preferencesChanged;
   loadPreferences().catch(e=>status(e.message,true)); $('pzPushEnable').onclick=enable; $('pzPushDisable').onclick=disable; $('pzPushTest').onclick=test; paint();
   // Prepare the installed PWA at startup; permission is still requested only by the user button.
   if(!native && window.isSecureContext && 'serviceWorker' in navigator) worker().then(reg=>reg.update()).catch(()=>status('Příjem oznámení se nepodařilo připravit. Připoj se k internetu a otevři aplikaci znovu.',true));
