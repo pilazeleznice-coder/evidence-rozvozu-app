@@ -72,10 +72,18 @@
   const button = $('pzPushEnable'); button.disabled = true;
   try {
    if (!ready) throw Error('Odesílací služba zatím není aktivovaná.');
-   if (!window.isSecureContext || !('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) throw Error('Tento prohlížeč nepodporuje systémová oznámení. Otevři HTTPS aplikaci v Chrome nebo Edge.');
+   if (!window.isSecureContext) throw Error('Oznámení vyžadují webovou verzi přes HTTPS. Otevři https://pilazeleznice-coder.github.io/evidence-rozvozu-app/ přímo v Chromu.');
+   if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) throw Error('Tato verze prohlížeče neumí přijímat push oznámení. Otevři webovou Evidenci přímo v aplikaci Chrome.');
    // Permission request is triggered directly by this button, before any await of network work.
    const permission = await Notification.requestPermission();
-   if (permission !== 'granted') throw Error('Oznámení nejsou povolená. Povol je v nastavení prohlížeče.');
+   if (permission !== 'granted') {
+    paintHealth();
+    throw Error(permission==='denied'
+     ? 'Chrome má oznámení pro tento web zablokovaná. V Chromu otevři Nastavení → Nastavení webu → Oznámení a povol tento web.'
+     : /Android/i.test(navigator.userAgent)
+      ? 'Chrome nezískal povolení. V Nastavení telefonu otevři Aplikace → Chrome → Oznámení a zapni Povolit oznámení. Pak se vrať a klepni znovu na Připojit oznámení.'
+      : 'Povolení oznámení nebylo potvrzeno. Klepni znovu na Připojit oznámení a v nabídce prohlížeče zvol Povolit.');
+   }
    if (!session) {
     const email = $('pzPushEmail').value.trim(), password = $('pzPushPassword').value;
     if (!email || !password) throw Error('Vyplň přihlášení k účtu Evidence.');
