@@ -62,3 +62,10 @@ Advisor upozorňuje na tři záměrná autentizovaná RPC se SECURITY DEFINER: s
 4. Na testovací jízdě dočasně nastavit krátké předstihy a následná upozornění. Ověřit šest typů, START a zrušení. Poté obnovit výchozí hodnoty.
 
 Web Push není přesný budík. Krátký závod mezi poslední serverovou kontrolou a předáním push službě nelze atomicky vyloučit. Při nejednoznačné síťové chybě může proběhnout opakované předání; stabilní tag sdružuje stejné oznámení na zařízení.
+
+
+## Android aplikace z Android Studia
+
+WebView nemá webová rozhraní PushManager a Notification. Nový klient podporuje důvěryhodný most PZAndroidNative v upravené APK: jízdy a nastavení předává místnímu Android plánovači. Android varianta nevyžaduje webové přihlášení a neposílá falešnou Web Push registraci. Jde o místní připomínky na jednom telefonu, nikoli cloudový push nebo synchronizaci jízd; po zavření fungují bez internetu. Vyžaduje aktualizovanou APK, povolení oznámení a Budíků a připomenutí. Test je naplánovaný za 10 sekund. Android může alarmy v hlubokém spánku zpozdit.
+
+Test mostu: `PZ_CHROMIUM_EXECUTABLE=/cesta/chromium node tests/push-native-browser.cjs`. Skutečné doručení do Android aplikace musí potvrdit uživatel na telefonu.
