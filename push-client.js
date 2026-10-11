@@ -65,7 +65,7 @@
  Storage.prototype.removeItem = function(k) { originalRemove.call(this,k); if (this === localStorage && /^(evidenceRozvozu_v4|evidenceRozvozu_activeRun_v24|evidenceRozvozu_mergedActive_v51)$/.test(k)) schedule(); };
  function publicBytes(value) { const raw = atob(value.replace(/-/g,'+').replace(/_/g,'/')); return Uint8Array.from(raw, c => c.charCodeAt(0)); }
  async function worker() {
-  if (!registration) registration = await navigator.serviceWorker.register('./sw.js', {scope:'./'});
+  if (!registration) registration = await navigator.serviceWorker.register('./sw.js', {scope:'./',updateViaCache:'none'});
   await navigator.serviceWorker.ready; return registration;
  }
  async function enable() {
@@ -161,6 +161,10 @@
   pending=true;cachePreferences();paintPreferences();sync(true);
  }
  function paintHealth() {
+  const standalone=window.matchMedia('(display-mode: standalone)').matches || navigator.standalone===true;
+  const missing=[!window.isSecureContext?'HTTPS':null,!('serviceWorker' in navigator)?'service worker':null,!('PushManager' in window)?'PushManager':null,!('Notification' in window)?'Notification':null].filter(Boolean);
+  $('pzAppMode').textContent='Spuštění: '+(standalone?'nainstalovaná PWA':'web v prohlížeči');
+  $('pzPushSupport').textContent='Podpora push: '+(missing.length?'chybí '+missing.join(', '):'dostupná');
   $('pzPermission').textContent='Povolení prohlížeče: '+(!('Notification' in window)?'nepodporováno':({granted:'povoleno',denied:'zablokováno',default:'dosud nepovoleno'}[Notification.permission]));
   $('pzConnection').textContent='Připojení: '+(navigator.onLine?(session?'účet přihlášen':'účet nepřihlášen'):'offline');
   $('pzDevice').textContent='Toto zařízení: '+(session?.subscribed?'registrováno':'nepřipojeno');
@@ -190,7 +194,7 @@
   const section = document.createElement('section'); section.innerHTML = `<h3 class="v80-group-title">Upozornění na jízdy</h3><div class="v80-card pz-push-card">
   <h3>Upozornění na jízdy</h3><p>Časy se počítají v Europe/Prague včetně letního a zimního času. START, dokončení, zrušení nebo smazání zastaví další připomínky.</p>
   <label class="pz-check"><input type="checkbox" id="pzPref-enabled">Zapnout připomínky na všech zařízeních účtu</label>
-  <div class="pz-health"><span id="pzPermission"></span><span id="pzConnection"></span><span id="pzDevice"></span><span id="pzLastSync"></span></div>
+  <div class="pz-health"><span id="pzAppMode"></span><span id="pzPushSupport"></span><span id="pzPermission"></span><span id="pzConnection"></span><span id="pzDevice"></span><span id="pzLastSync"></span></div>
   <div id="pzPushLogin"><label>E-mail účtu Evidence<input id="pzPushEmail" type="email" autocomplete="username"></label><label>Heslo<input id="pzPushPassword" type="password" autocomplete="current-password"></label></div>
   <p id="pzPushStatus" role="status" aria-live="polite"></p><div class="pz-push-buttons"><button id="pzPushEnable" type="button" class="v80-primary">Připojit oznámení</button><button id="pzPushTest" type="button">Zkusit oznámení</button><button id="pzPushDisable" type="button">Odpojit zařízení</button></div>
   <p>Nastavení časů a obsahu je společné pro účet. Připojení a odpojení platí pouze pro toto zařízení.</p>
@@ -208,6 +212,8 @@
   $('pzPrefReset').onclick=()=>{prefs=structuredClone(DEFAULTS);pending=true;cachePreferences();paintPreferences();sync(true);};
   $('pzPrefReload').onclick=async()=>{pending=false;try{await loadPreferences();$('pzPrefReload').hidden=true;}catch(e){status(e.message,true);}};
   loadPreferences().catch(e=>status(e.message,true)); $('pzPushEnable').onclick=enable; $('pzPushDisable').onclick=disable; $('pzPushTest').onclick=test; paint();
+  // Prepare the installed PWA at startup; permission is still requested only by the user button.
+  if(window.isSecureContext && 'serviceWorker' in navigator) worker().then(reg=>reg.update()).catch(()=>status('Příjem oznámení se nepodařilo připravit. Připoj se k internetu a otevři aplikaci znovu.',true));
   status(!ready ? 'Zatím neaktivní · čeká na připojení odesílací služby' : session?.subscribed ? 'Kontroluji připomínky…' : 'Připoj toto zařízení k oznámením.');
   if (ready && session?.subscribed) reconcile();
   const id = new URL(location.href).searchParams.get('pushRide'); if (id) { setTimeout(()=>openRide(id),500); const u=new URL(location.href); u.searchParams.delete('pushRide'); history.replaceState(null,'',u); }
