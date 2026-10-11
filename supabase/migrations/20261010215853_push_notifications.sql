@@ -81,7 +81,7 @@ begin
  return n;
 end;
 $$;
-revoke all on function public.pz_sync_push(jsonb,text[]) from public;
+revoke all on function public.pz_sync_push(jsonb,text[]) from public, anon;
 grant execute on function public.pz_sync_push(jsonb,text[]) to authenticated;
 
 create function public.pz_claim_push()
@@ -102,5 +102,5 @@ begin
  join public.pz_push_subscriptions s on s.id=j.subscription_id;
 end;
 $$;
-revoke all on function public.pz_claim_push() from public;
+revoke all on function public.pz_claim_push() from public, anon, authenticated;
 grant execute on function public.pz_claim_push() to service_role;
