@@ -1,5 +1,31 @@
 # Evidence rozvozů – Pila Železnice
 
+## Verze 85: synchronizace a Android
+
+Synchronizace používá existující projekt Supabase `Evidence-app`, samostatné tabulky `pz_sync_*` a neveřejný bucket `evidence-documents`. Oznámení nadále používají tabulky `pz_push_*`. Nativní Android 1.2 načítá tento web, novou APK pro tuto změnu nepotřebuje.
+
+V aplikaci otevřít **Nastavení → Cloudová synchronizace**, přihlásit existující účet Evidence a počkat na **Synchronizováno**. Stejný účet použít na dalších zařízeních. Heslo se nikde nevkládá do zdrojového kódu. Přihlášení pro synchronizaci a Web Push sdílí jednu obnovovanou relaci; nativní oprávnění k oznámením zůstávají místní.
+
+- Přenášejí se plánované, splněné, zrušené a sloučené jízdy včetně veškerých polí, koncepty, koš, pauzy po dnech, výchozí adresa, aktivní rozvoz a nastavení připomínek. Telefonní čísla a zákaznické údaje jsou součástí jízd a konceptů.
+- Změny se posílají automaticky po uložení, po návratu do aplikace a po připojení. Realtime doplňuje kontrola každých 15 sekund při otevřené aplikaci. Pozastavení automatiky je místní; tlačítko ruční synchronizace zůstává dostupné.
+- Offline změny přežijí restart. Service worker uchovává lokální aplikační soubory; pro úplně první spuštění je nutný internet. Mapové podklady a vyhledávání adres internet nadále potřebují.
+- Zavřený Android WebView neprovádí synchronizaci. Změny z jiného zařízení a nové místní připomínky se přenesou při dalším otevření nebo návratu do Evidence. Již naplánované Android připomínky běží samostatně.
+- Přílohy se ukládají soukromě pod SHA-256 otiskem, stahují a ověřují se do IndexedDB; limit jedné přílohy je 50 MiB. Kopie příloh v cloudu se automaticky nemažou, aby zůstala použitelná historie. Chyba či plná kvóta ponechá změny ve frontě a zobrazí chybu.
+- Server přiděluje revize; porovnání a zápis jsou v jedné transakci. Souběžné odlišné úpravy zobrazí obě verze k ručnímu výběru. Trvalé odstranění zanechá tombstone. Předešlé úspěšné revize zůstávají v `pz_sync_history`.
+- Před první synchronizací se v databázi `EvidenceRozvozuSync`, store `state`, klíči `before-first-sync` uchová místní záchytný bod. Dokumentové bloby se nemění. Běžná záloha JSON je nadále dostupná v Nastavení.
+- Při otevřeném editačním formuláři, Timeline, koši, konceptech, průběhu rozvozu nebo obnově zálohy se příchozí data neuplatňují. Existující sdílené pole jízd se aktualizuje na místě, aby zůstaly funkční všechny původní uzávěry UI. Více karet stejného prohlížeče řídí Web Locks.
+- Zařízení s daty již přiřazenými účtu nepřijme jiný účet. Odhlášení zachová místní data; nezajišťuje uzamčení telefonu.
+
+### Ověření
+
+`npm ci`, případně `npx playwright install chromium`, potom `npm test` a `npm run test:browser`. V omezeném prostředí lze cestu k Chromiu předat v `PZ_CHROMIUM_EXECUTABLE`.
+
+Testy pokrývají SQL/RLS, opakování požadavků, revize a historii, tombstones, dvě nezávislá zařízení, přihlášení, přenos PDF, Android bridge, offline restart, souběžné úpravy a volbu verze, ochranu otevřeného formuláře, koncepty, vypnutou i posunutou pauzu, výchozí adresu, aktivní rozvoz, mazání a responzivní Nastavení. Starší testy oznámení zůstávají zahrnuté. Databázový test v nasazeném projektu proběhl uvnitř transakce s ROLLBACK, bez testovacích záznamů v uživatelských datech.
+
+Klient Supabase 2.117.3 je přibalen lokálně pro offline použití; aktualizace: `npm run build:vendor`. Verze závislostí a lockfile jsou pevné. Přibalené licence jsou ve `vendor/LICENSES.txt`.
+
+## Původní serverová Web Push část
+
 Původní aplikace doplněná o systémová Web Push upozornění pro Android a Windows.
 
 Každá zastávka má samostatnou připomínku. Výchozí obsah je stručný bez zákaznických údajů; podrobnosti lze zapnout v Nastavení. Výchozí časy:

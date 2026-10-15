@@ -1,0 +1,54 @@
+const {chromium}=require('playwright'),http=require('http'),fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
+const root=path.join(__dirname,'..'),uid='e392a4f0-eb8a-4d7a-82da-4648021dbad7';
+(async()=>{
+ const rows=new Map(),blobs=new Map();let revision=0,rpcCount=0;
+ const server=http.createServer((req,res)=>{const pathname=new URL(req.url,'http://localhost').pathname;const p=path.join(root,pathname==='/'?'index.html':pathname);if(!fs.existsSync(p)){res.writeHead(404);return res.end();}res.setHeader('Content-Type',p.endsWith('.js')?'application/javascript':p.endsWith('.css')?'text/css':p.endsWith('.html')?'text/html':'application/octet-stream');res.end(fs.readFileSync(p));});await new Promise(r=>server.listen(0,'127.0.0.1',r));
+ const browser=await chromium.launch({headless:true,executablePath:process.env.PZ_CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-gpu']}),errors=[];
+ async function device(){const ctx=await browser.newContext({serviceWorkers:'allow',viewport:{width:390,height:844}});await ctx.routeWebSocket('**/*',ws=>ws.close());
+  const page=await ctx.newPage();page.on('pageerror',e=>errors.push(e.message));
+  await page.addInitScript(()=>{window.nativePayload=null;window.PZAndroidNative={postMessage(raw){const q=JSON.parse(raw);if(q.action==='sync')window.nativePayload=q.payload;queueMicrotask(()=>PZAndroidNative.onmessage({data:JSON.stringify({id:q.id,result:{enabled:true,permission:true,exact:true,count:q.payload?.rides?.length||0,lastSync:Date.now()}})}));}};});
+  await page.route('**/*',async route=>{const req=route.request(),u=new URL(req.url());if(u.hostname==='127.0.0.1')return route.continue();
+   const json=body=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});
+   if(u.pathname==='/auth/v1/token'){const exp=Math.floor(Date.now()/1000)+3600;const token=Buffer.from('{}').toString('base64url')+'.'+Buffer.from(JSON.stringify({sub:uid,exp,iss:'https://ctlweepsrdjrytisyvsk.supabase.co/auth/v1',aud:'authenticated'})).toString('base64url')+'.sig';return json({access_token:token,refresh_token:'mock-refresh',expires_in:3600,expires_at:exp,token_type:'bearer',user:{id:uid,email:'pilazeleznice@gmail.com',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{}}});}
+   if(u.pathname==='/auth/v1/logout')return route.fulfill({status:204});
+   if(u.pathname==='/rest/v1/rpc/pz_sync_apply'){rpcCount++;const changes=req.postDataJSON().changes,result=[];for(const c of changes){const k=c.kind+':'+c.id,old=rows.get(k);if(old&&(old.mutation_id===c.mutation_id||(old.deleted===c.deleted&&JSON.stringify(old.payload)===JSON.stringify(c.payload)))){result.push({ok:true,row:old});continue;}if((old?.revision||0)!==c.expected_revision){result.push({ok:false,row:old});continue;}const row={...c,user_id:uid,revision:++revision,changed_at:new Date().toISOString()};rows.set(k,row);result.push({ok:true,row});}return json(result);}
+   if(u.pathname==='/rest/v1/pz_sync_entries'){const cursor=Number((u.searchParams.get('revision')||'gt.0').slice(3));return json([...rows.values()].filter(x=>x.revision>cursor).sort((a,b)=>a.revision-b.revision).slice(0,200));}
+   if(u.pathname.startsWith('/storage/v1/object/')){const k=u.pathname.replace('/authenticated/','/');if(req.method()==='POST'){if(blobs.has(k))return route.fulfill({status:409,contentType:'application/json',body:JSON.stringify({statusCode:'409',error:'Duplicate',message:'Already exists'})});let bytes=req.postDataBuffer();const type=req.headers()['content-type']||'';if(type.includes('multipart/form-data')){const boundary=type.split('boundary=')[1];const parts=bytes.toString('latin1').split('--'+boundary);const part=parts.find(x=>x.includes('filename='));bytes=Buffer.from(part.slice(part.indexOf('\r\n\r\n')+4,-2),'latin1');}blobs.set(k,bytes);return json({Key:k});}const blob=blobs.get(k);return blob?route.fulfill({status:200,body:blob,contentType:'application/pdf'}):route.fulfill({status:404});}
+   return route.abort();
+  });
+  await page.goto(`http://127.0.0.1:${server.address().port}/`,{waitUntil:'load'});await page.evaluate(()=>Promise.race([PZSync.ready,new Promise((_,r)=>setTimeout(()=>r(Error('Sync init timeout: '+JSON.stringify(PZSync.status))),10000))]));await page.evaluate(()=>Promise.race([navigator.serviceWorker.ready,new Promise((_,reject)=>setTimeout(()=>reject(Error('Service worker readiness timeout')),10000))]));
+  await page.locator('#settingsToolBtn').click();await page.locator('#pzSyncSection>summary').click();await page.locator('#pzSyncPassword').fill('test-password');await page.locator('#pzSyncSignIn').click();await page.waitForFunction(()=>PZCloudAuth.user&&PZSync.status.lastSync);await page.locator('#v80SettingsClose').click();return {ctx,page};
+ }
+ const a=await device();const b=await device();const sync=async p=>{await p.waitForFunction(()=>!PZSync.status.working);await p.evaluate(()=>Promise.race([PZSync.sync(true),new Promise((_,r)=>setTimeout(()=>r(Error('Sync timeout: '+JSON.stringify(PZSync.status))),10000))]));await p.waitForFunction(()=>!PZSync.status.working);};
+ // Real shared app array and save hook, including IndexedDB attachment.
+ await a.page.evaluate(async()=>{
+  const blob=new Blob(['%PDF-1.4 synchronization fixture'],{type:'application/pdf'});const db=await new Promise((ok,no)=>{const q=indexedDB.open('EvidenceRozvozuFiles',1);q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error);});await new Promise((ok,no)=>{const tx=db.transaction('files','readwrite');tx.objectStore('files').put({id:'sync-test-pdf',name:'Objednavka.pdf',type:blob.type,size:blob.size,blob});tx.oncomplete=ok;tx.onerror=no;});
+  window.rides.push({id:123456,date:new Date().toLocaleDateString('en-CA'),time:'15:00',name:'Synchronizovaný zákazník',address:'Jičín',vehicle:'AK',payment:'Hotově',status:'planned',net:1000,documents:[{id:'sync-test-pdf',name:'Objednavka.pdf',type:blob.type,size:blob.size}]});window.save();window.render();
+ });await sync(a.page);await sync(b.page);
+ assert.equal(await b.page.evaluate(()=>window.rides[0]?.name),'Synchronizovaný zákazník');assert.equal(blobs.size,1);assert.equal(await b.page.evaluate(async()=>{const d=await new Promise(r=>{const q=indexedDB.open('EvidenceRozvozuFiles',1);q.onsuccess=()=>r(q.result);});return new Promise(r=>{const q=d.transaction('files','readonly').objectStore('files').get('sync-test-pdf');q.onsuccess=()=>r(q.result?.blob?.size);});}),Buffer.byteLength('%PDF-1.4 synchronization fixture'));
+ // Native reminder scheduler sees incoming rides.
+ await b.page.waitForFunction(()=>nativePayload?.rides.some(r=>r.id==='123456'));
+ await b.ctx.setOffline(true);await b.page.evaluate(()=>{window.rides[0].note='Offline verze';window.save();});await sync(b.page);assert.equal(await b.page.evaluate(()=>PZSync.status.queued),1);
+ await b.page.reload();await b.page.evaluate(()=>PZSync.ready);await b.page.waitForFunction(()=>PZSync.status.queued===1);assert.equal(await b.page.evaluate(()=>window.rides[0].note),'Offline verze');
+ await a.page.evaluate(()=>{window.rides[0].note='Serverová verze';window.save();});await sync(a.page);await b.ctx.setOffline(false);await sync(b.page);assert.equal(await b.page.evaluate(()=>PZSync.status.conflicts),1);assert.equal(await b.page.evaluate(()=>window.rides[0].note),'Offline verze');
+ await b.page.locator('#settingsToolBtn').click();await b.page.locator('#pzSyncSection>summary').click();await b.page.getByRole('button',{name:'Použít verzi ze serveru',exact:true}).click();await b.page.waitForFunction(()=>PZSync.status.conflicts===0);assert.equal(await b.page.evaluate(()=>window.rides[0].note),'Serverová verze');await b.page.locator('#v80SettingsClose').click();
+ // Open edit forms are never overwritten while new data arrive.
+ await b.page.evaluate(()=>openEdit(123456));await b.page.waitForSelector('#formModal.show');await a.page.evaluate(()=>{window.rides[0].name='Změna při otevřeném formuláři';window.save();});await sync(a.page);await sync(b.page);assert.equal(await b.page.evaluate(()=>window.rides[0].name),'Synchronizovaný zákazník');await b.page.evaluate(()=>document.getElementById('formModal').classList.remove('show'));await sync(b.page);assert.equal(await b.page.evaluate(()=>window.rides[0].name),'Změna při otevřeném formuláři');
+ // Shared application data beyond ride cards: drafts, breaks, origin and live run.
+ await a.page.evaluate(()=>{
+  localStorage.setItem('evidenceRozvozu_drafts_v40',JSON.stringify([{id:'draft-sync',name:'Rozpracovaná jízda',phone:'777123456',documents:[]}]));
+  localStorage.setItem('evidenceRozvozu_breaks_v20',JSON.stringify({'2030-06-10':null,'2030-06-11':{start:'12:30',end:'13:30'}}));
+  localStorage.setItem('evidenceRozvozu_mapyOrigin_v34',JSON.stringify({lon:15.38,lat:50.47,address:'Pila Železnice'}));
+  localStorage.setItem('evidenceRozvozu_activeRun_v24',JSON.stringify({rideId:123456,stage:'loading',paused:true,startedAt:Date.now(),accumulatedMs:1000}));
+ });await sync(a.page);await sync(b.page);
+ assert.equal(await b.page.evaluate(()=>JSON.parse(localStorage.getItem('evidenceRozvozu_drafts_v40'))[0].phone),'777123456');
+ assert.deepEqual(await b.page.evaluate(()=>JSON.parse(localStorage.getItem('evidenceRozvozu_breaks_v20'))),{'2030-06-10':null,'2030-06-11':{start:'12:30',end:'13:30'}});
+ assert.equal(await b.page.evaluate(()=>JSON.parse(localStorage.getItem('evidenceRozvozu_activeRun_v24')).paused),true);
+ assert.equal(await b.page.evaluate(()=>JSON.parse(localStorage.getItem('evidenceRozvozu_mapyOrigin_v34')).address),'Pila Železnice');
+ await a.page.evaluate(()=>localStorage.removeItem('evidenceRozvozu_activeRun_v24'));await sync(a.page);await sync(b.page);
+ assert.equal(await b.page.evaluate(()=>localStorage.getItem('evidenceRozvozu_activeRun_v24')),null);
+ // Permanent deletion propagates; repeated sync performs no writes.
+ await a.page.evaluate(()=>{window.rides.splice(0,1);window.save();});await sync(a.page);await sync(b.page);assert.equal(await b.page.evaluate(()=>window.rides.length),0);const calls=rpcCount;await sync(a.page);await sync(b.page);assert.equal(rpcCount,calls);
+ for(const width of [390,768,1440]){await b.page.setViewportSize({width,height:900});await b.page.locator('#settingsToolBtn').click();await b.page.evaluate(()=>document.getElementById('pzSyncSection').open=true);assert.equal(await b.page.locator('#pzSyncSection').evaluate(el=>el.scrollWidth<=el.clientWidth),true);if(width===390)await b.page.screenshot({path:'/tmp/pz-sync-settings.png'});await b.page.locator('#v80SettingsClose').click();}
+ assert.deepEqual(errors,[]);console.log('Two-device browser: sign-in, live app arrays, document upload/download, native reschedule, offline restart, concurrent edit resolution, protected forms, deletion, idempotency and responsive settings passed.');await browser.close();server.close();
+})().catch(e=>{console.error(e);process.exit(1);});

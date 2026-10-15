@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "node --test tests/*.test.cjs && node tests/push-sql.cjs",
-    "test:browser": "node tests/push-browser.cjs"
+    "test": "node --test tests/*.test.cjs && node tests/push-sql.cjs && node tests/sync-sql.cjs",
+    "test:browser": "node tests/push-browser.cjs && node tests/push-native-browser.cjs && node tests/sync-browser.cjs",
+    "build:vendor": "esbuild node_modules/@supabase/supabase-js/dist/index.mjs --bundle --format=iife --global-name=PZSupabase --minify --outfile=vendor/supabase-2.117.3.js"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.3.14",
+    "esbuild": "0.25.12",
     "playwright": "1.61.1",
     "typescript": "5.9.3",
     "web-push": "3.6.7"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.117.3"
   }
 }

@@ -46,6 +46,7 @@
  }
  let refreshing;
  async function token() {
+  if(window.PZCloudAuth) return window.PZCloudAuth.token();
   if (!session) throw Error('Nejdřív připoj oznámení.');
   if (session.expires_at < Date.now()/1000 + 90) {
    if (!refreshing) refreshing = http('/auth/v1/token?grant_type=refresh_token', { refresh_token: session.refresh_token }).then(x => {
@@ -80,7 +81,7 @@
   } catch (e) { status(e.message || 'Změny čekají na odeslání.', true); }
   finally { busy = false; if (successful && JSON.stringify(snapshot()) !== JSON.stringify(current)) schedule(); }
  }
- function schedule() { if(native){sync();return;}clearTimeout(timer); timer = setTimeout(() => sync(), 400); }
+ function schedule() { clearTimeout(timer); timer = setTimeout(() => sync(), 400); }
  const originalSet = Storage.prototype.setItem, originalRemove = Storage.prototype.removeItem;
  // Includes edits, timeline moves, merge/split, START, cancellation and backup restore.
  Storage.prototype.setItem = function(k, v) { originalSet.call(this, k, v); if (this === localStorage && /^(evidenceRozvozu_v4|evidenceRozvozu_activeRun_v24|evidenceRozvozu_mergedActive_v51)$/.test(k)) schedule(); };
@@ -117,7 +118,7 @@
    if (!session) {
     const email = $('pzPushEmail').value.trim(), password = $('pzPushPassword').value;
     if (!email || !password) throw Error('Vyplň přihlášení k účtu Evidence.');
-    const x = await http('/auth/v1/token?grant_type=password', {email,password});
+    const x = window.PZCloudAuth ? await window.PZCloudAuth.login(email,password) : await http('/auth/v1/token?grant_type=password', {email,password});
     session = {access_token:x.access_token,refresh_token:x.refresh_token,expires_at:Date.now()/1000+x.expires_in,userId:x.user.id,subscribed:false};
     $('pzPushPassword').value = ''; localStorage.setItem(SESSION, JSON.stringify(session));
    }
@@ -139,7 +140,9 @@
     await http(`/rest/v1/pz_push_subscriptions?user_id=eq.${encodeURIComponent(session.userId)}&device_id=eq.${device}`, undefined, 'DELETE', await token());
     const sub = await (await worker()).pushManager.getSubscription(); await sub?.unsubscribe();
    }
-   session = null; localStorage.removeItem(SESSION); paint(); status('Oznámení jsou na tomto zařízení vypnutá.');
+   if(window.PZCloudAuth && session){session.subscribed=false;localStorage.setItem(SESSION,JSON.stringify(session));}
+   else {session = null; localStorage.removeItem(SESSION);}
+   paint(); status('Oznámení jsou na tomto zařízení vypnutá.');
   } catch(e) { status('Odpojení se nezdařilo. Zkus to znovu s připojením k internetu.',true); }
   finally { button.disabled = false; }
  }
@@ -171,10 +174,11 @@
   const cached=loadedOwner===owner?null:read(prefKey()); if(cached){prefs=cached.settings;revision=cached.revision;pending=cached.pending;}
   else if(loadedOwner!==owner) {prefs=structuredClone(DEFAULTS);revision=0;pending=false;const local=read('pzPushPreferences:'+authRoot+':local');if(local?.pending){prefs=local.settings;pending=true;revision=0;}}
   loadedOwner=owner;
-  if(!native && session && !pending) { const rows=await http('/rest/v1/pz_push_preferences?select=settings,revision,updated_at',undefined,'GET',await token());if(!pending && session?.userId===owner){prefs=rows?.[0]?.settings||structuredClone(DEFAULTS);revision=rows?.[0]?.revision||0;cachePreferences();} }
+  if(!native && session && !pending && !window.PZSync) { const rows=await http('/rest/v1/pz_push_preferences?select=settings,revision,updated_at',undefined,'GET',await token());if(!pending && session?.userId===owner && !window.PZSync){prefs=rows?.[0]?.settings||structuredClone(DEFAULTS);revision=rows?.[0]?.revision||0;cachePreferences();} }
   paintPreferences();
  }
  async function syncPreferences() {
+  if(window.PZSync){pending=false;cachePreferences();paintPreferences();return;}
   if(native || !session || prefsBusy)return;
   prefsBusy=true;
   try {
@@ -192,6 +196,7 @@
   for(const k of ['enabled','detail','address','price','payment']) next[k]=$('pzPref-'+k).checked;
   for(const [k] of TYPES) {next[k].enabled=$('pz-'+k).checked;const input=$('pz-value-'+k);if(!input.checkValidity()){input.reportValidity();return;}if(k==='morning')next[k].time=input.value;else next[k].minutes=Math.round(Number(input.value)*(k==='day_before'?60:1));}
   prefs=next;pending=true;cachePreferences();button.disabled=true;
+  window.dispatchEvent(new Event('pz-reminders-changed'));
   try {
    if(native) await nativeSync(true); else await syncPreferences();
    $('pzSaveStatus').textContent=pending?'Změny uloženy v zařízení. Synchronizace se serverem čeká na připojení.':'Změny uloženy.';
@@ -256,7 +261,7 @@
   if(native){
    $('pzPref-enabled').parentElement.lastChild.textContent='Zapnout připomínky na tomto telefonu';
    section.querySelector('.pz-push-buttons').nextElementSibling.textContent='Android plánuje připomínky místně. Účet ani připojení k internetu nejsou pro jejich doručení potřeba.';
-   section.querySelector('.pz-push-card > small:last-child').textContent='Připomínky fungují i po zavření aplikace. Režim Nerušit a úspora baterie mohou ovlivnit doručení; Android může blízké alarmy během spánku odložit. Změny na jiném zařízení se sem automaticky nepřenášejí.';
+   section.querySelector('.pz-push-card > small:last-child').textContent='Připomínky fungují i po zavření aplikace. Při otevření Evidence se načtou synchronizované jízdy a aktualizují se připomínky v telefonu. Režim Nerušit a úspora baterie mohou ovlivnit doručení.';
    $('pzPrefReload').hidden=true;
   }
   section.querySelectorAll('input[id^=pzPref-],input[id^=pz-],input[id^=pz-value-]').forEach(input=>input.addEventListener('change',()=>{$('pzSaveStatus').textContent='Neuložené změny · klepni na Uložit změny.';}));
@@ -266,7 +271,7 @@
   $('pzPrefSave').onclick=preferencesChanged;
   loadPreferences().catch(e=>status(e.message,true)); $('pzPushEnable').onclick=enable; $('pzPushDisable').onclick=disable; $('pzPushTest').onclick=test; paint();
   // Prepare the installed PWA at startup; permission is still requested only by the user button.
-  if(!native && window.isSecureContext && 'serviceWorker' in navigator) worker().then(reg=>reg.update()).catch(()=>status('Příjem oznámení se nepodařilo připravit. Připoj se k internetu a otevři aplikaci znovu.',true));
+  if(window.isSecureContext && 'serviceWorker' in navigator) worker().then(reg=>reg.update()).catch(()=>{if(!native)status('Příjem oznámení se nepodařilo připravit. Připoj se k internetu a otevři aplikaci znovu.',true);});
   status(!ready ? 'Zatím neaktivní · čeká na připojení odesílací služby' : session?.subscribed ? 'Kontroluji připomínky…' : 'Připoj toto zařízení k oznámením.');
   if(native){nativeCall('health').then(x=>{nativeHealth=x;paint();listDevices();return nativeSync(true);}).catch(e=>status(e.message,true));}
   else if (ready && session?.subscribed) reconcile();
@@ -281,6 +286,17 @@
   } catch(e) { status(e.message || 'Oznámení se nepodařilo zkontrolovat.',true); }
  }
  window.addEventListener('pz-native-open-ride',e=>{if(e.detail)openRide(e.detail);});
+ window.addEventListener('pz-cloud-data',()=>{schedule();});
+ window.addEventListener('pz-cloud-auth',()=>{session=read(SESSION);if($('pzPushLogin')){paint();if(!native)sync();}});
+ window.PZPushSettings={
+  snapshot(){return structuredClone(prefs);},
+  isDefault(){const stable=window.PZSyncModel?.stable||JSON.stringify;return stable(prefs)===stable(DEFAULTS);},
+  apply(settings){
+   if(!settings || JSON.stringify(settings)===JSON.stringify(prefs))return;
+   prefs=structuredClone(settings);pending=true;cachePreferences();
+   if($('pzPrefStatus')){paintPreferences();schedule();}
+  }
+ };
  window.addEventListener('pz-native-resume',()=>{if(native && $('pzDevice'))nativeCall('health').then(x=>{nativeHealth=x;paint();return nativeSync();}).catch(e=>status(e.message,true));});
  window.addEventListener('online',()=>{paintHealth();sync(true);});
  window.addEventListener('offline',()=>{paintHealth();if(!native)$('pzPrefStatus').textContent='Offline · změny čekají na synchronizaci.';});
