@@ -28,7 +28,7 @@
  function setup(){
   const phone=$('fPhone'),name=$('fName'),address=$('fAddress');if(!phone||!name)return;
   const field=phone.closest('.field'),row=document.createElement('div');row.className='ride-contact-row';phone.before(row);row.append(phone);
-  const picker=document.createElement('button');picker.type='button';picker.className='ride-contact-pick';picker.textContent='Kontakty';picker.title='Vybrat kontakt z telefonu';row.append(picker);
+  const picker=document.createElement('button');picker.type='button';picker.className='ride-contact-pick';picker.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="16" height="18" rx="2"/><path d="M3 7h2M3 12h2M3 17h2"/><circle cx="13" cy="10" r="2"/><path d="M9 17c.5-2 7.5-2 8 0"/></svg>';picker.setAttribute('aria-label','Vybrat kontakt z telefonu');picker.title='Vybrat kontakt z telefonu';row.append(picker);
   const list=document.createElement('div');list.className='ride-contact-results';list.hidden=true;list.setAttribute('aria-label','Nabízené kontakty');field.append(list);
   const hide=()=>{list.hidden=true;phone.setAttribute('aria-expanded','false')};phone.setAttribute('aria-expanded','false');
   function assign(c){
@@ -74,6 +74,6 @@
  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;button.hidden=false});
  window.addEventListener('appinstalled',()=>{installPrompt=null;button.hidden=true});
  button.onclick=async()=>{if(!installPrompt)return;const prompt=installPrompt;installPrompt=null;button.hidden=true;await prompt.prompt();await prompt.userChoice};
- function start(){document.querySelector('.hero')?.after(button);setup()}
+ function start(){document.getElementById('v80SettingsHome')?.append(button);setup()}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();

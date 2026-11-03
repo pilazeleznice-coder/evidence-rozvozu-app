@@ -2218,7 +2218,7 @@ window.openRideDocument=async id=>{try{const f=await get(id);if(!f)return v52Ale
 function list(){dl.replaceChildren();for(const x of [...existing,...pending]){const row=document.createElement('div');row.className='document-item';const label=document.createElement('span');label.textContent='📄 '+x.name+(x.error?' – nepodařilo se uložit':(x.ready||existing.includes(x))?'':' – ukládám…');row.append(label);if(pending.includes(x)){const b=document.createElement('button');b.type='button';b.textContent='Odebrat';b.onclick=()=>{pending=pending.filter(p=>p!==x);list()};row.append(b)}dl.append(row)}}
 fi.onchange=()=>{const gen=generation;for(const f of fi.files){const x={id:'doc_'+crypto.randomUUID(),name:f.name,type:f.type,size:f.size,ready:false};pending.push(x);const job=put(x.id,f).then(()=>{x.ready=true;if(gen===generation)list()},()=>{x.error=true;if(gen===generation){list();v52Alert('Dokument se nepodařilo uložit. Zkontrolujte volné místo a vyberte soubor znovu.')}});writes=Promise.all([writes,job])}fi.value='';list()};
 function metadata(){return [...existing,...pending.filter(x=>x.ready)].map(({id,name,type,size})=>({id,name,type,size}))}
-window.PZRideDocuments={ready:()=>writes,metadata,load:docs=>{generation++;pending=[];existing=[...(docs||[])];writes=Promise.resolve();list()},failed:()=>pending.some(x=>x.error)};
+window.PZRideDocuments={ready:()=>writes,metadata,load:docs=>{generation++;pending=[];existing=[...(docs||[])];writes=Promise.resolve();list()},setOrderNo:value=>{ord.value=value||''},failed:()=>pending.some(x=>x.error)};
 function clear(){st.value='';ph.value='';dur.value='00:00';ord.value='';window.PZRideDocuments.load([])}
 addBtn.addEventListener('click',()=>setTimeout(clear,0),true);
 const oe=window.openEdit;window.openEdit=id=>{oe(id);const r=rides.find(x=>x.id===id);if(!r)return;st.value=r.startTime||'';ph.value=r.phone||'';let n=+r.estimatedMinutes||0;dur.value=String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');ord.value=r.orderNo||'';window.PZRideDocuments.load(r.documents||[])};
@@ -4714,7 +4714,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
     plannedLoadMinutes:parseInt($("v39Load")?.textContent)||null,plannedUnloadMinutes:parseInt($("v39Unload")?.textContent)||null,
     deliveryReserveMinutes:Number(document.querySelector("[data-reserve].active")?.dataset.reserve||10),
     startTime:$("fStartTime")?.value||"",estimatedMinutes:(()=>{let p=($("fDuration")?.value||"00:00").split(":");return (+p[0]||0)*60+(+p[1]||0)})(),
-    documents:window.PZRideDocuments.metadata()
+    orderNo:window.PZArchiveImport?.selection()?.kgNumber||'',sourceConfiguration:window.PZArchiveImport?.selection()||null,documents:window.PZRideDocuments.metadata()
    };
  }
  async function saveAsDraft(){
@@ -4744,7 +4744,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
    const row=e.target.closest("[data-draft]");if(!row)return;const d=drafts().find(x=>x.id===row.dataset.draft);if(!d)return;
    $("v40Drafts").classList.remove("open");$("addBtn").click();
    setTimeout(()=>{
-     mode="draft";activeDraftId=d.id;stagedDraftDocs=[...(d.documents||[])];window.PZRideDocuments.load(d.documents||[]);
+     mode="draft";activeDraftId=d.id;stagedDraftDocs=[...(d.documents||[])];window.PZRideDocuments.load(d.documents||[]);window.PZRideDocuments.setOrderNo(d.orderNo);window.PZArchiveImport?.restoreSelection(d.sourceConfiguration);
      $("fName").value=d.name||"";$("fPhone").value=d.phone||"";$("fNet").value=d.net||"";$("fNet").dispatchEvent(new Event("input",{bubbles:true}));
      $("fPayment").value=d.payment||"Hotově";$("fDate").value=d.date||$("fDate").value;$("fVehicle").value=d.vehicle||"AK";$("fVehicle").dispatchEvent(new Event("change",{bubbles:true}));
      $("fAddress").value=d.address||"";$("fNote").value=d.note||"";
@@ -7876,3 +7876,9 @@ input:focus,select:focus,textarea:focus{background:#fff!important;border-color:#
 
 <link rel="stylesheet" href="./ride-enhancements.css">
 <script src="./ride-enhancements.js"></script>
+
+<script src="./vendor/pdf-lib-1.17.1.min.js"></script>
+<script src="./vendor/fontkit-1.1.1.min.js"></script>
+<script src="./archive-model.js"></script>
+<script src="./archive-pdf.js"></script>
+<script src="./archive-import.js"></script>
