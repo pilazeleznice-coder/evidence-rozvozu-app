@@ -23,7 +23,7 @@ const root=path.join(__dirname,'..');
  await page.evaluate(()=>{nativeState.permission=true;nativeState.exact=true;dispatchEvent(new Event('pz-native-resume'));});
  await page.waitForFunction(()=>document.querySelector('#pzPermission').textContent.includes('povoleno'));
  await page.locator('#pzPushEnable').click();await page.locator('#pzPushTest').waitFor({state:'visible'});
- await page.evaluate(()=>localStorage.setItem('evidenceRozvozu_v4',JSON.stringify([{id:'native-test',name:'Test',status:'planned',date:'2030-06-15',time:'09:00',vehicle:'AK'}])));
+ await page.evaluate(()=>localStorage.setItem('evidenceRozvozu_v4',JSON.stringify([{id:'native-test',name:'Test',status:'planned',date:'2030-06-15',time:'09:00',vehicle:'AK',routeOutMinutes:30}])));
  await page.waitForFunction(()=>window.nativePayload?.rides[0]?.enabled===true);
  await page.evaluate(()=>localStorage.setItem('evidenceRozvozu_activeRun_v24',JSON.stringify({rideId:'native-test'})));
  await page.waitForFunction(()=>window.nativePayload?.rides[0]?.enabled===false);

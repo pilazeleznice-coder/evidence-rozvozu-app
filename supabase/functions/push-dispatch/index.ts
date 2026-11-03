@@ -7,14 +7,14 @@ function title(job: any) {
  const minutes = job.preferences?.[job.kind]?.minutes;
  if (job.kind === 'test') return 'Evidence rozvozů – serverová zkouška';
  if (job.kind === 'morning') return 'Evidence rozvozů – dnešní jízda';
- if (job.kind === 'day_before' || job.kind === 'hour_before') return `Evidence rozvozů – jízda za ${minutes} min`;
- return `Evidence rozvozů – ${minutes} min po termínu`;
+ if (job.kind === 'day_before' || job.kind === 'hour_before') return `Evidence rozvozů – odjezd za ${minutes} min`;
+ return `Evidence rozvozů – ${minutes} min po odjezdu`;
 }
 function body(job: any) {
  if (job.kind === 'test') return 'Oznámení dorazilo ze serveru přes Web Push. Zavři aplikaci a ověř další test při zamčeném telefonu.';
  const p = job.preferences || {};
  if (!p.detail) return 'Připomínka naplánované jízdy. Podrobnosti najdeš v Evidenci rozvozů.';
- const parts = [job.name, `Doručení: ${dateFormat.format(new Date(job.delivery_at))}`, `Vozidlo: ${job.vehicle}`];
+ const parts = [job.name, `Odjezd: ${dateFormat.format(new Date(job.delivery_at))}`, `Vozidlo: ${job.vehicle}`];
  if (job.order_no) parts.push(`Objednávka: ${job.order_no}`);
  if (p.address && job.address) parts.push(`Adresa: ${job.address}`);
  if (p.price) parts.push(`Cena bez DPH: ${moneyFormat.format(Number(job.net))}`);
