@@ -1,6 +1,6 @@
 'use strict';
-const SHELL_CACHE='pz-evidence-shell-operations-6';
-const SHELL=['./operations-model.js','./operations.js','./operations.css','./archive-model.js','./archive-pdf.js','./archive-import.js','./vendor/pdf-lib-1.17.1.min.js','./vendor/fontkit-1.1.1.min.js','./ride-enhancements.js','./ride-enhancements.css','./','./index.html','./manifest.webmanifest','./push-config.js','./push-model.js','./push-client.js','./push-settings.css','./cloud-auth.js','./sync-model.js','./sync-client.js','./sync-settings.css','./vendor/supabase-2.117.3.js','./icon-192.png?v=2','./icon-512.png?v=2','./favicon.ico?v=2'];
+const SHELL_CACHE='pz-evidence-shell-navigation-7';
+const SHELL=['./navigation.js','./operations-model.js','./operations.js','./operations.css','./archive-model.js','./archive-pdf.js','./archive-import.js','./vendor/pdf-lib-1.17.1.min.js','./vendor/fontkit-1.1.1.min.js','./ride-enhancements.js','./ride-enhancements.css','./','./index.html','./manifest.webmanifest','./push-config.js','./push-model.js','./push-client.js','./push-settings.css','./cloud-auth.js','./sync-model.js','./sync-client.js','./sync-settings.css','./vendor/supabase-2.117.3.js','./icon-192.png?v=2','./icon-512.png?v=2','./favicon.ico?v=2'];
 self.addEventListener('install', event => event.waitUntil((async()=>{const cache=await caches.open(SHELL_CACHE);await cache.addAll(SHELL);await self.skipWaiting();})()));
 self.addEventListener('activate', event => event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith('pz-evidence-shell-')&&key!==SHELL_CACHE)await caches.delete(key);await self.clients.claim();})()));
 self.addEventListener('fetch',event=>{

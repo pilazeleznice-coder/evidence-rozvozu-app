@@ -109,3 +109,9 @@ Test mostu: `PZ_CHROMIUM_EXECUTABLE=/cesta/chromium node tests/push-native-brows
 - Přepínače funkcí a výchozí období/graf jsou v **Nastavení → Plánování, platby a statistiky**. Předvolby zobrazení jsou místní pro zařízení; obchodní údaje jsou součástí běžného payloadu jízdy/konceptu a stávající synchronizace i úplné zálohy. Databázové schéma ani služba oznámení se nemění.
 
 Ověření: `npm test` a `npm run test:browser`. Nové testy pokrývají částky a chybějící data, sloučené trasy, hranice období, přechod půlnoci, bezpečnou kopii, editaci/koncept, přenos nových polí na druhé zařízení a mobilní rozložení.
+
+## Systémové Zpět v telefonu
+
+`navigation.js` drží jednu opakovaně používanou položku historie na stejné URL. Zpět zavírá nejvyšší otevřené okno přes jeho původní ovládání; podstránka Nastavení se vrací do přehledu. Formulář a Timeline zachovávají dotaz na neuložené změny, potvrzovací okna volí bezpečné storno, aktivní rozvoz se jen minimalizuje. Nativní dialog může zavření zamítnout při probíhající operaci. Na úvodu Zpět ponechá aplikaci otevřenou. Běžné zavírání ani opětovné načtení nehromadí další kroky historie. Toto chování se vztahuje na web/PWA v Chromu; nezměněný starý Android WebView může vyžadovat úpravu jeho nativního obsluhování Zpět.
+
+Ověření: `tests/navigation-browser.cjs` používá skutečný `history.back()` v Chromiu.
