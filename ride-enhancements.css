@@ -2,3 +2,54 @@
 .ride-contact-pick svg{width:20px;height:20px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.ride-contact-pick{padding:11px}.archive-action{padding:12px;border:1px solid #bbd0b8;border-radius:11px;color:#104c29;background:#eef6ec;font-weight:700;cursor:pointer;margin:6px 0;min-height:44px}.archive-import-dialog{width:min(94vw,620px);max-height:88vh;overflow:auto;border:0;border-radius:20px;padding:20px;color:#243129;box-shadow:0 20px 60px #0004}.archive-import-dialog::backdrop{background:#0b21148f}.archive-import-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.archive-import-head h2{font-size:20px;color:#104c29}.archive-import-close{border:0;background:#fff1f1;color:#a9413b;border-radius:9px;min-width:40px;min-height:40px;font-size:24px;cursor:pointer}.archive-import-result{display:block;text-align:left;width:100%;padding:14px;border:1px solid #d8e4d6;border-radius:12px;background:white;color:#104c29;margin:8px 0;cursor:pointer}.archive-import-result:hover{background:#eef6ec}.archive-import-result small,.archive-import-result strong{display:block;overflow-wrap:anywhere}.archive-import-result small{margin-top:7px;color:#617064;font-size:12px}.archive-import-status,.archive-import-summary,.ride-options p{font-size:12px;line-height:1.5}.archive-import-summary{padding:12px;background:#eef6ec;border-radius:11px}.ride-options form{display:grid;gap:8px;margin-top:12px}
 
 html.ride-hide-upload .v51-info-upload{display:none!important}
+
+/* Shared visual rhythm for the ride editor and settings. Presentation only. */
+#formModal .sheet{width:min(100%,640px);max-height:92dvh!important;scroll-padding:20px;background:#f5f7f3!important}
+#formModal .sheet>h2{font-size:20px!important;line-height:1.3!important;padding-bottom:20px!important}
+#formModal .form-grid{gap:14px!important;align-items:start}
+#formModal .field{min-width:0;margin-bottom:2px!important}
+#formModal .field>label{font-size:11px!important;line-height:1.5;margin-bottom:7px;font-weight:800}
+#formModal input:not([type=checkbox]):not([type=radio]):not([type=file]),#formModal select{height:46px!important;font-size:14px!important;padding:0 12px!important;box-sizing:border-box;max-width:100%}
+#formModal textarea{font-size:14px!important;min-height:90px;box-sizing:border-box;width:100%;resize:vertical}
+#formModal input[readonly]{background:#edf3e9!important;color:#104c29;font-weight:750}
+#formModal #archiveImportOpen{display:block;width:100%;margin:0 0 20px;padding:13px 16px;background:#e8f2e4;border:1px solid #bdd2b7;border-radius:13px;font:750 13px/1.4 inherit;text-align:left}
+#formModal .ride-contact-row{gap:8px}
+#formModal .ride-contact-pick{flex:0 0 46px;height:46px;display:grid;place-items:center;padding:0;border-radius:11px;background:#104c29}
+#formModal .v72-unknown-row{border-radius:10px!important;background:#edf3e9!important;margin-top:7px!important;min-height:36px!important}
+#formModal .v72-unknown-row>span{font-size:10px!important}
+#formModal .sheet-actions{position:sticky;bottom:-18px;z-index:3;background:#f5f7f3;padding:14px 0 max(8px,env(safe-area-inset-bottom));border-top:1px solid #dce6d7;margin-top:20px!important}
+#formModal .sheet-actions button{min-height:46px!important;font-size:12px!important}
+#formModal .ride-departure-note{border:1px solid #dce6d7;padding:12px;line-height:1.6}
+#v80Settings .v80-wrap{width:min(640px,100%)}
+#v80Settings .v80-head p{font-size:11px;line-height:1.5}
+#v80Settings .v80-groups{gap:18px;margin:20px 0}
+#v80Settings .v80-group-title{font-size:10px;letter-spacing:.5px;margin-bottom:8px}
+#v80Settings .v80-copy strong{font-size:13px!important;line-height:1.4}
+#v80Settings .v80-copy small{font-size:11px!important;line-height:1.5!important}
+#v80Settings .v80-row{padding:13px 15px;min-height:76px!important}
+#v80Settings .ride-options,#v80Settings .pz-sync-section,#v80Settings .pz-settings-section{margin:0 0 14px;padding:0;border:1px solid #dce6d7;border-radius:18px;background:#fff;box-shadow:0 4px 16px #104c290b;overflow:hidden;color:#26372c}
+#v80Settings .ride-options>summary,#v80Settings .pz-sync-section>summary,#v80Settings .pz-settings-section>summary{display:flex;align-items:center;gap:10px;list-style:none;min-height:66px;box-sizing:border-box;padding:17px 18px;border:0;border-radius:0;background:#fff;color:#104c29;font-size:13px;font-weight:800;line-height:1.5;cursor:pointer}
+#v80Settings summary::-webkit-details-marker{display:none}
+#v80Settings .ride-options>summary:after{content:'⌄';margin-left:auto;font-size:18px;color:#69816d}
+#v80Settings .ride-options[open]>summary:after{content:'⌃'}
+#v80Settings .ride-options[open]>summary{border-bottom:1px solid #e5ece1;margin-bottom:14px}
+#v80Settings .ride-options>label{margin:0 18px 14px!important;padding:10px 0;line-height:1.5;font-size:12px!important;color:#425147!important;align-items:center}
+#v80Settings .ride-options>p,#v80Settings .ride-options>form{margin:14px 18px;overflow-wrap:anywhere}
+#v80Settings .ride-options input[type=checkbox]{flex:0 0 20px;margin:0;accent-color:#104c29}
+#v80Settings .ride-options input:not([type=checkbox]){font-size:14px!important;min-height:46px}
+#v80Settings .pz-settings-section>summary span{font-size:11px;line-height:1.5;color:#718078}
+#v80Settings .pz-push-card{border:0;border-radius:0;box-shadow:none;padding:18px;font-size:12px;line-height:1.6}
+#v80Settings .pz-push-card h3{font-size:14px}
+#v80Settings .pz-push-card label{font-size:12px!important;line-height:1.5}
+#v80Settings .pz-push-card button{min-height:44px;border-radius:11px;padding:10px 14px;cursor:pointer}
+#v80Settings .pz-sync-body{padding:18px}
+#v80Settings button:focus-visible,#v80Settings summary:focus-visible,#formModal button:focus-visible{outline:3px solid #91b98b;outline-offset:3px}
+@media(max-width:430px){
+ #formModal{padding:8px!important}
+ #formModal .sheet{max-height:95dvh!important;padding:16px!important}
+ #formModal .sheet>h2{margin:-16px -16px 18px!important;padding-left:16px!important}
+ #formModal .form-grid{gap:13px!important}
+ #formModal .sheet-actions{bottom:-16px;gap:8px!important}
+ #v80Settings .v80-row{padding:12px;gap:10px}
+ #v80Settings .ride-options>summary,#v80Settings .pz-sync-section>summary,#v80Settings .pz-settings-section>summary{padding:16px}
+}
