@@ -25,7 +25,7 @@ const {chromium}=require('playwright'),http=require('http'),fs=require('fs'),pat
  rows=await page.evaluate(()=>JSON.parse(localStorage.getItem('evidenceRozvozu_v4')));assert.equal(rows.find(r=>r.id===id).documents.length,2);assert.equal(rows.find(r=>r.id===draftRide.id).documents.length,1);
  await page.reload();
  const manifest=await page.evaluate(()=>fetch('./manifest.webmanifest').then(r=>r.json()));assert.equal(manifest.id,'/evidence-rozvozu-app/');assert.equal(manifest.display,'standalone');
- await page.evaluate(()=>{window.installCalled=0;const e=new Event('beforeinstallprompt',{cancelable:true});e.prompt=async()=>window.installCalled++;e.userChoice=Promise.resolve({outcome:'accepted'});dispatchEvent(e)});await page.locator('.ride-install').click();assert.equal(await page.evaluate(()=>installCalled),1);
+ await page.evaluate(()=>{window.installCalled=0;const e=new Event('beforeinstallprompt',{cancelable:true});e.prompt=async()=>window.installCalled++;e.userChoice=Promise.resolve({outcome:'accepted'});dispatchEvent(e)});await page.locator('#settingsToolBtn').click();await page.locator('.ride-install').click();await page.locator('#v80SettingsClose').click();assert.equal(await page.evaluate(()=>installCalled),1);
  await page.evaluate(()=>navigator.serviceWorker.ready);await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
  await page.context().setOffline(true);await page.reload();await page.locator('#addBtn').click();await page.waitForTimeout(200);assert.equal(await page.locator('.ride-contact-pick').count(),1);await page.context().setOffline(false);
  assert.deepEqual(errors,[]);
