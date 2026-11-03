@@ -2208,18 +2208,23 @@ updateTodayReturnVisibility();
 <script id="v17">
 (function(){
 const st=document.getElementById("fStartTime"),ph=document.getElementById("fPhone"),dur=document.getElementById("fDuration"),ord=document.getElementById("fOrderNo"),fi=document.getElementById("fDocuments"),dl=document.getElementById("documentDraftList");
-let pending=[];
+let pending=[],existing=[],writes=Promise.resolve(),generation=0;
 const dbp=new Promise((ok,no)=>{const q=indexedDB.open("EvidenceRozvozuFiles",1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains("files"))q.result.createObjectStore("files",{keyPath:"id"})};q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)});
-async function put(id,file){const db=await dbp;return new Promise((ok,no)=>{const tx=db.transaction("files","readwrite");tx.objectStore("files").put({id,blob:file,name:file.name,type:file.type,size:file.size});tx.oncomplete=ok;tx.onerror=()=>no(tx.error)})}
+async function put(id,file){const db=await dbp;return new Promise((ok,no)=>{const tx=db.transaction("files","readwrite");tx.objectStore("files").put({id,blob:file,name:file.name,type:file.type,size:file.size});tx.oncomplete=ok;tx.onerror=()=>no(tx.error);tx.onabort=()=>no(tx.error)})}
 async function get(id){const db=await dbp;return new Promise((ok,no)=>{const q=db.transaction("files","readonly").objectStore("files").get(id);q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}
-window.openRideDocument=async id=>{try{const f=await get(id);if(!f)return v52Alert("Dokument nebyl nalezen.");const u=URL.createObjectURL(f.blob);window.open(u,"_blank");setTimeout(()=>URL.revokeObjectURL(u),60000)}catch(e){v52Alert("Dokument se nepodařilo otevřít.")}};
-function list(existing=[]){dl.innerHTML=[...existing.map(x=>({...x,old:true})),...pending.map((x,i)=>({name:x.name,i}))].map(x=>`<div class="document-item"><span>📄 ${esc(x.name)}</span>${x.old?"":`<button type="button" data-i="${x.i}">Odebrat</button>`}</div>`).join("")}
-fi.onchange=()=>{pending.push(...fi.files);fi.value="";const r=editingId?rides.find(x=>x.id===editingId):null;list(r?.documents||[])};
-dl.onclick=e=>{const b=e.target.closest("[data-i]");if(b){pending.splice(+b.dataset.i,1);const r=editingId?rides.find(x=>x.id===editingId):null;list(r?.documents||[])}};
-function clear(){st.value="";ph.value="";dur.value="00:00";ord.value="";pending=[];list([])}
-addBtn.addEventListener("click",()=>setTimeout(clear,0),true);
-const oe=window.openEdit;window.openEdit=id=>{oe(id);const r=rides.find(x=>x.id===id);if(!r)return;st.value=r.startTime||"";ph.value=r.phone||"";let n=+r.estimatedMinutes||0;dur.value=String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");ord.value=r.orderNo||"";pending=[];list(r.documents||[])};
-saveRide.addEventListener("click",function(){const eid=editingId,snap={startTime:st.value,phone:ph.value.trim(),estimatedMinutes:(()=>{const p=(dur.value||"00:00").split(":");return (+p[0]||0)*60+Math.min(59,+p[1]||0)})(),orderNo:ord.value.trim()},files=[...pending];setTimeout(async()=>{const r=eid?rides.find(x=>x.id===eid):rides.reduce((a,b)=>!a||+b.id>+a.id?b:a,null);if(!r)return;Object.assign(r,snap);r.documents=r.documents||[];for(const f of files){const id="doc_"+Date.now()+"_"+Math.random().toString(36).slice(2);try{await put(id,f);r.documents.push({id,name:f.name,type:f.type,size:f.size})}catch(e){}}pending=[];save();render()},0)},true);
+window.openRideDocument=async id=>{try{const f=await get(id);if(!f)return v52Alert("Dokument nebyl nalezen.");const u=URL.createObjectURL(f.blob),a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';a.download=f.name||'dokument';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}catch(e){v52Alert("Dokument se nepodařilo otevřít.")}};
+function list(){dl.replaceChildren();for(const x of [...existing,...pending]){const row=document.createElement('div');row.className='document-item';const label=document.createElement('span');label.textContent='📄 '+x.name+(x.error?' – nepodařilo se uložit':(x.ready||existing.includes(x))?'':' – ukládám…');row.append(label);if(pending.includes(x)){const b=document.createElement('button');b.type='button';b.textContent='Odebrat';b.onclick=()=>{pending=pending.filter(p=>p!==x);list()};row.append(b)}dl.append(row)}}
+fi.onchange=()=>{const gen=generation;for(const f of fi.files){const x={id:'doc_'+crypto.randomUUID(),name:f.name,type:f.type,size:f.size,ready:false};pending.push(x);const job=put(x.id,f).then(()=>{x.ready=true;if(gen===generation)list()},()=>{x.error=true;if(gen===generation){list();v52Alert('Dokument se nepodařilo uložit. Zkontrolujte volné místo a vyberte soubor znovu.')}});writes=Promise.all([writes,job])}fi.value='';list()};
+function metadata(){return [...existing,...pending.filter(x=>x.ready)].map(({id,name,type,size})=>({id,name,type,size}))}
+window.PZRideDocuments={ready:()=>writes,metadata,load:docs=>{generation++;pending=[];existing=[...(docs||[])];writes=Promise.resolve();list()},failed:()=>pending.some(x=>x.error)};
+function clear(){st.value='';ph.value='';dur.value='00:00';ord.value='';window.PZRideDocuments.load([])}
+addBtn.addEventListener('click',()=>setTimeout(clear,0),true);
+const oe=window.openEdit;window.openEdit=id=>{oe(id);const r=rides.find(x=>x.id===id);if(!r)return;st.value=r.startTime||'';ph.value=r.phone||'';let n=+r.estimatedMinutes||0;dur.value=String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');ord.value=r.orderNo||'';window.PZRideDocuments.load(r.documents||[])};
+// Wait before the original save listeners execute, so the ride references only
+// committed files. A rejected form never reaches the saved event below.
+let waiting=false;
+document.addEventListener('click',async e=>{if(!e.target.closest('#saveRide'))return;if(pending.some(x=>!x.ready&&!x.error)){e.preventDefault();e.stopImmediatePropagation();if(waiting)return;waiting=true;await writes;waiting=false;if(!window.PZRideDocuments.failed())saveRide.click()}else if(window.PZRideDocuments.failed()){e.preventDefault();e.stopImmediatePropagation();v52Alert('Neuloženou přílohu odeberte nebo ji vyberte znovu.')}},true);
+window.addEventListener('pz-ride-saved',e=>{const r=rides.find(x=>String(x.id)===String(e.detail.id));if(!r)return;Object.assign(r,{startTime:st.value,phone:ph.value.trim(),estimatedMinutes:(()=>{const p=(dur.value||'00:00').split(':');return (+p[0]||0)*60+Math.min(59,+p[1]||0)})(),orderNo:ord.value.trim(),documents:metadata()});save();render()});
 const oi=window.showInfo;window.showInfo=id=>{oi(id);const r=rides.find(x=>x.id===id);if(!r)return;let n=+r.estimatedMinutes||0,h=Math.floor(n/60),m=n%60,d=n?(h?`${h} h${m?" "+m+" min":""}`:`${m} min`):"Neuvedeno";const x=document.createElement("div");x.innerHTML=`<div class="detail-line"><b>Plánovaný začátek:</b> ${r.startTime?esc(r.startTime):"Neuvedeno"}</div><div class="detail-line"><b>Odhad délky:</b> ${d}</div><div class="detail-line"><b>Telefon:</b> ${r.phone?`<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>`:"Neuvedeno"}</div><div class="detail-line"><b>Číslo objednávky:</b> ${r.orderNo?esc(r.orderNo):"Neuvedeno"}</div><div class="detail-line"><b>Dokumenty:</b></div><div class="info-documents">${(r.documents||[]).length?(r.documents||[]).map(a=>`<div class="info-document"><span>📄 ${esc(a.name)}</span><button onclick="openRideDocument('${a.id}')">Otevřít</button></div>`).join(""):'<span style="font-size:10px;color:#7a877e">Žádné dokumenty</span>'}</div>`;detailContent.appendChild(x)};
 })();
 </script>
@@ -4209,6 +4214,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
 
   /* Save the full planning snapshot onto the ride after legacy save handlers finish. */
   $("saveRide")?.addEventListener("click",()=>{
+    if(!["fName","fPhone","fAddress","fDate"].every(id=>$(id)?.value.trim()))return;
     const editing=typeof editingId!=="undefined"?editingId:null;
     const snapshot={
       plannedLoadMinutes:state.load,
@@ -4695,13 +4701,6 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
  async function putFile(id,file){const db=await dbp;return new Promise((ok,no)=>{const tx=db.transaction("files","readwrite");tx.objectStore("files").put({id,blob:file,name:file.name,type:file.type,size:file.size});tx.oncomplete=ok;tx.onerror=()=>no(tx.error)})}
  async function deleteFile(id){const db=await dbp;return new Promise(ok=>{const tx=db.transaction("files","readwrite");tx.objectStore("files").delete(id);tx.oncomplete=ok;tx.onerror=ok})}
  let stagedDraftDocs=[];
- $("fDocuments")?.addEventListener("change",async e=>{
-   if(mode!=="new"&&mode!=="draft")return;
-   for(const f of [...e.target.files]){
-     const id="draftdoc_"+Date.now()+"_"+Math.random().toString(36).slice(2);
-     try{await putFile(id,f);stagedDraftDocs.push({id,name:f.name,type:f.type,size:f.size})}catch(err){}
-   }
- },true);
 
  const drafts=()=>{try{return JSON.parse(localStorage.getItem(DRAFT_KEY)||"[]")}catch(e){return []}};
  const saveDrafts=a=>{localStorage.setItem(DRAFT_KEY,JSON.stringify(a));updateDraftBadge()};
@@ -4713,10 +4712,11 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
     plannedLoadMinutes:parseInt($("v39Load")?.textContent)||null,plannedUnloadMinutes:parseInt($("v39Unload")?.textContent)||null,
     deliveryReserveMinutes:Number(document.querySelector("[data-reserve].active")?.dataset.reserve||10),
     startTime:$("fStartTime")?.value||"",estimatedMinutes:(()=>{let p=($("fDuration")?.value||"00:00").split(":");return (+p[0]||0)*60+(+p[1]||0)})(),
-    documents:[...stagedDraftDocs]
+    documents:window.PZRideDocuments.metadata()
    };
  }
- function saveAsDraft(){
+ async function saveAsDraft(){
+   await window.PZRideDocuments.ready();if(window.PZRideDocuments.failed())return;
    const d=collectDraft(),a=drafts(),i=a.findIndex(x=>x.id===d.id);
    if(i>=0)a[i]=d;else a.unshift(d);saveDrafts(a);activeDraftId=d.id;
    $("v40LeaveNew").classList.remove("open");closeNow();
@@ -4742,7 +4742,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
    const row=e.target.closest("[data-draft]");if(!row)return;const d=drafts().find(x=>x.id===row.dataset.draft);if(!d)return;
    $("v40Drafts").classList.remove("open");$("addBtn").click();
    setTimeout(()=>{
-     mode="draft";activeDraftId=d.id;stagedDraftDocs=[...(d.documents||[])];
+     mode="draft";activeDraftId=d.id;stagedDraftDocs=[...(d.documents||[])];window.PZRideDocuments.load(d.documents||[]);
      $("fName").value=d.name||"";$("fPhone").value=d.phone||"";$("fNet").value=d.net||"";$("fNet").dispatchEvent(new Event("input",{bubbles:true}));
      $("fPayment").value=d.payment||"Hotově";$("fDate").value=d.date||$("fDate").value;$("fVehicle").value=d.vehicle||"AK";$("fVehicle").dispatchEvent(new Event("change",{bubbles:true}));
      $("fAddress").value=d.address||"";$("fNote").value=d.note||"";
@@ -4751,7 +4751,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
        if(d.plannedLoadMinutes!=null){const el=$("v39Load");if(el)el.textContent=human(d.plannedLoadMinutes)}
        if(d.plannedUnloadMinutes!=null){const el=$("v39Unload");if(el)el.textContent=human(d.plannedUnloadMinutes)}
        document.querySelectorAll("[data-reserve]").forEach(b=>b.classList.toggle("active",Number(b.dataset.reserve)===Number(d.deliveryReserveMinutes||10)));
-       $("documentDraftList").innerHTML=(d.documents||[]).map(x=>`<div class="document-item"><span class="doc-name">📄 ${esc(x.name)}</span></div>`).join("");
+       /* The shared attachment list already renders restored draft documents. */
        dirty=false;editBaseline=formSnapshot();
      },100);
    },120);
@@ -4759,7 +4759,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
 
  /* On final save of an opened concept: attach concept docs to the created ride and remove concept. */
  $("saveRide")?.addEventListener("click",()=>{
-   if(mode!=="draft")return;
+   if(mode!=="draft"||!["fName","fPhone","fAddress","fDate"].every(id=>$(id)?.value.trim()))return;
    const draftId=activeDraftId,docs=[...stagedDraftDocs];
    setTimeout(()=>{
      const arr=getRides(),r=arr.reduce((a,b)=>!a||+b.id>+a.id?b:a,null);if(!r)return;
@@ -5274,6 +5274,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
       }
 
       save();
+      window.dispatchEvent(new CustomEvent('pz-ride-saved',{detail:{id:editingId||rides[rides.length-1].id}}));
       selectedDate=new Date(data.date+"T00:00:00");
       form.classList.remove("show");
       render();
@@ -7375,7 +7376,7 @@ body{min-height:100dvh}
    dateUndetermined:floating,time:untimed?'':timeInput.value,timeUndetermined:untimed,
    name:fName.value.trim(),address:fAddress.value.trim(),net:Number(fNet.value||0),payment:fPayment.value,vehicle:fVehicle.value,note:fNote.value.trim()
   };
-  if((!floating&&!data.date)||(!untimed&&!data.time)||!data.name||!data.address){v52Alert('Vyplňte datum, čas, jméno a adresu, nebo u data/času zvolte NEURČENO.');return}
+  if((!floating&&!data.date)||(!untimed&&!data.time)||!data.name||!data.address||!$('fPhone').value.trim()){v52Alert('Vyplňte datum, čas, jméno a adresu, nebo u data/času zvolte NEURČENO.');return}
   if(editingId){
    const i=rides.findIndex(r=>r.id===editingId);rides[i]={...rides[i],...data};
    if(untimed){rides[i].startTime='';rides[i].expectedReturnTime=''}
@@ -7383,7 +7384,7 @@ body{min-height:100dvh}
    const sameDay=rides.filter(r=>!r.dateUndetermined&&r.date===data.date);
    rides.push({id:Date.now(),...data,status:'planned',manualOrder:sameDay.length,km:0,startTime:''});
   }
-  save();selectedDate=new Date((floating?currentKey():data.date)+'T00:00:00');formModal.classList.remove('show');render();
+  save();window.dispatchEvent(new CustomEvent('pz-ride-saved',{detail:{id:editingId||rides[rides.length-1].id}}));selectedDate=new Date((floating?currentKey():data.date)+'T00:00:00');formModal.classList.remove('show');render();
  };
 
  /* Karty zachovají veškeré stávající akce, pouze zobrazí čitelné NEURČENO. */
@@ -7870,3 +7871,6 @@ input:focus,select:focus,textarea:focus{background:#fff!important;border-color:#
 <link rel="stylesheet" href="./sync-settings.css">
 <script src="./sync-model.js"></script>
 <script src="./sync-client.js"></script>
+
+<link rel="stylesheet" href="./ride-enhancements.css">
+<script src="./ride-enhancements.js"></script>

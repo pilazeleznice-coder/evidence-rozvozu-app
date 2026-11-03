@@ -24,7 +24,7 @@
   pending=false;cachePreferences();paint();paintPreferences();
   if(force)status(nativeHealth.enabled?`Android · naplánováno ${nativeHealth.count} oznámení v telefonu`:'Oznámení jsou na tomto telefonu vypnutá.');
  }
- const TYPES = [['day_before','Den předem','Předstih před termínem jízdy',1440],['morning','Ranní připomínka','V den jízdy, pouze před jejím termínem','07:00'],['hour_before','Připomínka před jízdou','Předstih před termínem jízdy',60],['late_5','První upozornění po termínu','Pokud jízda zůstává plánovaná',5],['late_10','Druhé upozornění po termínu','Pokud jízda zůstává plánovaná',10],['late_15','Třetí upozornění po termínu','Pokud jízda zůstává plánovaná',15]];
+ const TYPES = [['day_before','Den předem','Předstih před odjezdem podle mapy',1440],['morning','Ranní připomínka','V den odjezdu, pouze před odjezdem','07:00'],['hour_before','Připomínka před odjezdem','Předstih před odjezdem podle mapy',60],['late_5','První upozornění po odjezdu','Pokud jízda zůstává plánovaná',5],['late_10','Druhé upozornění po odjezdu','Pokud jízda zůstává plánovaná',10],['late_15','Třetí upozornění po odjezdu','Pokud jízda zůstává plánovaná',15]];
  let prefs = structuredClone(DEFAULTS), revision=0, pending=false, prefsBusy=false, loadedOwner;
  const SESSION = 'pzPushSession', DEVICE = 'pzPushDevice', BASE = 'pzPushBaseline';
  let session = read(SESSION), device = localStorage.getItem(DEVICE), busy = false, timer, registration;
