@@ -4645,6 +4645,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
    if($("v39Planning")&&grid.contains($("v39Planning")))wanted.push($("v39Planning"));
    if(fieldOf("fNote")&&grid.contains(fieldOf("fNote")))wanted.push(fieldOf("fNote"));
    if(fieldOf("fCancelReason")&&grid.contains(fieldOf("fCancelReason")))wanted.push(fieldOf("fCancelReason"));
+   if($("opsMore"))wanted.push($("opsMore"));
    /* Move only when the current order is actually different. */
    const current=[...grid.children].filter(x=>wanted.includes(x));
    const differs=wanted.some((x,i)=>current[i]!==x);
@@ -4664,7 +4665,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
    return JSON.stringify({
     name:$("fName")?.value||"",phone:$("fPhone")?.value||"",net:$("fNet")?.value||"",payment:$("fPayment")?.value||"",
     date:$("fDate")?.value||"",time:$("fTime")?.value||"",vehicle:$("fVehicle")?.value||"",address:$("fAddress")?.value||"",note:$("fNote")?.value||"",
-    dateUnknown:!!$("v72DateUnknown")?.checked,timeUnknown:!!$("v72TimeUnknown")?.checked,documents:$("fDocuments")?.files?.length||0,
+    operations:window.PZOperations?.collect()||{},dateUnknown:!!$("v72DateUnknown")?.checked,timeUnknown:!!$("v72TimeUnknown")?.checked,documents:$("fDocuments")?.files?.length||0,
     load:$("v39Load")?.textContent||"",unload:$("v39Unload")?.textContent||"",reserve:[...document.querySelectorAll("[data-reserve].active")].map(x=>x.dataset.reserve)[0]||""
    });
  }
@@ -4673,6 +4674,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
  $("v39Planning")?.addEventListener("click",e=>{if(e.target.closest("[data-plan-step],[data-reserve]"))dirty=true},true);
  document.querySelector(".v39-time-picker")?.addEventListener("click",()=>{if(mode!=="none")dirty=true},true);
 
+ window.addEventListener('pz-editor-open',()=>{mode='edit';activeDraftId=null;dirty=false;setTimeout(()=>{editBaseline=formSnapshot();dirty=false},240)});
  $("addBtn")?.addEventListener("click",()=>setTimeout(()=>{mode="new";dirty=false;activeDraftId=null;editBaseline=formSnapshot();reorderForm()},80),true);
  document.addEventListener("click",e=>{
    const edit=e.target.closest(".edit-btn");if(!edit)return;
@@ -4714,7 +4716,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
     plannedLoadMinutes:parseInt($("v39Load")?.textContent)||null,plannedUnloadMinutes:parseInt($("v39Unload")?.textContent)||null,
     deliveryReserveMinutes:Number(document.querySelector("[data-reserve].active")?.dataset.reserve||10),
     startTime:$("fStartTime")?.value||"",estimatedMinutes:(()=>{let p=($("fDuration")?.value||"00:00").split(":");return (+p[0]||0)*60+(+p[1]||0)})(),
-    orderNo:window.PZArchiveImport?.selection()?.kgNumber||'',sourceConfiguration:window.PZArchiveImport?.selection()||null,documents:window.PZRideDocuments.metadata()
+    ...(window.PZOperations?.collect()||{}),orderNo:window.PZArchiveImport?.selection()?.kgNumber||'',sourceConfiguration:window.PZArchiveImport?.selection()||null,documents:window.PZRideDocuments.metadata()
    };
  }
  async function saveAsDraft(){
@@ -4747,7 +4749,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
      mode="draft";activeDraftId=d.id;stagedDraftDocs=[...(d.documents||[])];window.PZRideDocuments.load(d.documents||[]);window.PZRideDocuments.setOrderNo(d.orderNo);window.PZArchiveImport?.restoreSelection(d.sourceConfiguration);
      $("fName").value=d.name||"";$("fPhone").value=d.phone||"";$("fNet").value=d.net||"";$("fNet").dispatchEvent(new Event("input",{bubbles:true}));
      $("fPayment").value=d.payment||"Hotově";$("fDate").value=d.date||$("fDate").value;$("fVehicle").value=d.vehicle||"AK";$("fVehicle").dispatchEvent(new Event("change",{bubbles:true}));
-     $("fAddress").value=d.address||"";$("fNote").value=d.note||"";
+     $("fAddress").value=d.address||"";$("fNote").value=d.note||"";window.PZOperations?.load(d);
      if(d.time){$("fTime").value=d.time;$("fTime").dispatchEvent(new Event("change",{bubbles:true}))}
      setTimeout(()=>{
        if(d.plannedLoadMinutes!=null){const el=$("v39Load");if(el)el.textContent=human(d.plannedLoadMinutes)}
@@ -4864,7 +4866,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
    const r=getRides().find(x=>String(x.id)===String(id));if(!r)return;
    const modal=$("detailModal"),content=$("detailContent");
    $("v40Archive").classList.remove("open");modal.classList.add("v43-archive-info","show");
-   modal.querySelector(".sheet>h2").textContent="Archivní záznam";content.innerHTML=renderArchiveInfo(r);
+   modal.querySelector(".sheet>h2").textContent="Archivní záznam";content.innerHTML=renderArchiveInfo(r);window.PZOperations?.detail(r.id);
    modal.querySelector(".v43-archive-back")?.remove();const back=document.createElement("button");back.type="button";back.className="v43-archive-back";back.textContent="← Zpět do archivu";modal.querySelector(".sheet")?.appendChild(back);
    back.onclick=()=>{modal.classList.remove("show","v43-archive-info");back.remove();modal.querySelector(".sheet>h2").textContent="Informace o dopravě";$("v40Archive").classList.add("open")};
  }
@@ -5109,6 +5111,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
 
     add("fNote");
     add("fCancelReason");
+    if($("opsMore"))wanted.push($("opsMore"));
 
     const current=[...grid.children].filter(x=>wanted.includes(x));
     if(wanted.some((x,i)=>current[i]!==x)) wanted.forEach(x=>grid.appendChild(x));
@@ -5172,6 +5175,7 @@ const MAPY_API_KEY = "pSJaQYFz_AT9plNh18H8L9ayNmXyZw6r7mD3ebkCpkY";
     },80);
   },true);
 
+  window.addEventListener('pz-editor-open',()=>setTimeout(()=>{updateSaveActions(true);clearValidation();setAutoDateVisual(false)},80));
   /* Otevření konceptu není automatické datum. */
   $("v40DraftBody")?.addEventListener("click",e=>{
     if(!e.target.closest("[data-draft]"))return;
@@ -6692,7 +6696,7 @@ function suggestedVehicleMany(rs){const rank={AK:1,TRM:2,TRMS:2,TRV:3,TRVS:3};le
 async function openMerge(){if(selection.length<2||selection.length>4)return;const rs=selection.map(ride).filter(Boolean);$('v51MergeDate').value=rs.map(r=>r.date).filter(Boolean).sort()[0]||new Date().toISOString().slice(0,10);$('v51MergeVehicle').value=suggestedVehicleMany(rs);$('v51RouteOptions').innerHTML='<div class="v51-route-option"><b>Počítám varianty skutečné silniční trasy…</b></div>';$('v51MergeModal').classList.add('show');try{if(!keyReady())throw Error('Chybí Mapy API');const perms=permutations(rs.map(r=>String(r.id)));const computed=[];for(const order of perms)computed.push(await variant(order));computed.sort((a,b)=>a.km-b.km);routeVariants=computed.slice(0,3);chosen=0;renderRouteOptions();setTimeout(drawMergeMap,60)}catch(e){const order=rs.map(r=>String(r.id));routeVariants=[{order,pts:[],segments:[],km:rs.reduce((x,r)=>x+Number(r.km||0),0),seconds:0}];chosen=0;renderRouteOptions();$('v51MergeMap').innerHTML='<div style="padding:20px;font-size:9px;color:#718078">Trasu se nepodařilo načíst. Sloučení lze přesto uložit.</div>'}}
 window.v52OpenMergeForIds=(ids)=>{setSelection((ids||[]).map(String));return openMerge()};
 $('v51MergeCancel').onclick=()=>$('v51MergeModal').classList.remove('show');
-$('v51MergeConfirm').onclick=()=>{if(selection.length<2||selection.length>4)return;const v=routeVariants[chosen],ordered=v.order.map(ride),id=nextId(),date=$('v51MergeDate').value,vehicle=$('v51MergeVehicle').value;const stops=ordered.map((r,i)=>({childId:r.id,original:JSON.parse(JSON.stringify(r)),originalDate:r.date,name:r.name,phone:r.phone,address:r.address,time:r.time,net:r.net,payment:r.payment,orderNo:r.orderNo,note:r.note,documents:JSON.parse(JSON.stringify(r.documents||[])),vehicle:r.vehicle,stacking:isStack(r.vehicle),addressLat:r.addressLat,addressLon:r.addressLon,routeIndex:i,skipped:false}));const parent={id,date,time:stops[0].time||'',name:stops.map(s=>s.name).join(' + '),address:stops.map(s=>s.address).join(' → '),net:stops.reduce((s,x)=>s+Number(x.net||0),0),payment:'Více plateb',vehicle,status:'planned',manualOrder:Math.min(...ordered.map(r=>Number(r.manualOrder??9999))),km:Math.round(v.km*10)/10,estimatedMinutes:mergedPlanMinutes(stops,v),mergedV51:true,stops,routeV51:v,plannedKmV51:Math.round(v.km*10)/10,createdAtV51:Date.now()};ordered.forEach(r=>{r.mergedParentId=id;r.status='merged-child'});all().push(parent);persist();setSelection([]);$('v51MergeModal').classList.remove('show');rerender();};
+$('v51MergeConfirm').onclick=()=>{if(selection.length<2||selection.length>4)return;const v=routeVariants[chosen],ordered=v.order.map(ride),id=nextId(),date=$('v51MergeDate').value,vehicle=$('v51MergeVehicle').value;const stops=ordered.map((r,i)=>({...window.PZOperationsModel?.business(r),childId:r.id,original:JSON.parse(JSON.stringify(r)),originalDate:r.date,name:r.name,phone:r.phone,address:r.address,time:r.time,net:r.net,payment:r.payment,orderNo:r.orderNo,note:r.note,documents:JSON.parse(JSON.stringify(r.documents||[])),vehicle:r.vehicle,stacking:isStack(r.vehicle),addressLat:r.addressLat,addressLon:r.addressLon,routeIndex:i,skipped:false}));const parent={id,date,time:stops[0].time||'',name:stops.map(s=>s.name).join(' + '),address:stops.map(s=>s.address).join(' → '),net:stops.reduce((s,x)=>s+Number(x.net||0),0),payment:'Více plateb',vehicle,status:'planned',manualOrder:Math.min(...ordered.map(r=>Number(r.manualOrder??9999))),km:Math.round(v.km*10)/10,estimatedMinutes:mergedPlanMinutes(stops,v),plannedLoadMinutes:avgStage(cat(vehicle),'loading'),deliveryReserveMinutes:15,mergedV51:true,stops,routeV51:v,plannedKmV51:Math.round(v.km*10)/10,createdAtV51:Date.now()};ordered.forEach(r=>{r.mergedParentId=id;r.status='merged-child'});all().push(parent);persist();setSelection([]);$('v51MergeModal').classList.remove('show');rerender();};
 
 /* ---------- plán ---------- */
 function actualMs(r,k){return Number(r.actualDurations?.[k]||r.durations?.[k]||r.runDurations?.[k]||0)}
@@ -6710,7 +6714,7 @@ window.render=function(){baseRender();bindLongPress();decorateCalendar();decorat
 
 /* ---------- INFO sloučené ---------- */
 function docsHtml(s){return `<div class="v51-docs">${(s.documents||[]).length?(s.documents||[]).map(d=>`<div class="v51-doc"><span>📄 ${E(d.name)}</span><button onclick="openRideDocument('${E(d.id)}')">Otevřít</button></div>`).join(''):'<div style="font-size:8px;color:#7a867e">Žádné dokumenty</div>'}</div>`}
-function showMergedInfo(r){const c=$('detailContent');$('detailModal').classList.add('show');$('detailModal').querySelector('.sheet>h2').textContent='Informace o dopravě';const rows=planRows(r),src=(window.VEHICLE_IMAGES&&window.VEHICLE_IMAGES[r.vehicle])||'';c.innerHTML=`<div class="v51-info-head"><span class="v51-info-tag">🔗 SLOUČENÁ JÍZDA</span><b>${fmtDate(r.date)}</b></div><section class="v51-info-stop"><div class="v51-info-stop-head"><strong>Společný rozvoz</strong><div class="vehicle-code">${E(r.vehicle)}</div></div><div class="v51-info-grid"><div class="v51-info-row"><small>SPOLEČNÉ DATUM</small><b>${fmtDate(r.date)}</b></div><div class="v51-info-row"><small>SOUPRAVA</small><b>${E(r.vehicle)}</b></div></div>${src?`<div style="text-align:center;padding:8px"><img src="${E(src)}" alt="${E(r.vehicle)}" style="max-width:180px;max-height:80px;object-fit:contain"></div>`:''}<div class="v51-map" id="v52InfoMap"></div></section>${visibleStops(r).map((s,i)=>`<section class="v52-info-customer"><div class="v52-info-customer-head"><span class="v51-info-stop-num">${i+1}</span><b>${E(s.name)}</b>${r.status==='planned'?`<button class="v51-edit-stop" style="margin-left:auto" onclick="v51EditStop(${r.id},${s.childId})">UPRAVIT</button>`:''}</div><div class="v52-info-section"><div class="v52-info-section-title">Zákazník</div><div class="v51-info-grid"><div class="v51-info-row"><small>TELEFON</small><b>${s.phone?`<a href="tel:${E(s.phone)}">${E(s.phone)}</a>`:'Neuvedeno'}</b></div><div class="v51-info-row"><small>ADRESA</small><b>${E(s.address)}</b></div><div class="v51-info-row"><small>DATUM DORUČENÍ</small><b>${fmtDate(s.originalDate)}</b></div><div class="v51-info-row"><small>ČAS DORUČENÍ</small><b>${E(s.time||'Čas neurčen')}</b></div></div></div><div class="v52-info-section"><div class="v52-info-section-title">Zakázka a platba</div><div class="v51-info-grid"><div class="v51-info-row"><small>OBJEDNÁVKA</small><b>${E(s.orderNo||'Neuvedeno')}</b></div><div class="v51-info-row"><small>PŮVODNÍ SOUPRAVA</small><b>${E(s.vehicle||'—')}</b></div><div class="v51-info-row"><small>CENA BEZ DPH</small><b>${M(Number(s.net||0))}</b></div><div class="v51-info-row"><small>CENA S DPH</small><b>${M(G(s.net))}</b></div><div class="v51-info-row"><small>TYP PLATBY</small><b>${E(s.payment||'—')}</b></div><div class="v51-info-row"><small>SKLÁDÁNÍ</small><b>${s.stacking?'ANO':'NE'}</b></div></div></div><div class="v52-info-section"><div class="v52-info-section-title">Poznámka</div><div style="font-size:9px;color:#34483a">${E(s.note||'Bez poznámky')}</div></div><div class="v52-info-section"><div class="v52-info-section-title">Dokumenty</div>${docsHtml(s)}</div></section>`).join('')}<section class="v51-plan"><h3>${r.status==='completed'?'SKUTEČNÝ PRŮBĚH':'PLÁN ROZVOZU'}</h3>${r.status==='completed'?actualMergedRows(r):rows.map(x=>`<div class="v51-plan-row"><b>${x[0]}</b><span>${E(x[1])}</span></div>`).join('')}<div class="v51-plan-total"><span>${r.status==='completed'?'Skutečně najeto':'Plánovaná trasa'}</span><span>${Number(r.actualKmV51||r.plannedKmV51||r.km||0).toLocaleString('cs-CZ',{maximumFractionDigits:1})} km</span></div><div class="v51-plan-total"><span>${r.status==='completed'?'Celková doba':'Plánovaná doba'}</span><span>${r.status==='completed'?FMIN((r.actualTotalMsV51||0)/60000):FMIN(r.estimatedMinutes||0)}</span></div></section>${r.status==='planned'?`<div class="v51-actions"><button class="v51-secondary" onclick="v52EditMerged(${r.id})">UPRAVIT SLOUČENÍ</button><button class="v51-secondary" onclick="v51SplitMerged(${r.id})">ODDĚLIT JÍZDY</button></div>`:''}`;setTimeout(()=>v52DrawMap('v52InfoMap',r.routeV51,()=>null),70)}
+function showMergedInfo(r){const c=$('detailContent');$('detailModal').classList.add('show');$('detailModal').querySelector('.sheet>h2').textContent='Informace o dopravě';const rows=planRows(r),src=(window.VEHICLE_IMAGES&&window.VEHICLE_IMAGES[r.vehicle])||'';c.innerHTML=`<div class="v51-info-head"><span class="v51-info-tag">🔗 SLOUČENÁ JÍZDA</span><b>${fmtDate(r.date)}</b></div><section class="v51-info-stop"><div class="v51-info-stop-head"><strong>Společný rozvoz</strong><div class="vehicle-code">${E(r.vehicle)}</div></div><div class="v51-info-grid"><div class="v51-info-row"><small>SPOLEČNÉ DATUM</small><b>${fmtDate(r.date)}</b></div><div class="v51-info-row"><small>SOUPRAVA</small><b>${E(r.vehicle)}</b></div></div>${src?`<div style="text-align:center;padding:8px"><img src="${E(src)}" alt="${E(r.vehicle)}" style="max-width:180px;max-height:80px;object-fit:contain"></div>`:''}<div class="v51-map" id="v52InfoMap"></div></section>${visibleStops(r).map((s,i)=>`<section class="v52-info-customer"><div class="v52-info-customer-head"><span class="v51-info-stop-num">${i+1}</span><b>${E(s.name)}</b>${r.status==='planned'?`<button class="v51-edit-stop" style="margin-left:auto" onclick="v51EditStop(${r.id},${s.childId})">UPRAVIT</button>`:''}</div><div class="v52-info-section"><div class="v52-info-section-title">Zákazník</div><div class="v51-info-grid"><div class="v51-info-row"><small>TELEFON</small><b>${s.phone?`<a href="tel:${E(s.phone)}">${E(s.phone)}</a>`:'Neuvedeno'}</b></div><div class="v51-info-row"><small>ADRESA</small><b>${E(s.address)}</b></div><div class="v51-info-row"><small>DATUM DORUČENÍ</small><b>${fmtDate(s.originalDate)}</b></div><div class="v51-info-row"><small>ČAS DORUČENÍ</small><b>${E(s.time||'Čas neurčen')}</b></div></div></div><div class="v52-info-section"><div class="v52-info-section-title">Zakázka a platba</div><div class="v51-info-grid"><div class="v51-info-row"><small>OBJEDNÁVKA</small><b>${E(s.orderNo||'Neuvedeno')}</b></div><div class="v51-info-row"><small>PŮVODNÍ SOUPRAVA</small><b>${E(s.vehicle||'—')}</b></div><div class="v51-info-row"><small>CENA BEZ DPH</small><b>${M(Number(s.net||0))}</b></div><div class="v51-info-row"><small>CENA S DPH</small><b>${M(G(s.net))}</b></div><div class="v51-info-row"><small>TYP PLATBY</small><b>${E(s.payment||'—')}</b></div><div class="v51-info-row"><small>SKLÁDÁNÍ</small><b>${s.stacking?'ANO':'NE'}</b></div></div></div><div class="v52-info-section"><div class="v52-info-section-title">Poznámka</div><div style="font-size:9px;color:#34483a">${E(s.note||'Bez poznámky')}</div></div><div class="v52-info-section"><div class="v52-info-section-title">Dokumenty</div>${docsHtml(s)}</div></section>`).join('')}<section class="v51-plan"><h3>${r.status==='completed'?'SKUTEČNÝ PRŮBĚH':'PLÁN ROZVOZU'}</h3>${r.status==='completed'?actualMergedRows(r):rows.map(x=>`<div class="v51-plan-row"><b>${x[0]}</b><span>${E(x[1])}</span></div>`).join('')}<div class="v51-plan-total"><span>${r.status==='completed'?'Skutečně najeto':'Plánovaná trasa'}</span><span>${Number(r.actualKmV51||r.plannedKmV51||r.km||0).toLocaleString('cs-CZ',{maximumFractionDigits:1})} km</span></div><div class="v51-plan-total"><span>${r.status==='completed'?'Celková doba':'Plánovaná doba'}</span><span>${r.status==='completed'?FMIN((r.actualTotalMsV51||0)/60000):FMIN(r.estimatedMinutes||0)}</span></div></section>${r.status==='planned'?`<div class="v51-actions"><button class="v51-secondary" onclick="v52EditMerged(${r.id})">UPRAVIT SLOUČENÍ</button><button class="v51-secondary" onclick="v51SplitMerged(${r.id})">ODDĚLIT JÍZDY</button></div>`:''}`;window.PZOperations?.detail(r.id);setTimeout(()=>v52DrawMap('v52InfoMap',r.routeV51,()=>null),70)}
 function actualMergedRows(r){const a=r.actualMergedV51||{},out=[];if(a.loading)out.push(`<div class="v51-plan-row"><b>${FMS(a.loading)}</b><span>Nakládka</span></div>`);visibleStops(r).forEach((s,i)=>{if(a.travel?.[i])out.push(`<div class="v51-plan-row"><b>${FMS(a.travel[i])}</b><span>Cesta k ${E(s.name)}</span></div>`);if(a.unload?.[i])out.push(`<div class="v51-plan-row"><b>${FMS(a.unload[i])}</b><span>Vykládka · ${E(s.name)}</span></div>`)});if(a.return)out.push(`<div class="v51-plan-row"><b>${FMS(a.return)}</b><span>Cesta zpět</span></div>`);return out.join('')}
 window.v51EditStop=(pid,cid)=>{const p=ride(pid),c=ride(cid);if(!p||!c)return;$('detailModal').classList.remove('show');window.openEdit(cid)};
 window.v51SplitMerged=async id=>{const p=ride(id);if(!merged(p)||p.status!=='planned')return;if(!await v52Confirm('Oddělit jízdy?','Sloučená jízda se rozdělí zpět na původní samostatné plánované jízdy.'))return;(p.stops||[]).forEach(s=>{const c=ride(s.childId);if(c){Object.assign(c,JSON.parse(JSON.stringify(s.original)));c.status='planned';delete c.mergedParentId}});const i=all().indexOf(p);if(i>=0)all().splice(i,1);persist();$('detailModal').classList.remove('show');rerender()};
@@ -6776,8 +6780,7 @@ $('v40ArchiveBody')?.addEventListener('click',e=>{const row=e.target.closest('[d
 /* ---------- Statistiky v48: přesné počty a vykládky pro sloučené jízdy ----------
    Stávající modul čte parent jako jednu fyzickou jízdu (správně pro km/cestu/nakládku).
    Počet zákaznických rozvozů opravíme po každém renderu Statistik; vykládku doplníme z jednotlivých zastávek. */
-function patchStats(){const root=$('v48Stats');if(!root?.classList.contains('open'))return;try{const label=$('v48PeriodLabel')?.textContent||'',mode=document.querySelector('.v48-tab.active')?.dataset.mode||'month',now=new Date();let rs=all().filter(r=>r.status==='completed'&&r.date);/* interval odvodíme z interního zobrazení přes datum labelu není bezpečné; parenty jsou už v základním rs, počet upravujeme pouze rozdílem viditelných merged v aktuálním výsledku podle hodnoty km grafu. */const shownKm=parseFloat(($('v48Km')?.textContent||'0').replace(/\s/g,'').replace(',','.'))||0;let candidates=rs.filter(r=>merged(r));/* zúžení podle režimu/labelu */candidates=candidates.filter(r=>{const d=new Date(r.date+'T12:00:00');if(mode==='year')return String(d.getFullYear())===label.trim();if(mode==='month'){const s=label.toLowerCase();return s.includes(String(d.getFullYear()))&&s.includes(new Intl.DateTimeFormat('cs-CZ',{month:'long'}).format(d).toLowerCase())}if(mode==='week'){const nums=label.match(/\d{1,2}\.\s*\d{1,2}\./g);if(!nums?.length)return false;const parts=x=>x.match(/\d+/g).map(Number),a=parts(nums[0]),b=parts(nums[nums.length-1]),y=+(label.match(/\d{4}/)||[d.getFullYear()])[0],start=new Date(y,a[1]-1,a[0]),end=new Date(y,b[1]-1,b[0],23,59,59);return d>=start&&d<=end}return false});const base=Number($('v48Trips')?.textContent||0),extra=candidates.reduce((s,r)=>s+Math.max(0,visibleStops(r).length-1),0);$('v48Trips').textContent=base+extra}catch(e){}}
-setInterval(patchStats,600);
+/* v48 counts physical journeys; customer stops are counted in the new dashboard. */
 
 
 /* ===================== v52 – schválené rozšíření ===================== */
@@ -7376,7 +7379,7 @@ body{min-height:100dvh}
   const data={
    date:floating?currentKey():dateInput.value,
    dateUndetermined:floating,time:untimed?'':timeInput.value,timeUndetermined:untimed,
-   name:fName.value.trim(),address:fAddress.value.trim(),net:Number(fNet.value||0),payment:fPayment.value,vehicle:fVehicle.value,note:fNote.value.trim()
+   name:fName.value.trim(),address:fAddress.value.trim(),net:Number(fNet.value||0),payment:fPayment.value,vehicle:fVehicle.value,note:fNote.value.trim(),...(window.PZOperations?.collect()||{})
   };
   if((!floating&&!data.date)||(!untimed&&!data.time)||!data.name||!data.address||!$('fPhone').value.trim()){v52Alert('Vyplňte datum, čas, jméno a adresu, nebo u data/času zvolte NEURČENO.');return}
   if(editingId){
@@ -7882,3 +7885,7 @@ input:focus,select:focus,textarea:focus{background:#fff!important;border-color:#
 <script src="./archive-model.js"></script>
 <script src="./archive-pdf.js"></script>
 <script src="./archive-import.js"></script>
+
+<link rel="stylesheet" href="./operations.css">
+<script src="./operations-model.js"></script>
+<script src="./operations.js"></script>

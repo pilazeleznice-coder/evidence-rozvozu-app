@@ -43,6 +43,7 @@
     for(const [id,value] of Object.entries(fields))set(id,value);
     const notes=[data.note,context?.rows.map(r=>r.text).filter(x=>x.trim()).join('\n')].filter(Boolean).join('\n\n');set('fNote',notes);
     window.PZRideDocuments.setOrderNo?.(data.orderNo);
+    window.PZOperations?.load({...data,cargo:data.cargo,volumeM3:data.volumeM3,transportNet:data.transportNet,paymentState:'unknown',paidGross:0});
     const du=$('v72DateUnknown'),tu=$('v72TimeUnknown');
     if(du){du.checked=!data.date;du.dispatchEvent(new Event('change',{bubbles:true}))}if(data.date)set('fDate',data.date);
     if(tu){tu.checked=!data.time;tu.dispatchEvent(new Event('change',{bubbles:true}))}if(data.time)set('fTime',data.time);

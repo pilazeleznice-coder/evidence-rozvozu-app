@@ -95,3 +95,17 @@ Web Push není přesný budík. Krátký závod mezi poslední serverovou kontro
 WebView nemá webová rozhraní PushManager a Notification. Nový klient podporuje důvěryhodný most PZAndroidNative v upravené APK: jízdy a nastavení předává místnímu Android plánovači. Android varianta nevyžaduje webové přihlášení a neposílá falešnou Web Push registraci. Jde o místní připomínky na jednom telefonu, nikoli cloudový push nebo synchronizaci jízd; po zavření fungují bez internetu. Vyžaduje aktualizovanou APK, povolení oznámení a Budíků a připomenutí. Test je naplánovaný za 10 sekund. Android může alarmy v hlubokém spánku zpozdit.
 
 Test mostu: `PZ_CHROMIUM_EXECUTABLE=/cesta/chromium node tests/push-native-browser.cjs`. Skutečné doručení do Android aplikace musí potvrdit uživatel na telefonu.
+
+## Přehled rozvozů, náklad, úhrady a statistiky
+
+- Úvod nabízí přípravu zítřejších rozvozů, překryvy dostupných plánů pro jednoho řidiče a potvrzený stav synchronizace. Přehled přípravy lze přepnout na libovolný den; přílohy se otevírají přes detail jízdy.
+- Nová jízda má rozbalovací **Více údajů**: náklad, m³, pokyny k vykládce, samostatná cena dopravy bez DPH, stav úhrady a uhrazená částka s DPH. Cena v původním poli zůstává celkovou cenou objednávky.
+- Archiv konfigurátoru předává náklad, známý objem a cenu dopravy po odpovídající slevě/přirážce. Stav úhrady se z ceny ani ze způsobu platby neodvozuje. Výslovná původní volba „Zaplaceno předem“ je respektována.
+- Kopie jízdy se otevře k doplnění. Nepřenáší termín, identitu objednávky, soubory, trasu, skutečný průběh ani zaplacený stav. Sama nevytváří uloženou jízdu.
+- Historie zákazníka propojuje přesné normalizované telefonní číslo (včetně české předvolby). Sloučené zastávky se nezapočítávají ještě jednou přes skryté podřízené jízdy.
+- Náklad a úhradu lze upravit i v detailu dokončené jízdy a samostatně u zákazníka sloučeného rozvozu. Úprava zapisuje také původní záznam zastávky pro následné oddělení jízd. Souběžné změny těchto údajů vyžadují nové otevření dialogu.
+- Statistiky: den/týden/měsíc/rok/vlastní rozsah, předchozí období, dokončené fyzické jízdy i počet zákazníků, samostatná doprava bez DPH, uložené km, skutečně měřený čas, známé nedoplatky, přepínatelný graf a všech pět souprav. Karty a sloupce otevírají konkrétní jízdy. Plánované ceny jsou zvlášť. Původní podrobné časové statistiky mají vlastní výběr období.
+- Chybějící cena dopravy, úhrada či měření zůstávají neznámé. Kilometry odpovídají uloženému údaji aplikace, nikoli GPS záznamu. Kontrola překryvů vyžaduje datum, čas a cestu z mapy, zahrnuje nakládku, rezervu, vykládku a návrat. Staré sloučené jízdy bez uložené doby nakládky nelze spolehlivě zkontrolovat.
+- Přepínače funkcí a výchozí období/graf jsou v **Nastavení → Plánování, platby a statistiky**. Předvolby zobrazení jsou místní pro zařízení; obchodní údaje jsou součástí běžného payloadu jízdy/konceptu a stávající synchronizace i úplné zálohy. Databázové schéma ani služba oznámení se nemění.
+
+Ověření: `npm test` a `npm run test:browser`. Nové testy pokrývají částky a chybějící data, sloučené trasy, hranice období, přechod půlnoci, bezpečnou kopii, editaci/koncept, přenos nových polí na druhé zařízení a mobilní rozložení.
