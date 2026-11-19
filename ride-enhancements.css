@@ -53,3 +53,6 @@ html.ride-hide-upload .v51-info-upload{display:none!important}
  #v80Settings .v80-row{padding:12px;gap:10px}
  #v80Settings .ride-options>summary,#v80Settings .pz-sync-section>summary,#v80Settings .pz-settings-section>summary{padding:16px}
 }
+
+
+.ride-contact-feedback{font-size:11px;line-height:1.5;margin:8px 0 0;color:#104c29}.ride-contact-feedback[data-error=true]{color:#9f3029}.ride-contact-pick:disabled{opacity:.6;cursor:wait}.ride-phone-choice p{font-size:13px;line-height:1.5;color:#617064}

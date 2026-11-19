@@ -1,0 +1,33 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
+// Small DOM fixture runs the actual contact UI module, with only the phone's
+// native picker and browser dialogs mocked. It never reads personal contacts.
+function fixture(){
+ class Element extends EventTarget{
+  constructor(tag='div'){super();this.tagName=tag;this.children=[];this.attributes={};this.dataset={};this.value='';this.hidden=false;this.disabled=false;this.textContent='';const classes=new Set();this.classList={add:(...xs)=>xs.forEach(x=>classes.add(x)),remove:(...xs)=>xs.forEach(x=>classes.delete(x)),contains:x=>classes.has(x)};}
+  append(...xs){for(const x of xs){if(x.parentElement)x.remove();this.children.push(x);x.parentElement=this}}appendChild(x){this.append(x);return x}
+  before(x){const p=this.parentElement,i=p.children.indexOf(this);p.children.splice(i,0,x);x.parentElement=p}remove(){if(this.parentElement){const p=this.parentElement;p.children.splice(p.children.indexOf(this),1);this.parentElement=null}}
+  replaceChildren(...xs){for(const x of this.children)x.parentElement=null;this.children=[];this.append(...xs)}closest(){return this.field||this.parentElement}setAttribute(k,v){this.attributes[k]=String(v)}getAttribute(k){return this.attributes[k]}contains(x){return x===this||this.children.some(c=>c.contains?.(x))}
+  querySelector(s){return this.querySelectorAll(s)[0]||null}querySelectorAll(s){return this.children.flatMap(c=>[(s==='button'&&c.tagName==='button')?c:null,...c.querySelectorAll(s)]).filter(Boolean)}showModal(){this.open=true}close(){this.open=false;this.dispatchEvent(new Event('close'))}click(){return this.onclick?.()}focus(){}
+ }
+ const body=new Element(),ids={},add=(id,parent=body)=>{const e=new Element();e.id=id;ids[id]=e;parent.append(e);return e};
+ for(const id of ['fPhone','fName','fAddress']){const f=new Element();body.append(f);const i=add(id,f);i.field=f}
+ add('formModal').classList.add('show');add('v80SettingsHome');
+ const document={body,readyState:'complete',getElementById:id=>ids[id]||null,createElement:t=>new Element(t),createTextNode:text=>Object.assign(new Element('text'),{textContent:text}),addEventListener(){},querySelectorAll:()=>[]};
+ const ctx={document,Event,MutationObserver:class{observe(){}},navigator:{contacts:{select:async()=>ctx.response}},localStorage:{getItem:()=>null,setItem(){}},confirm:()=>false,alert:m=>ctx.alerts.push(m),alerts:[],response:[],addEventListener(){}};ctx.window=ctx;
+ vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(__dirname,'../ride-enhancements.js'),'utf8'),ctx);
+ const picker=ids.fPhone.parentElement.children.find(e=>e.className==='ride-contact-pick');
+ const feedback=()=>ids.fPhone.field.children.find(e=>e.className==='ride-contact-feedback');
+ return {ctx,ids,body,picker,feedback};
+}
+const tick=()=>new Promise(r=>setImmediate(r));
+test('native contact selection replaces fields through visible app confirmation, not suppressed browser confirm',async()=>{const f=fixture();f.ids.fName.value='Původní zákazník';f.ids.fAddress.value='Původní adresa';f.ctx.response=[{name:['Novák'],tel:['+420 777 123 456']}];let prompt;
+ f.ctx.v52Confirm=(title,text)=>new Promise(resolve=>prompt={title,text,resolve});const pending=f.picker.click();await tick();assert.ok(prompt,'replacement must ask through the in-app dialog');prompt.resolve(true);await pending;assert.equal(f.ids.fPhone.value,'+420 777 123 456');assert.equal(f.ids.fName.value,'Novák');assert.equal(f.ids.fAddress.value,'Původní adresa')});
+test('cancelled replacement leaves all fields untouched',async()=>{const f=fixture();f.ids.fName.value='Původní';f.ids.fPhone.value='111222333';f.ctx.response=[{name:['Novák'],tel:['777123456']}];f.ctx.v52Confirm=async()=>false;await f.picker.click();assert.equal(f.ids.fPhone.value,'111222333');assert.equal(f.ids.fName.value,'Původní')});
+test('skip blank numbers and fill a valid number even if name was not shared',async()=>{const f=fixture();f.ctx.response=[{name:[],tel:['','  ','+420 666 333 222']}];await f.picker.click();assert.equal(f.ids.fPhone.value,'+420 666 333 222');assert.equal(f.ids.fName.value,'')});
+test('multiple phone numbers have a deduplicated explicit selection',async()=>{const f=fixture();f.ctx.response=[{name:['Dvě čísla'],tel:['777000111','888000222','777 000 111']}];const pending=f.picker.click();await tick();const dialog=f.body.children.find(e=>e.className?.includes('ride-phone-choice'));assert.ok(dialog);const choices=dialog.querySelectorAll('button').filter(b=>b.dataset.phone);assert.equal(choices.length,2);choices.find(b=>b.dataset.phone==='888000222').click();await pending;assert.equal(f.ids.fPhone.value,'888000222');assert.equal(f.ids.fName.value,'Dvě čísla')});
+test('missing number, cancelled picker and failed permission retain fields and restore the button',async()=>{const f=fixture();f.ids.fName.value='Původní';f.ctx.response=[{name:['Bez čísla'],tel:['','  ']}];await f.picker.click();assert.match(f.feedback().textContent,/neobsahuje.*číslo/);assert.equal(f.ids.fName.value,'Původní');
+ f.ctx.navigator.contacts.select=async()=>{throw Object.assign(new Error('cancel'),{name:'AbortError'})};await f.picker.click();assert.equal(f.picker.disabled,false);f.ctx.navigator.contacts.select=async()=>{throw Object.assign(new Error('permission'),{name:'NotAllowedError'})};await f.picker.click();assert.match(f.feedback().textContent,/nepodařilo/);assert.equal(f.picker.disabled,false)});
+test('cancelling number choice never writes a partial customer',async()=>{const f=fixture();f.ids.fAddress.value='Původní adresa';f.ctx.response=[{name:['Dvě čísla'],tel:['777000111','888000222']}];const pending=f.picker.click();await tick();const dialog=f.body.children.find(e=>e.className?.includes('ride-phone-choice'));assert.ok(dialog);dialog.close();await pending;assert.equal(f.ids.fPhone.value,'');assert.equal(f.ids.fName.value,'');assert.equal(f.ids.fAddress.value,'Původní adresa')});
+
+test('ordinary phone selection fills immediately without replacing the address or showing confirmation',async()=>{const f=fixture();f.ids.fAddress.value='Místo vykládky';f.ctx.response=[{name:['Jana Nová'],tel:['777111222']}];await f.picker.click();assert.equal(f.ids.fPhone.value,'777111222');assert.equal(f.ids.fName.value,'Jana Nová');assert.equal(f.ids.fAddress.value,'Místo vykládky');assert.equal(f.picker.disabled,false)});
+test('empty picker result does not change form values',async()=>{const f=fixture();f.ids.fPhone.value='777111222';f.ctx.response=[];await f.picker.click();assert.equal(f.ids.fPhone.value,'777111222');assert.equal(f.picker.disabled,false)});
