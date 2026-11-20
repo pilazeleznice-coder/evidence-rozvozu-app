@@ -54,8 +54,14 @@
   document.addEventListener('click',e=>{if(!field.contains(e.target)&&!name.closest('.field').contains(e.target))hide()});
   new MutationObserver(()=>{if(!$('formModal').classList.contains('show'))hide()}).observe($('formModal'),{attributes:true,attributeFilter:['class']});
   const feedback=document.createElement('p');feedback.className='ride-contact-feedback';feedback.hidden=true;feedback.setAttribute('role','status');feedback.setAttribute('aria-live','polite');field.append(feedback);
-  let stage='READY',selectPending=false,editRevision=0,requestNumber=0;
-  function report(text,error=false){feedback.textContent=text+' [K2-'+stage+']';feedback.hidden=false;feedback.dataset.error=String(error)}
+  let stage='READY',selectPending=false,editRevision=0,requestNumber=0,banner=null;
+  function report(text,error=false){
+   feedback.textContent=text+' [K2-'+stage+']';feedback.hidden=false;feedback.dataset.error=String(error);
+   if(stage!=='READY'&&stage!=='OPEN'&&!$('formModal').classList.contains('show')){
+    if(!banner){banner=document.createElement('div');banner.className='ride-contact-diagnostic';banner.setAttribute('role','status');banner.setAttribute('style','position:fixed;left:12px;right:12px;bottom:20px;z-index:90000;padding:14px;border:1px solid #b9cdb6;border-radius:12px;background:#fff;color:#104c29;font:13px/1.5 sans-serif;box-shadow:0 6px 24px #0003');document.body.append(banner)}
+    banner.textContent=feedback.textContent;banner.hidden=false;
+   }else if(banner)banner.hidden=true;
+  }
   function trace(next,text,error=false){stage=next;report(text,error)}
   trace('READY','Výběr kontaktů připraven.');
   for(const input of [phone,name])input.addEventListener('input',e=>{if(e.isTrusted)editRevision++});
