@@ -35,11 +35,12 @@
    const target={fPhone:c.phone,fName:c.name,fAddress:c.address};
    const replace=Object.entries(target).some(([id,v])=>v&&clean($(id)?.value)&&(id==='fPhone'?digits($(id).value)!==digits(v):fold($(id).value)!==fold(v)));
    if(replace){
+    if(fromPhone)trace('CONFIRM','Kontakt se vrátil. Čekám na potvrzení přepsání údajů.');
     const message='Některé údaje jsou již vyplněné. Nahradit jméno a telefon údaji vybraného kontaktu?';
     const accepted=fromPhone?(window.v52Confirm?await window.v52Confirm('Použít vybraný kontakt?',message):await choose('Použít vybraný kontakt?',[{label:'Nahradit údaje',value:'yes'},{label:'Zachovat původní údaje',value:'no'}],message)==='yes'):confirm('Některé údaje jsou již vyplněné. Nahradit je údaji vybraného kontaktu?');
-    if(!accepted)return false;
+    if(!accepted){if(fromPhone)trace('CANCELLED','Přepsání údajů nebylo potvrzené.');return false;}
    }
-   if(!$('formModal').classList.contains('show'))return false;
+   if(!$('formModal').classList.contains('show')){if(fromPhone)trace('FORM-CLOSED','Kontakt se vrátil, ale formulář nové jízdy už není otevřený.',true);return false;}
    for(const [id,value] of Object.entries(target)){if(!value||!$(id))continue;$(id).value=value;$(id).dispatchEvent(new Event('input',{bubbles:true}));$(id).dispatchEvent(new Event('change',{bubbles:true}))}
    hide();return true;
   }
@@ -53,7 +54,14 @@
   document.addEventListener('click',e=>{if(!field.contains(e.target)&&!name.closest('.field').contains(e.target))hide()});
   new MutationObserver(()=>{if(!$('formModal').classList.contains('show'))hide()}).observe($('formModal'),{attributes:true,attributeFilter:['class']});
   const feedback=document.createElement('p');feedback.className='ride-contact-feedback';feedback.hidden=true;feedback.setAttribute('role','status');feedback.setAttribute('aria-live','polite');field.append(feedback);
-  function report(text,error=false){feedback.textContent=text;feedback.hidden=!text;feedback.dataset.error=String(error)}
+  let stage='READY',selectPending=false,editRevision=0,requestNumber=0;
+  function report(text,error=false){feedback.textContent=text+' [K2-'+stage+']';feedback.hidden=false;feedback.dataset.error=String(error)}
+  function trace(next,text,error=false){stage=next;report(text,error)}
+  trace('READY','Výběr kontaktů připraven.');
+  for(const input of [phone,name])input.addEventListener('input',e=>{if(e.isTrusted)editRevision++});
+  function checkReturn(){const current=requestNumber;setTimeout(()=>{if(selectPending&&requestNumber===current)trace('WAITING','Telefon se vrátil, ale zatím nepředal výsledek výběru kontaktu.',true)},1500)}
+  window.addEventListener('focus',()=>{if(selectPending)checkReturn()});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&selectPending)checkReturn()});
   function choose(title,items,description=''){
    return new Promise(resolve=>{
     const dialog=document.createElement('dialog');dialog.className='archive-import-dialog ride-phone-choice';dialog.setAttribute('aria-label',title);
@@ -66,19 +74,31 @@
   }
   const values=value=>(Array.isArray(value)?value:[value]).filter(v=>typeof v==='string').map(clean).filter(Boolean);
   picker.onclick=async()=>{
-   report('');hide();
-   if(!navigator.contacts?.select){report('Výběr kontaktů z telefonu zde není dostupný. Otevři Evidenci v Chromu na Androidu; našeptávání uložených zákazníků funguje i bez tohoto přístupu.',true);return}
-   if(picker.disabled)return;picker.disabled=true;
+   hide();
+   if(!navigator.contacts?.select){stage='UNSUPPORTED';report('Výběr kontaktů z telefonu zde není dostupný. Otevři Evidenci v Chromu na Androidu; našeptávání uložených zákazníků funguje i bez tohoto přístupu.',true);return}
+   if(picker.disabled)return;picker.disabled=true;selectPending=true;requestNumber++;trace('OPEN','Otevírám kontakty telefonu…');
    try{
     const selected=await navigator.contacts.select(['name','tel'],{multiple:false}),contact=selected?.[0];
-    if(!contact)return;
+    selectPending=false;
+    if(!contact){trace('EMPTY','Telefon dokončil výběr, ale nepředal žádný kontakt. Návrat: '+(Array.isArray(selected)?'seznam o délce '+selected.length:typeof selected)+'.',true);return}
+    trace('RETURN','Kontakt se vrátil. Telefonní pole: '+(Array.isArray(contact.tel)?'seznam o délce '+contact.tel.length:typeof contact.tel)+'.');
     const phones=[...new Map(values(contact.tel).filter(v=>/\d/.test(v)).map(v=>[digits(v),v])).values()];
-    if(!phones.length){report('Vybraný kontakt neobsahuje dostupné telefonní číslo. Vyber jiný kontakt nebo při výběru povol sdílení čísla.',true);return}
+    if(!phones.length){stage='NO-NUMBER';report('Vybraný kontakt neobsahuje dostupné telefonní číslo. Vyber jiný kontakt nebo při výběru povol sdílení čísla.',true);return}
+    if(phones.length>1)trace('NUMBER-CHOICE','Kontakt obsahuje více čísel. Čekám na výběr čísla.');
     const name=values(contact.name)[0]||'',phone=phones.length===1?phones[0]:await choose('Vyber telefonní číslo',phones.map(value=>({label:value,value,phone:true})),name);
-    if(!phone)return;
-    if(await assign({name,phone},true))report('Telefon'+(name?' a jméno':'')+' byly doplněny z kontaktu.');
-   }catch(e){if(e.name!=='AbortError')report('Kontakt se nepodařilo načíst. Zkus výběr znovu a povol sdílení telefonního čísla.',true)}
-   finally{picker.disabled=false}
+    if(!phone){trace('CANCELLED','Výběr čísla byl zrušený.');return}
+    if(await assign({name,phone},true)){
+     const revision=editRevision,current=requestNumber;
+     const verify=()=>{if(requestNumber!==current||editRevision!==revision||!$('formModal').classList.contains('show'))return;
+      if(digits($('fPhone')?.value)!==digits(phone)||(name&&fold($('fName')?.value)!==fold(name)))trace('RESET','Vyplnění proběhlo, ale hodnotu pole potom změnila jiná část formuláře.',true);
+      else trace('FILLED','Telefon'+(name?' a jméno':'')+' byly doplněny z kontaktu.');
+     };verify();setTimeout(verify,250);setTimeout(verify,1200);
+    }
+   }catch(e){
+    if(e?.name==='AbortError')trace('ABORT','Telefon ukončil výběr bez předání kontaktu.');
+    else{const code=['NotAllowedError','SecurityError','TypeError','NotSupportedError','InvalidStateError'].includes(e?.name)?e.name:'OtherError';trace('ERROR-'+code,'Kontakt se nepodařilo načíst. Zkus výběr znovu a povol sdílení telefonního čísla.',true)}
+   }
+   finally{selectPending=false;picker.disabled=false}
   };
   const settings=$('v80SettingsHome')||$('v80Settings');
   if(settings){const panel=document.createElement('details');panel.className='ride-options';const summary=document.createElement('summary');summary.textContent='Kontakty a zákazníci';panel.append(summary);for(const [key,label] of [['picker','Výběr kontaktů z telefonu'],['suggest','Našeptávání uložených zákazníků']]){const l=document.createElement('label'),input=document.createElement('input');input.type='checkbox';input.checked=options()[key];input.onchange=()=>{localStorage.setItem(optionsKey,JSON.stringify({...options(),[key]:input.checked}));refresh()};l.append(input,document.createTextNode(label));panel.append(l)}settings.append(panel)}
