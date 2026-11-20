@@ -56,3 +56,5 @@ html.ride-hide-upload .v51-info-upload{display:none!important}
 
 
 .ride-contact-feedback{font-size:11px;line-height:1.5;margin:8px 0 0;color:#104c29}.ride-contact-feedback[data-error=true]{color:#9f3029}.ride-contact-pick:disabled{opacity:.6;cursor:wait}.ride-phone-choice p{font-size:13px;line-height:1.5;color:#617064}
+
+.ride-contact-import{display:block;max-width:100%;margin-top:9px;padding:9px 12px;min-height:40px;border:1px solid #bdd1b7;border-radius:10px;background:#edf4e9;color:#104c29;font-family:inherit;font-size:11px;font-weight:750;line-height:1.5;cursor:pointer}.ride-contact-import:disabled{opacity:.6;cursor:wait}.ride-contact-help{margin-top:8px;color:#617064;font-size:11px;line-height:1.6}.ride-contact-help summary{cursor:pointer;color:#104c29}.ride-contact-help p{margin:8px 0 0}.ride-phone-choice input[type=search]{box-sizing:border-box;width:100%;margin:8px 0}
